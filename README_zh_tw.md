@@ -36,7 +36,7 @@
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-平臺由 <strong>WEB、APP、DEVICE、NODE、VIDEO、AI、TASK</strong> 七個核心模塊組成，以 Java 構建穩定管控底座、Python 承載 AI 與網絡能力、C++ 驅動高性能計算任務，三語言混編各取所長。在能力側，平臺覆蓋 GB28181 / ONVIF 多協議攝像頭接入、實時與抓拍算法任務、YOLO 目標檢測與 SAM 零樣本自動標註、人臉/車牌識別、可編排業務後處理、聯邦算力集群調度，以及 MQTT / TCP / HTTP 物聯網設備全生命周期管理；在體驗側，Web 管控臺與移動 App / 小程序能力對齊，讓指揮中心與現場巡檢同一套業務邏輯、隨時隨地處置。
+平臺由 <strong>WEB、APP、DEVICE、NODE、VIDEO、AI、TASK、EDGE</strong> 八個核心模塊組成，以 Java 構建穩定管控底座、Python 承載 AI 與網絡能力、C++ 驅動高性能計算任務，三語言混編各取所長。在能力側，平臺覆蓋 GB28181 / ONVIF 多協議攝像頭接入、實時與抓拍算法任務、YOLO 目標檢測與 SAM 零樣本自動標註、人臉/車牌識別、可編排業務後處理、聯邦算力集群調度，以及 <strong>無限聯邦邊緣集群模式</strong>（記憶體約 512MB，Ceph 邊緣 0 硬碟佔用，一行命令把普通開發板直接智慧化，算力可鋪開部署並匯聚上雲），還有 MQTT / TCP / HTTP 物聯網設備全生命周期管理；在體驗側，Web 管控臺與移動 App / 小程序能力對齊，讓指揮中心與現場巡檢同一套業務邏輯、隨時隨地處置。
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -90,6 +90,14 @@ EasyAIoT是一個雲邊端一體化的智能物聯網平臺，專註於AI與IoT�
   </div>
 </div>
 
+<div style="margin: 20px 0; padding: 18px 22px; border-radius: 10px; border: 1px solid rgba(52, 152, 219, 0.25); background: linear-gradient(120deg, #f0f7ff 0%, #ffffff 55%, #eef9f4 100%);">
+  <p style="font-size: 16px; font-weight: 700; color: #1a5276; margin: 0 0 8px 0;">🚀 EasyAIoT 無限聯邦邊緣集群模式</p>
+  <p style="font-size: 14px; line-height: 1.8; color: #333; margin: 0;">
+    記憶體占用約 <strong>512MB</strong>，<strong>Ceph 邊緣 0 硬碟佔用</strong>（告警圖與業務物件寫共享 Ceph，邊緣不落本地業務盤）；可直接鋪開算力部署；<strong>一行命令</strong>即可把普通開發板直接智慧化，同時告警與事件匯聚上雲。
+    與上方三檔全棧部署互補——全棧負責雲邊管控與業務編排，EDGE 節點負責現場輕量推理與無限橫向擴容，真正做到「中心一處管控、邊緣任意鋪開」。
+  </p>
+</div>
+
 #### 🧠 AI能力
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
@@ -101,12 +109,14 @@ EasyAIoT是一個雲邊端一體化的智能物聯網平臺，專註於AI與IoT�
     </ul>
   </li>
   <li><strong>YOLO26 新一代目標檢測能力</strong>：平台內建最新一代目標檢測能力，開箱即可用於即時畫面分析與抓拍識別，在相同硬體條件下可接入更多路攝像頭、響應更快、誤報更少。支持從數據採集、標註、訓練到上線推理的完整閉環，幫助用戶以更低成本持續迭代專屬檢測模型，快速覆蓋安全帽佩戴、人員闖入、煙火隱患等各類常見安防與工業場景，讓「看得準、算得快、擴得動」成為默認可用能力</li>
+  <li><strong>YOLO26 人體姿態分析</strong>：在目標檢測能力之上新增人體關鍵點與骨架姿態分析，基於 YOLO26 Pose 模型開箱即用，支持圖片、視頻與攝像頭即時流三種輸入方式。圖片模式可同步輸出骨架標註與人數統計；視頻模式採用異步任務處理，進度可輪詢、結果可下載；攝像頭模式可對接 RTSP/RTMP 即時取流，將姿態識別結果疊加推流回顯，便於遠程盯防與行為研判。模型推理頁提供「姿態分析」與「目標檢測」一鍵切換，置信度可調，與現有模型管理、歷史記錄、對照預覽等能力無縫銜接，適用於工地作業規範、健身動作評估、人群聚集態勢感知等需要「看清人體結構與動作形態」的場景，讓平台從「框出目標」進一步走向「理解姿態」</li>
   <li><strong>多協議攝像頭接入支持</strong>：全面支持 GB28181 和 ONVIF 兩大主流視頻監控協議，實現標準化設備接入與管理。GB28181 作為中國國家標準，完美適配國內主流監控設備；ONVIF 作為國際通用標準，廣泛兼容全球主流品牌攝像頭。通過雙協議支持，平台能夠無縫對接現有監控系統，實現設備的即插即用、自動發現與統一管理，大幅降低設備接入門檻，提升系統兼容性與擴展性，為大規模攝像頭部署提供堅實的技術基礎。此外，新增 NVR 同網段/跨網段批量掃描、註冊與統一管控能力，覆蓋海康、大華、華為、螢石、小米等主流品牌，支持基於設備原生協議的網段發現、一鍵登記及通道批量導入，進一步降低大規模監控設備的接入與運維成本</li>
   <li><strong>即時對講與雲台遠控</strong>：打破「只能看、不能管」的傳統監控侷限，值守人員在即時預覽同屏即可完成語音喊話與雲台操控——無需切換系統、不必親臨現場，即可遠程溝通、引導疏散或制止違規行為，把響應從「派人到場」壓縮到「開口即達」。雲台操控讓攝像頭隨心轉向、變焦聚焦，突發情況可迅速對準事發區域、放大細節，形成「看得清、指得準、喊得到」的一體化現場處置閉環。全面兼容 GB28181 與 ONVIF 設備，利舊現有監控資產，無需額外購置對講主機或第三方軟件，讓存量攝像頭即刻具備遠程溝通與靈活調度能力，顯著降低系統孤島與值守成本</li>
   <li><strong>可編排演算法後處理</strong>：突破「只能檢出、難以研判」的能力瓶頸，在目標檢測之上增設獨立的業務研判層，將畫面感知結果轉化為可運營、可追責、可統計的業務事件。支持按任務靈活定義人數統計、越線通行、停留超時、區域滯留、多條件複合告警等場景規則，無需反覆調整模型即可快速適配工地安監、園區安防、交通管控等差異化需求，把通用視覺能力鍛造成貼近現場的管理抓手。後處理與即時分析彼此獨立、並行運轉——監控畫面持續流暢研判，業務邏輯按需彈性擴展，研判結果自動沉澱存檔並驅動精準告警，顯著降低誤報漏報與人工複核成本。業務人員專注規則表達，平台負責分發執行與規模承載，讓「看得見」真正走向「判得清、管得住、用得起來」</li>
   <li><strong>多中心節點 × 多工作節點聯邦集群</strong>：面向跨區域、多機房與雲邊協同部署，平台採用「N 個中心節點 + N 個工作節點」聯邦架構——以中心節點為統一控制面、工作節點為算力與媒體執行面，構建可橫向擴展的分散式調度體系。每個中心節點納管本域工作節點集群，支持監測代理、分散式存儲、流媒體引擎、音視頻轉碼、視頻分析運行時、模型推理與訓練等運行時分發與一鍵遠程部署；多中心節點可互聯同步，集群泳道視圖直觀呈現「中心—工作」拓撲與資源水位，支持泳道級批量維護與組件分發。演算法任務、自動標註流水線、推流轉發等工作負載按節點角色與 GPU 能力智能調度、隊列彈性分發，讓海量路數接入、高併發推理與分散式訓練在同一集群中協同運轉，真正做到「納得進、分得清、擴得開、管得全」</li>
   <li><strong>SAM 零啟動自動標註編排流水線</strong>：面向「尚無標註樣本、尚無可用檢測模型」的冷啟動場景，平台集成 SAM 開放詞彙分割能力與智能編排引擎，提供一鍵無人值守標註流水線。系統按策略自動串聯攝像頭抽幀採集、SAM 文本提示首批標註、達標後自動觸發 YOLO 微調訓練、量產階段以 YOLO 高速推理為主並對漏檢樣本智能切換 SAM 回補、按進度週期性迭代訓練及數據集自動打包導出，完整貫通「採—標—訓—導」閉環。編排中樞即時感知流水線階段與標註進度，自主決策 SAM / YOLO / 混合補充等標註模式及訓練觸發時機，支持任務暫停恢復與本地/集群算力隊列彈性調度；配合可視化策略配置與運行日誌，幫助用戶從零樣本、零模型起步快速沉澱專屬檢測能力，讓「開口定義類別、坐等模型成型」成為數據集建設的默認可用路徑</li>
   <li><strong>萬級彈性算力集群與橫向擴容池</strong>：面向超大規模 AI 與視頻業務，構建雲邊端一體的分散式算力底座，將演算法任務、推流轉發、演算法服務、模型訓練與推理統一納入橫向負載均衡與彈性伸縮體系。新增伺服器一鍵納管入網即可成為可調度算力單元，調度中樞按資源水位與業務壓力自動分發任務、平衡負載，實現從百路到萬路攝影機、從單機到萬級節點的線性擴容——無需重複部署與手工調參，讓海量路數接入、高併發推理與分散式訓練在同一算力池中協同運行，真正做到「擴得動、跑得穩、管得住」</li>
+  <li><strong>無限聯邦邊緣集群模式（EDGE）</strong>：面向 RK3588、樹莓派等普通開發板與現場算力節點，提供記憶體占用約 <strong>512MB</strong> 的輕量無介面邊緣算法運行時——<strong>一行命令</strong>寫入控制面地址並啟動，即可把普通開發板直接智慧化，算力可隨點位鋪開部署，同時告警與事件匯聚上雲；告警圖與抓拍寫入共享 Ceph，由中心 sink 歸檔，邊緣側<strong>業務存儲 0 硬碟佔用</strong>（不落本地業務盤、無 MinIO 直傳）。執行面從 VIDEO 控制面抽離為獨立 <code>EDGE</code> 模塊：無 WEB、無本地業務庫，專注「收指令、跑推理、回事件」。現場只需配置一項 <code>EDGE_NODE_URL</code>，經 enroll / runtime-config 自動領取 EMQX 集群地址、MQTT 憑證、Ceph 熱緩衝路徑與 Topic 約定；任意數量節點共享同一 EMQX 總線，由控制面按能力調度實時 / 抓拍 / 巡檢任務，啟停經 <code>mqtt/iot-algo-task-cmd</code> 下發，心跳、確認、告警與後處理原路回傳，真正做到「512MB 起跑、Ceph 邊緣 0 硬碟、一行命令上線、無限聯邦擴容、現場智能與雲端匯聚一體」</li>
   <li><strong>天地圖空間可視化與以圖研判</strong>：接入國家天地圖，將攝像頭、告警與人車識別能力匯聚到一張地圖，讓監控從「看畫面」升級為「看全局」。流媒體與告警模組均提供「地圖分布」視圖，配合設備目錄樹按區域聚焦，一眼掌握卡口佈局與在線狀態；支持地圖點選、地點搜索與批量導入坐標，國標通道、NVR 通道與直連攝像頭均可快速完成布點，讓每路畫面都有清晰的空間歸屬。告警事件自動關聯攝像頭坐標上圖展示，可按時間、事件類型、任務與業務標籤篩選，選中即可查看抓拍與錄像，幫助值守人員從「哪裡出事」快速切入處置。結合人臉庫與車牌庫識別能力，可將同一目標在多個點位上的命中記錄串聯成空間脈絡——<strong>以人尋跡</strong>，還原重點人員在布控範圍內的出現路線與活動範圍；<strong>以車尋跡</strong>，串聯過車記錄，快速定位車輛行經路徑與停留區域，為尋人找車、巡防布控與事後復盤提供直觀線索。移動類設備還支持軌跡回放，按時間軸重現巡邏與行進路線；矢量地圖與衛星影像隨心切換，自動適應視野，讓管理者以地圖為綱、以圖為媒，更快發現異常、鎖定目標、指揮調度</li>
   <li><strong>Qwen / DeepSeek 多卡部署</strong>：支持將 Qwen、DeepSeek 等大語言模型以多卡並行方式部署上線，可按集群與 Worker 維度靈活調度 GPU 算力，實現模型實例的彈性擴縮與負載均衡，滿足高並發推理與長上下文場景下的穩定服務能力</li>
   <li><strong>視覺大模型智能理解</strong>：集成QwenVL3視覺大模型，支持對實時視頻畫面進行深度視覺推理與語義理解，能夠對畫面內容進行智能分析與場景理解，提供更豐富的視覺認知能力，實現從像素級感知到語義級理解的跨越</li>
@@ -224,7 +234,7 @@ Java擅長構建穩定可靠的平臺架構，但不適合網絡編程和AI編�
 ### 🏗️ 項目架構特點
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-EasyAIoT其實不是一個項目，而是七個項目。
+EasyAIoT其實不是一個項目，而是八個項目。
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -261,10 +271,10 @@ EasyAIoT積極響應本土化戰略，全面支持本土化硬件和操作系統
 <div style="padding: 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
 <h4 style="margin-top: 0; color: white; font-size: 18px;">📱 邊緣端支持</h4>
 <ul style="font-size: 14px; line-height: 1.8; margin: 10px 0; padding-left: 20px;">
-  <li>全面支持瑞芯微（Rockchip）ARM架構芯片</li>
-  <li>完美適配RK3588等主流邊緣計算平臺</li>
-  <li>針對邊緣場景進行深度優化</li>
-  <li>實現邊緣智能的輕量化部署</li>
+  <li>無限聯邦邊緣集群：約 512MB 記憶體即可接入</li>
+  <li>Ceph 邊緣 0 硬碟佔用，業務物件不落本地盤</li>
+  <li>一行命令把 RK3588 等普通開發板直接智慧化</li>
+  <li>算力隨點位鋪開部署，告警與事件匯聚上雲</li>
 </ul>
 </div>
 
@@ -287,7 +297,7 @@ EasyAIoT積極響應本土化戰略，全面支持本土化硬件和操作系統
 ## 🧩 項目結構
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT由七個核心項目組成：
+EasyAIoT由八個核心項目組成：
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
@@ -367,6 +377,20 @@ EasyAIoT由七個核心項目組成：
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>TASK模塊</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">基於C++的高性能任務處理模塊，負責計算密集型任務執行</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>EDGE模塊</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>無限聯邦邊緣集群模式</strong>：第八核心模塊，記憶體占用約 512MB；Ceph 邊緣 0 硬碟佔用；一行命令把普通開發板直接智慧化，算力可鋪開部署並匯聚上雲，支撐無限聯邦擴容</li>
+    <li><strong>無介面邊緣算法運行時</strong>：從 VIDEO 抽離的算法執行面；純 CLI / systemd，不提供 WEB 與本地業務庫，專注邊緣側推理與事件回傳</li>
+    <li><strong>單配置入口</strong>：現場只需配置 <code>EDGE_NODE_URL</code>（iot-node 控制面地址）；經 <code>/admin-api/node/edge/enroll</code> 與 <code>runtime-config</code> 自動領取 MQTT broker 列表、租戶憑證、clientId、Ceph 熱緩衝路徑與算法 Topic 約定</li>
+    <li><strong>全鏈路 MQTT 總線</strong>：訂閱 <code>mqtt/iot-algo-task-cmd</code> 接收啟停指令（按 <code>targetNodeId</code> 過濾本節點），發布心跳 / ack / 告警 / 後處理；不直連 Kafka、不提供 HTTP 管理面</li>
+    <li><strong>Ceph 邊緣 0 硬碟佔用</strong>：告警圖與抓拍寫入 Ceph 共享路徑，由中心 <code>iot-sink</code> 歸檔至 MinIO；邊緣側不落本地業務盤、無 MinIO 同步上傳職責</li>
+    <li><strong>無限集群擴展</strong>：任意數量 EDGE 節點掛載同一 EMQX 集群；broker 列表有序探測、故障從頭重試，支撐實時 / 抓拍 / 巡檢算法任務橫向擴容</li>
+    <li><strong>與控制面分工清晰</strong>：VIDEO 保留任務 CRUD、調度策略與日誌查詢；EDGE 承接 <code>runtime/</code> 推理主循環與 workload 拉起，可與 NODE Agent（通用 HTTP 工作負載）並存</li>
+  </ul>
+</td>
 </tr>
 </table>
 
@@ -487,6 +511,10 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
 <div>
   <img src=".image/banner/banner1145.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
   <img src=".image/banner/banner1146.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1147.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1148.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
   <img src=".image/banner/banner1129.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
@@ -914,11 +942,19 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>Li</nobr></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">為推動 EasyAIoT 項目在青年開發者社群與協作生態方向的發展，以卓越的組織領導力與感召力，帶領全校同學深度參與項目共建，匯聚青春才智、凝聚團隊合力，為 EasyAIoT 注入了源源不絕、綿延不絕的發展動能；在項目傳播推廣、實踐落地與後續人才梯隊培育等方面，亦作出了舉足輕重、不可替代的重要貢獻。</td>
 </tr>
+<tr style="background-color: #f8f9fa;">
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>陳家林</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">為推動 EasyAIoT 項目在物聯網設備互通與空天視訊融合方向的發展，打通設備指令與狀態資料的上下行閉環，使平台真正實現「下得去、看得見、控得住」；同時貢獻大疆司空機場與無人機畫面接入能力，把空中巡檢視角納入統一視訊與告警體系，顯著拓展平台在廣域巡查、應急勘察與天地一體協同感知中的落地價值。</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>NULL</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">為推動 EasyAIoT 項目在工業現場設備接入方向的發展，打通 Modbus 協議上行採集能力，使電表、感測器、控制器等海量工業設備資料可被平台統一匯聚、監測與聯動，補齊「看得見現場、也聽得到設備」的關鍵拼圖，為工控數採、產線智控與安防聯動場景提供堅實底座。</td>
+</tr>
 </tbody>
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>特別致謝</strong>：以上貢獻者在跨平台部署文檔與腳本、國標視訊能力落地與 AI 聯調驗證、多品牌攝影機直連發現與批量接入、天地圖空間視覺化完整落地、異構串流媒體叢集部署與排程架構、車牌識別演算法與完整程式碼落地、EasyAIoT-Edge 邊緣側端到端串聯、校園開發者社群組織與青年協作生態構建等不同方面推動了 EasyAIoT 的發展，他們的專業精神與無私奉獻值得我們學習與尊敬。再次向這些傑出的貢獻者表示最誠摯的感謝！🙏
+<strong>特別致謝</strong>：以上貢獻者在跨平台部署文檔與腳本、國標視訊能力落地與 AI 聯調驗證、多品牌攝影機直連發現與批量接入、天地圖空間視覺化完整落地、異構串流媒體叢集部署與排程架構、車牌識別演算法與完整程式碼落地、EasyAIoT-Edge 邊緣側端到端串聯、校園開發者社群組織與青年協作生態構建、物聯網設備上下行閉環與大疆司空空中視角接入、工業 Modbus 設備上行採集等不同方面推動了 EasyAIoT 的發展，他們的專業精神與無私奉獻值得我們學習與尊敬。再次向這些傑出的貢獻者表示最誠摯的感謝！🙏
 </p>
 
 ## 💝 開源守望者
@@ -928,15 +964,15 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
 <table>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/默者.png" width="80px;" alt="歐陽建輝"/><br /><sub><b>歐陽建輝</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/小满藏舟.png" width="80px;" alt="小滿藏舟"/><br /><sub><b>小滿藏舟</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/空空.png" width="80px;" alt="空空"/><br /><sub><b>空空</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/阿涛.png" width="80px;" alt="阿涛"/><br /><sub><b>阿涛</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/火车叨位去、.png" width="80px;" alt="火车叨位去、"/><br /><sub><b>火车叨位去、</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/NULL.png" width="80px;" alt="NULL"/><br /><sub><b>NULL</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/一片天.png" width="80px;" alt="一片天"/><br /><sub><b>一片天</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/舍得.png" width="80px;" alt="舍得"/><br /><sub><b>舍得</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/M.png" width="80px;" alt="M"/><br /><sub><b>M</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/Louis.png" width="80px;" alt="Louis"/><br /><sub><b>Louis</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/胡首凡 梯控门禁五方对讲.png" width="80px;" alt="胡首凡 梯控门禁五方对讲"/><br /><sub><b>胡首凡 梯控门禁五方对讲</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/袁建华.png" width="80px;" alt="袁建华"/><br /><sub><b>袁建华</b></sub></a></td>
     </tr>
     <tr>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/南北.png" width="80px;" alt="南北"/><br /><sub><b>南北</b></sub></a></td>
@@ -1064,6 +1100,9 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/noname.png" width="80px;" alt="noname"/><br /><sub><b>noname</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/兔子.png" width="80px;" alt="兔子"/><br /><sub><b>兔子</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/ThinkInStack.png" width="80px;" alt="ThinkInStack"/><br /><sub><b>ThinkInStack</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/Louis.png" width="80px;" alt="Louis"/><br /><sub><b>Louis</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/胡首凡 梯控门禁五方对讲.png" width="80px;" alt="胡首凡 梯控门禁五方对讲"/><br /><sub><b>胡首凡 梯控门禁五方对讲</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/袁建华.png" width="80px;" alt="袁建华"/><br /><sub><b>袁建华</b></sub></a></td>
     </tr>
   </tbody>
 </table>
@@ -1094,17 +1133,19 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
 <table>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/默者.png" width="80px;" alt="歐陽建輝"/><br /><sub><b>歐陽建輝</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/小满藏舟.png" width="80px;" alt="小滿藏舟"/><br /><sub><b>小滿藏舟</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/空空.png" width="80px;" alt="空空"/><br /><sub><b>空空</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/chen_jialin123" target="_blank"><img src="./.image/sponsor/陈家林.png" width="80px;" alt="陳家林"/><br /><sub><b>陳家林</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/NULL.png" width="80px;" alt="NULL"/><br /><sub><b>NULL</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/陈勇至.jpg" width="80px;" alt="陈勇至"/><br /><sub><b>陈勇至</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/Dark.jpg" width="80px;" alt="Dark"/><br /><sub><b>Dark</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/machh" target="_blank"><img src="./.image/sponsor/machh.jpg" width="80px;" alt="machh"/><br /><sub><b>machh</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/三块两毛四.jpg" width="80px;" alt="三块两毛四"/><br /><sub><b>三块两毛四</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/嘎嗝.jpg" width="80px;" alt="嘎嗝"/><br /><sub><b>嘎嗝</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/曹.jpg" width="80px;" alt="曹"/><br /><sub><b>曹</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/滔滔.jpg" width="80px;" alt="滔滔"/><br /><sub><b>滔滔</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/物语晨水²⁰²⁶.jpg" width="80px;" alt="物语晨水²⁰²⁶"/><br /><sub><b>物语晨水²⁰²⁶</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/L_Z_M" target="_blank"><img src=".image/sponsor/玖零。.jpg" width="80px;" alt="玖零。"/><br /><sub><b>玖零。</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/物语晨水²⁰²⁶.jpg" width="80px;" alt="物语晨水²⁰²⁶"/><br /><sub><b>物语晨水²⁰²⁶</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/L_Z_M" target="_blank"><img src=".image/sponsor/玖零。.jpg" width="80px;" alt="玖零。"/><br /><sub><b>玖零。</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/36436022" target="_blank"><img src=".image/sponsor/金鸿伟.jpg" width="80px;" alt="金鸿伟"/><br /><sub><b>金鸿伟</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/cnlijf" target="_blank"><img src="./.image/sponsor/李江峰.jpg" width="80px;" alt="李江峰"/><br /><sub><b>李江峰</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src=".image/sponsor/Best%20Yao.jpg" width="80px;" alt="Best Yao"/><br /><sub><b>Best Yao</b></sub></a></td>
@@ -1112,10 +1153,10 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/shup092_admin" target="_blank"><img src="./.image/sponsor/shup.jpg" width="80px;" alt="shup"/><br /><sub><b>shup</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/gampa" target="_blank"><img src="./.image/sponsor/也许.jpg" width="80px;" alt="也许"/><br /><sub><b>也许</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/leishaozhuanshudi" target="_blank"><img src="./.image/sponsor/⁰ʚᦔrꫀꪖꪑ⁰ɞ%20..jpg" width="80px;" alt="⁰ʚᦔrꫀꪖꪑ⁰ɞ ."/><br /><sub><b>⁰ʚᦔrꫀꪖꪑ⁰ɞ .</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/fateson" target="_blank"><img src="./.image/sponsor/逆.jpg" width="80px;" alt="逆"/><br /><sub><b>逆</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/dongGezzz_admin" target="_blank"><img src="./.image/sponsor/廖东旺.jpg" width="80px;" alt="廖东旺"/><br /><sub><b>廖东旺</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/fateson" target="_blank"><img src="./.image/sponsor/逆.jpg" width="80px;" alt="逆"/><br /><sub><b>逆</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/dongGezzz_admin" target="_blank"><img src="./.image/sponsor/廖东旺.jpg" width="80px;" alt="廖东旺"/><br /><sub><b>廖东旺</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/huangzhen1993" target="_blank"><img src="./.image/sponsor/黄振.jpg" width="80px;" alt="黄振"/><br /><sub><b>黄振</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/fengchunshen" target="_blank"><img src="./.image/sponsor/春生.jpg" width="80px;" alt="春生"/><br /><sub><b>春生</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/mrfox_wang" target="_blank"><img src="./.image/sponsor/贵阳王老板.jpg" width="80px;" alt="贵阳王老板"/><br /><sub><b>贵阳王老板</b></sub></a></td>
@@ -1123,10 +1164,10 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/finalice" target="_blank"><img src="./.image/sponsor/尽千.jpg" width="80px;" alt="尽千"/><br /><sub><b>尽千</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/yuer629" target="_blank"><img src="./.image/sponsor/yuer629.jpg" width="80px;" alt="yuer629"/><br /><sub><b>yuer629</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/cai-peikai/ai-project" target="_blank"><img src="./.image/sponsor/kong.jpg" width="80px;" alt="kong"/><br /><sub><b>kong</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/HB1731276584" target="_blank"><img src="./.image/sponsor/岁月静好.jpg" width="80px;" alt="岁月静好"/><br /><sub><b>岁月静好</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/hy5128" target="_blank"><img src="./.image/sponsor/Kunkka.jpg" width="80px;" alt="Kunkka"/><br /><sub><b>Kunkka</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/HB1731276584" target="_blank"><img src="./.image/sponsor/岁月静好.jpg" width="80px;" alt="岁月静好"/><br /><sub><b>岁月静好</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/hy5128" target="_blank"><img src="./.image/sponsor/Kunkka.jpg" width="80px;" alt="Kunkka"/><br /><sub><b>Kunkka</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/guo-dida" target="_blank"><img src="./.image/sponsor/灬.jpg" width="80px;" alt="灬"/><br /><sub><b>灬</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/XyhBill" target="_blank"><img src="./.image/sponsor/Mr.LuCkY.jpg" width="80px;" alt="Mr.LuCkY"/><br /><sub><b>Mr.LuCkY</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/timeforeverz" target="_blank"><img src="./.image/sponsor/泓.jpg" width="80px;" alt="泓"/><br /><sub><b>泓</b></sub></a></td>
@@ -1271,6 +1312,9 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
     </tr>
     <tr>
         <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/常康.jpg" width="80px;" alt="常康"/><br /><sub><b>常康</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/嘎嗝.jpg" width="80px;" alt="嘎嗝"/><br /><sub><b>嘎嗝</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/曹.jpg" width="80px;" alt="曹"/><br /><sub><b>曹</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/滔滔.jpg" width="80px;" alt="滔滔"/><br /><sub><b>滔滔</b></sub></a></td>
     </tr>
   </tbody>
 </table>

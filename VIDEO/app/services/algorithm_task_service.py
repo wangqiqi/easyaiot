@@ -134,6 +134,59 @@ def _serialize_motion_gate_config(config) -> Optional[str]:
     return None
 
 
+def _serialize_pose_analysis_config(config) -> Optional[str]:
+    if config is None:
+        return None
+    if isinstance(config, str):
+        return config if config.strip() else None
+    if isinstance(config, dict):
+        return json.dumps(config, ensure_ascii=False)
+    return None
+
+
+def _serialize_pose_intent_config(config) -> Optional[str]:
+    if config is None:
+        return None
+    if isinstance(config, str):
+        return config if config.strip() else None
+    if isinstance(config, dict):
+        return json.dumps(config, ensure_ascii=False)
+    return None
+
+
+def _normalize_pose_intent_fields(
+    *,
+    pose_intent_enabled: bool,
+    pose_analysis_enabled: bool,
+    pose_library_ids,
+) -> tuple:
+    """姿态意图启用时自动开启姿态分析，并校验库绑定。"""
+    intent_on = bool(pose_intent_enabled)
+    pose_on = bool(pose_analysis_enabled) or intent_on
+    lib_ids = _normalize_library_ids(pose_library_ids)
+    if intent_on:
+        if not _has_library_matching_scope(lib_ids):
+            raise ValueError('启用姿态意图分析时必须指定至少一个场景姿态库')
+        from models import ScenarioPoseLibrary
+        for lib_id in lib_ids:
+            ScenarioPoseLibrary.query.get_or_404(lib_id)
+    elif not intent_on:
+        lib_ids = []
+    return intent_on, pose_on, lib_ids
+
+
+def _normalize_detect_conf(value) -> float:
+    if value is None:
+        return 0.5
+    try:
+        conf = float(value)
+    except (TypeError, ValueError):
+        raise ValueError('检测置信度格式无效')
+    if conf < 0.01 or conf > 0.99:
+        raise ValueError('检测置信度必须在 1% ~ 99% 之间')
+    return conf
+
+
 def _has_library_matching_scope(library_ids) -> bool:
     return bool(_normalize_library_ids(library_ids))
 
@@ -725,6 +778,13 @@ def create_algorithm_task(task_name: str,
                          sam_supplement_config=None,
                          motion_gate_enabled: bool = False,
                          motion_gate_config=None,
+                         detect_conf: float = 0.5,
+                         pose_analysis_enabled: bool = False,
+                         pose_analysis_config=None,
+                         pose_intent_enabled: bool = False,
+                         pose_library_ids=None,
+                         pose_intent_threshold: Optional[float] = None,
+                         pose_intent_config=None,
                          post_process_enabled: bool = False,
                          post_process_replicas: int = 1) -> AlgorithmTask:
     """创建算法任务"""
@@ -850,6 +910,13 @@ def create_algorithm_task(task_name: str,
             from models import PlateLibrary
             for lib_id in plate_lib_ids:
                 PlateLibrary.query.get_or_404(lib_id)
+
+        pose_lib_ids = _normalize_library_ids(pose_library_ids)
+        pose_intent_enabled, pose_analysis_enabled, pose_lib_ids = _normalize_pose_intent_fields(
+            pose_intent_enabled=bool(pose_intent_enabled),
+            pose_analysis_enabled=bool(pose_analysis_enabled),
+            pose_library_ids=pose_lib_ids,
+        )
         
         # 生成唯一编号
         prefix_map = {'realtime': 'REALTIME_TASK', 'snap': 'SNAP_TASK', 'patrol': 'PATROL_TASK'}
@@ -939,6 +1006,7 @@ def create_algorithm_task(task_name: str,
             task_type=task_type,
             model_ids=model_ids_json,
             model_names=model_names,
+            detect_conf=_normalize_detect_conf(detect_conf),
             extract_interval=extract_interval if task_type == 'realtime' else None,
             rtmp_input_url=None,  # 不再使用，从摄像头列表获取RTSP流地址
             rtmp_output_url=None,  # 不再使用，从摄像头列表获取RTMP流地址
@@ -977,6 +1045,12 @@ def create_algorithm_task(task_name: str,
             sam_supplement_config=_serialize_sam_supplement_config(sam_supplement_config),
             motion_gate_enabled=bool(motion_gate_enabled) if task_type == 'realtime' else False,
             motion_gate_config=_serialize_motion_gate_config(motion_gate_config) if task_type == 'realtime' else None,
+            pose_analysis_enabled=bool(pose_analysis_enabled),
+            pose_analysis_config=_serialize_pose_analysis_config(pose_analysis_config),
+            pose_intent_enabled=bool(pose_intent_enabled),
+            pose_library_ids=_serialize_library_ids(pose_lib_ids) if pose_intent_enabled else None,
+            pose_intent_threshold=pose_intent_threshold if pose_intent_enabled else None,
+            pose_intent_config=_serialize_pose_intent_config(pose_intent_config),
             post_process_enabled=bool(post_process_enabled),
             post_process_replicas=max(1, int(post_process_replicas or 1)),
         )
@@ -1136,6 +1210,7 @@ def update_algorithm_task(task_id: int, **kwargs) -> AlgorithmTask:
         updatable_fields = [
             'task_name', 'task_type', 'pusher_id',
             'model_ids', 'model_names',  # 模型配置
+            'detect_conf',
             'extract_interval',  # 实时算法任务配置（rtmp_input_url和rtmp_output_url不再使用，从摄像头列表获取）
             'tracking_enabled', 'tracking_similarity_threshold', 'tracking_max_age', 'tracking_smooth_alpha',  # 追踪配置
             'alert_event_enabled', 'alert_event_suppress_time', 'alert_class_names',
@@ -1152,6 +1227,8 @@ def update_algorithm_task(task_id: int, **kwargs) -> AlgorithmTask:
             'schedule_policy', 'prefer_gpu', 'target_node_id',
             'sam_supplement_enabled', 'sam_supplement_config',
             'motion_gate_enabled', 'motion_gate_config',
+            'pose_analysis_enabled', 'pose_analysis_config',
+            'pose_intent_enabled', 'pose_library_ids', 'pose_intent_threshold', 'pose_intent_config',
             'post_process_enabled', 'post_process_script', 'post_process_replicas',
         ]
         
@@ -1164,6 +1241,46 @@ def update_algorithm_task(task_id: int, **kwargs) -> AlgorithmTask:
             kwargs['motion_gate_config'] = _serialize_motion_gate_config(
                 kwargs['motion_gate_config']
             )
+
+        if 'pose_analysis_config' in kwargs:
+            kwargs['pose_analysis_config'] = _serialize_pose_analysis_config(
+                kwargs['pose_analysis_config']
+            )
+
+        if 'pose_intent_config' in kwargs:
+            kwargs['pose_intent_config'] = _serialize_pose_intent_config(
+                kwargs['pose_intent_config']
+            )
+
+        if 'pose_library_ids' in kwargs:
+            kwargs['pose_library_ids'] = _serialize_library_ids(
+                _normalize_library_ids(kwargs.get('pose_library_ids'))
+            )
+
+        intent_enabled = kwargs.get('pose_intent_enabled')
+        if intent_enabled is None:
+            intent_enabled = bool(getattr(task, 'pose_intent_enabled', False))
+        pose_enabled = kwargs.get('pose_analysis_enabled')
+        if pose_enabled is None:
+            pose_enabled = bool(getattr(task, 'pose_analysis_enabled', False))
+        lib_ids_raw = kwargs.get('pose_library_ids') if 'pose_library_ids' in kwargs else getattr(task, 'pose_library_ids', None)
+        if intent_enabled or 'pose_intent_enabled' in kwargs or 'pose_library_ids' in kwargs or 'pose_analysis_enabled' in kwargs:
+            intent_on, pose_on, lib_ids = _normalize_pose_intent_fields(
+                pose_intent_enabled=bool(intent_enabled),
+                pose_analysis_enabled=bool(pose_enabled),
+                pose_library_ids=lib_ids_raw,
+            )
+            kwargs['pose_intent_enabled'] = intent_on
+            kwargs['pose_analysis_enabled'] = pose_on
+            kwargs['pose_library_ids'] = _serialize_library_ids(lib_ids) if intent_on else None
+            if not intent_on:
+                kwargs['pose_intent_threshold'] = None
+        elif 'pose_intent_enabled' in kwargs and not kwargs.get('pose_intent_enabled'):
+            kwargs['pose_library_ids'] = None
+            kwargs['pose_intent_threshold'] = None
+
+        if 'detect_conf' in kwargs:
+            kwargs['detect_conf'] = _normalize_detect_conf(kwargs.get('detect_conf'))
         
         # 验证布防模式
         if 'defense_mode' in kwargs:

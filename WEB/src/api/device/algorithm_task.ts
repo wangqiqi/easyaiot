@@ -40,6 +40,8 @@ export interface AlgorithmTask {
   // 模型配置（直接选择模型列表，不再依赖模型服务接口）
   model_ids?: number[]; // 关联的模型ID列表
   model_names?: string; // 关联的模型名称列表（逗号分隔，冗余字段，用于快速显示）
+  /** YOLO 检测置信度阈值（0~1，默认 0.5） */
+  detect_conf?: number;
   // 实时算法任务配置
   extract_interval?: number; // 抽帧间隔（每N帧抽一次）
   motion_gate_enabled?: boolean;
@@ -98,6 +100,15 @@ export interface AlgorithmTask {
     merge_iou?: number;
     return_masks?: boolean;
   };
+  /** 是否启用人体姿态分析 */
+  pose_analysis_enabled?: boolean;
+  /** 人体姿态分析配置 */
+  pose_analysis_config?: {
+    model_file_path?: string;
+    conf?: number;
+    trigger?: 'always' | 'on_interval' | 'on_person';
+    interval_frames?: number;
+  };
   service_names?: string; // 关联的算法服务名称列表（逗号分隔，冗余字段，用于快速显示）
   defense_mode?: string; // 布防模式: full(全防), half(半防), day(白天), night(夜间)
   defense_schedule?: string | number[][]; // 布防时段: JSON字符串或二维数组，7天×24小时
@@ -151,6 +162,8 @@ export const createAlgorithmTask = (data: {
   device_ids?: string[];
   // 模型配置
   model_ids?: number[];
+  /** YOLO 检测置信度阈值（0~1，默认 0.5） */
+  detect_conf?: number;
   // 实时算法任务配置
   extract_interval?: number;
   // 追踪配置
@@ -186,6 +199,14 @@ export const createAlgorithmTask = (data: {
   is_enabled?: boolean;
   defense_mode?: string;
   defense_schedule?: string;
+  /** 是否启用人体姿态分析 */
+  pose_analysis_enabled?: boolean;
+  pose_analysis_config?: {
+    model_file_path?: string;
+    conf?: number;
+    trigger?: 'always' | 'on_interval' | 'on_person';
+    interval_frames?: number;
+  };
   /** 是否启用 AI 后处理脚本，默认关闭 */
   post_process_enabled?: boolean;
   /** 后处理 Worker 副本数 */

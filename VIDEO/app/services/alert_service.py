@@ -47,6 +47,7 @@ def _alert_to_dict(alert: Alert) -> dict:
         'record_path': alert.record_path,
         'task_id': alert.task_id if hasattr(alert, 'task_id') else None,
         'task_name': alert.task_name if hasattr(alert, 'task_name') else None,
+        'node_id': getattr(alert, 'node_id', None),
     }
     
     # 处理 information 字段（如果是 JSON 字符串则解析）
@@ -544,6 +545,7 @@ def create_alert(alert_data: dict) -> dict:
             channels=channels,
             business_tags=business_tags,
             correlation_id=correlation_id,
+            node_id=alert_data.get('node_id') or alert_data.get('nodeId'),
         )
         
         db.session.add(alert)

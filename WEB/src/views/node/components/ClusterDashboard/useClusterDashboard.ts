@@ -36,6 +36,45 @@ export type { TrendViewMode };
 
 const MAX_TREND_POINTS = 120;
 
+function relativeDiff(a: number, b: number): number {
+  const max = Math.max(a, b);
+  if (max <= 0) return 0;
+  return Math.abs(a - b) / max;
+}
+
+/** 冲突 Agent 会突然换一套硬件容量；保留已绑定容量，平台节点允许切换到显著更大的上报（宿主机优先） */
+function sanitizeCapacityPatch(existing: ComputeNodeVO, patch: ComputeNodeVO): ComputeNodeVO {
+  const prevMem = Number(existing.memTotalBytes || 0);
+  const nextMem = Number(patch.memTotalBytes || 0);
+  if (prevMem <= 0 || nextMem <= 0 || relativeDiff(prevMem, nextMem) <= 0.2) {
+    return patch;
+  }
+  const preferLarger = Boolean(existing.isPlatform) && nextMem > prevMem;
+  if (preferLarger) {
+    return patch;
+  }
+  const cleaned: ComputeNodeVO = { ...patch };
+  delete cleaned.memTotalBytes;
+  delete cleaned.memUsedBytes;
+  delete cleaned.memPercent;
+  delete cleaned.diskTotalBytes;
+  delete cleaned.diskUsedBytes;
+  delete cleaned.diskPercent;
+  return cleaned;
+}
+
+function mergeComputeNode(existing: ComputeNodeVO, patch: ComputeNodeVO): ComputeNodeVO {
+  const safePatch = sanitizeCapacityPatch(existing, patch);
+  const merged: ComputeNodeVO = { ...existing };
+  (Object.keys(safePatch) as Array<keyof ComputeNodeVO>).forEach((key) => {
+    const value = safePatch[key];
+    if (value !== undefined && value !== null) {
+      (merged as Record<string, unknown>)[key as string] = value;
+    }
+  });
+  return merged;
+}
+
 const shared = {
   trendHistory: [] as ClusterTrendPoint[],
   nodeTrendSeries: [] as NodeTrendSeries[],
@@ -65,11 +104,17 @@ export function useClusterDashboard() {
     activeLaneKey,
     centralLaneOptions,
     scopeNodes,
+    lanesReady,
     loadLanes,
     setActiveLaneKey: setScopeLaneKey,
   } = useClusterNodeScope();
 
-  const scopedNodes = computed(() => scopeNodes(nodes.value));
+  const scopedNodes = computed(() => {
+    if (!lanesReady.value && activeLaneKey.value !== 'all') {
+      return nodes.value;
+    }
+    return scopeNodes(nodes.value);
+  });
 
   const focusNodes = computed(() => {
     if (!overviewFocusNodeId.value) {
@@ -124,7 +169,18 @@ export function useClusterDashboard() {
   });
 
   function applySnapshot(currentNodes: ComputeNodeVO[]) {
-    nodes.value = sortNodesWithPlatformFirst(currentNodes);
+    // 全量 snapshot 按 id 合并：入站缺容量等字段时保留本地已有值，避免 register/重连导致卡面跳动
+    const prevById = new Map(
+      nodes.value
+        .filter((node) => node.id != null)
+        .map((node) => [node.id!, node] as const),
+    );
+    const merged = currentNodes.map((incoming) => {
+      if (!incoming.id) return incoming;
+      const prev = prevById.get(incoming.id);
+      return prev ? mergeComputeNode(prev, incoming) : incoming;
+    });
+    nodes.value = sortNodesWithPlatformFirst(merged);
     recomputeDerivedState();
     loading.value = false;
   }
@@ -133,7 +189,7 @@ export function useClusterDashboard() {
     if (!update.id) return;
     const index = nodes.value.findIndex((node) => node.id === update.id);
     if (index >= 0) {
-      nodes.value[index] = { ...nodes.value[index], ...update };
+      nodes.value[index] = mergeComputeNode(nodes.value[index], update);
     } else {
       nodes.value.push(update);
     }
@@ -169,10 +225,10 @@ export function useClusterDashboard() {
   async function loadInitialData() {
     loading.value = nodes.value.length === 0;
     try {
+      await loadLanes();
       const [pageRes] = await Promise.all([
         getNodePage({ pageNo: 1, pageSize: 200 }),
         loadMetricHistory(),
-        loadLanes(),
       ]);
       if (!nodes.value.length) {
         applySnapshot(pageRes?.data?.list ?? []);

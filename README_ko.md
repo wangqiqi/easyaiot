@@ -36,7 +36,7 @@
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-플랫폼은 <strong>WEB, APP, DEVICE, NODE, VIDEO, AI, TASK</strong> 일곱 핵심 모듈로 구성되며, Java로 안정적인 관제 기반을 구축하고, Python으로 AI와 네트워킹을 담당하며, C++로 고성능 컴퓨팅 작업을 구동하는 삼언어 혼합 아키텍처로 각 언어의 강점을 살립니다. 기능 측면: GB28181 / ONVIF 다중 프로토콜 카메라 접속, 실시간 및 스냅샷 알고리즘 태스크, YOLO 객체 검출 및 SAM 제로샷 자동 어노테이션, 얼굴/번호판 인식, 오케스트레이션 가능한 비즈니스 후처리, 연합 컴퓨팅 클러스터 스케줄링, MQTT / TCP / HTTP IoT 디바이스 전 생애주기 관리. 경험 측면: Web 관제 콘솔과 모바일 App / 미니프로그램의 기능이 정렬되어, 지휘 센터와 현장 순찰이 동일한 비즈니스 로직으로 언제 어디서나 대응할 수 있습니다.
+플랫폼은 <strong>WEB, APP, DEVICE, NODE, VIDEO, AI, TASK, EDGE</strong> 여덟 핵심 모듈로 구성되며, Java로 안정적인 관제 기반을 구축하고, Python으로 AI와 네트워킹을 담당하며, C++로 고성능 컴퓨팅 작업을 구동하는 삼언어 혼합 아키텍처로 각 언어의 강점을 살립니다. 기능 측면: GB28181 / ONVIF 다중 프로토콜 카메라 접속, 실시간 및 스냅샷 알고리즘 태스크, YOLO 객체 검출 및 SAM 제로샷 자동 어노테이션, 얼굴/번호판 인식, 오케스트레이션 가능한 비즈니스 후처리, 연합 컴퓨팅 클러스터 스케줄링, <strong>무한 연합 엣지 클러스터 모드</strong>(메모리 약 512MB, Ceph 엣지 로컬 디스크 점유 0, 한 줄 명령으로 일반 개발 보드를 바로 지능화, 컴퓨팅을 현장에 펼쳐 배포하고 이벤트를 클라우드로 집약), MQTT / TCP / HTTP IoT 디바이스 전 생애주기 관리. 경험 측면: Web 관제 콘솔과 모바일 App / 미니프로그램의 기능이 정렬되어, 지휘 센터와 현장 순찰이 동일한 비즈니스 로직으로 언제 어디서나 대응할 수 있습니다.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -90,6 +90,14 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
   </div>
 </div>
 
+<div style="margin: 20px 0; padding: 18px 22px; border-radius: 10px; border: 1px solid rgba(52, 152, 219, 0.25); background: linear-gradient(120deg, #f0f7ff 0%, #ffffff 55%, #eef9f4 100%);">
+  <p style="font-size: 16px; font-weight: 700; color: #1a5276; margin: 0 0 8px 0;">🚀 EasyAIoT 무한 연합 엣지 클러스터 모드</p>
+  <p style="font-size: 14px; line-height: 1.8; color: #333; margin: 0;">
+    메모리 약 <strong>512MB</strong>, <strong>Ceph 엣지 로컬 디스크 점유 0</strong>(알람 이미지·비즈니스 객체는 공유 Ceph에 기록, 엣지 로컬 비즈니스 디스크 없음); 컴퓨팅을 현장에 바로 펼쳐 배포할 수 있습니다; <strong>한 줄 명령</strong>으로 일반 개발 보드를 바로 지능화하고, 알람·이벤트를 클라우드로 집약합니다.
+    상단 세 가지 풀스택 배포 등급과 상호 보완합니다 — 풀스택은 클라우드-엣지 관제·비즈니스 오케스트레이션을 담당하고, EDGE 노드는 현장 경량 추론과 무한 수평 확장을 담당하여 「중앙 한곳에서 관제, 엣지는 어디서나 펼침」을 실현합니다.
+  </p>
+</div>
+
 #### 🧠 AI 기능
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
@@ -101,12 +109,14 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
     </ul>
   </li>
   <li><strong>YOLO26 차세대 객체 감지 기능</strong>: 플랫폼에 내장된 최신 세대 객체 감지 기능으로, 별도 설정 없이 실시간 화면 분석과 스냅샷 인식에 바로 활용할 수 있습니다. 동일한 하드웨어에서 더 많은 카메라 채널을 연결하고, 더 빠르게 응답하며, 오탐을 줄일 수 있습니다. 데이터 수집·라벨링·학습부터 배포·추론까지 전 과정을 지원하여, 낮은 비용으로 맞춤형 감지 모델을 지속적으로 개선하고, 안전모 착용, 무단 침입, 화재 위험 등 일반적인 보안·산업 시나리오를 빠르게 커버할 수 있어 「정확히 보고, 빠르게 연산하고, 유연하게 확장」이 기본 역량이 됩니다</li>
+  <li><strong>YOLO26 인체 자세 분석</strong>: 객체 감지 기능 위에 인체 키포인트 및 골격 자세 분석을 추가하여, YOLO26 Pose 모델로 별도 설정 없이 바로 사용할 수 있습니다. 이미지, 동영상, 카메라 실시간 스트림 세 가지 입력 방식을 지원합니다. 이미지 모드는 골격 주석과 인원 수 통계를 동시에 출력하고, 동영상 모드는 비동기 작업 처리로 진행률을 폴링하고 결과를 다운로드할 수 있으며, 카메라 모드는 RTSP/RTMP 실시간 스트림에 연결하여 자세 인식 결과를 오버레이하여 재스트리밍하여 원격 감시 및 행동 분석에 활용할 수 있습니다. 모델 추론 페이지에서 「자세 분석」과 「객체 감지」를 원클릭으로 전환할 수 있고, 신뢰도를 조절할 수 있으며, 기존 모델 관리, 이력 기록, 대조 미리보기 등의 기능과 원활하게 연동됩니다. 건설 현장 작업 규범, 피트니스 동작 평가, 군중 집결 상황 인식 등 「인체 구조와 동작 형태를 명확히 파악」해야 하는 시나리오에 적합하며, 플랫폼을 「대상을 박스로 표시」에서 「자세를 이해」하는 단계로 한 걸음 더 나아가게 합니다</li>
   <li><strong>다중 프로토콜 카메라 접근 지원</strong>: GB28181 및 ONVIF 두 가지 주요 비디오 감시 프로토콜을 완전히 지원하여 표준화된 장치 접근 및 관리를 실현합니다. GB28181은 중국 국가 표준으로 국내 주요 감시 장비에 완벽하게 적합하며, ONVIF는 국제 범용 표준으로 전 세계 주요 카메라 브랜드와 광범위하게 호환됩니다. 이중 프로토콜 지원을 통해 플랫폼은 기존 감시 시스템과 원활하게 통합할 수 있으며, 플러그 앤 플레이 장치 접근, 자동 발견 및 통합 관리를 실현하여 장치 접근 장벽을 크게 낮추고 시스템 호환성과 확장성을 향상시키며 대규모 카메라 배포를 위한 견고한 기술 기반을 제공합니다. 또한 동일·교차 서브넷에서 NVR 일괄 스캔·등록·통합 관리 기능을 추가하였으며, 하이크비전·다화·화웨이·이즈비즈·샤오미 등 주요 브랜드를 지원합니다. 장치 네이티브 프로토콜 기반 서브넷 발견, 원클릭 등록, 채널 일괄 가져오기를 제공하여 대규모 감시 장비의 접속 및 운영 비용을 더욱 절감합니다</li>
   <li><strong>실시간 인터콤 및 PTZ 원격 제어</strong>: 전통적인 감시의 「볼 수만 있고, 관리할 수 없는」 한계를 돌파합니다. 감시 담당자는 실시간 미리보기 화면에서 음성 방송과 PTZ 제어를 동시에 수행할 수 있습니다 — 시스템 전환 없이, 현장 방문 없이 원격 소통, 대피 유도, 위반 행위 제지가 가능하며, 대응을 「현장 파견」에서 「말하면 즉시 도달」로 압축합니다. PTZ 제어로 카메라를 자유롭게 회전·줌·포커스할 수 있어, 돌발 상황 시 사고 지역을 신속히 조준하고 세부 사항을 확대하여 「잘 보고, 정확히 지시하고, 말하면 전달된다」는 일체화된 현장 대응 선순환을 형성합니다. GB28181 및 ONVIF 장치와 완벽 호환, 기존 감시 자산을 활용하고 별도의 인터콤 장비나 서드파티 소프트웨어 없이 배포된 카메라에 즉시 원격 소통 및 유연한 디스패치 기능을 부여하여, 시스템 사일로와 감시 비용을 크게 절감합니다</li>
   <li><strong>오케스트레이션 가능한 알고리즘 후처리</strong>: 「검출은 되지만 판단이 어렵다」는 역량 병목을 돌파하여, 객체 감지 위에 독립적인 업무 판단 계층을 추가하고 화면 인식 결과를 운영·추적·통계 가능한 업무 이벤트로 전환합니다. 작업별로 인원 집계, 경계선 통과, 체류 시간 초과, 구역 장기 체류, 다중 조건 복합 경보 등 시나리오 규칙을 유연하게 정의할 수 있어, 모델을 반복 조정하지 않고도 건설 현장 안전 감독, 단지 보안, 교통 통제 등 차별화된 요구에 빠르게 적응하고, 범용 시각 역량을 현장에 밀착한 관리 도구로 단련합니다. 후처리와 실시간 분석은 서로 독립적으로 병렬 운영됩니다 — 감시 화면은 끊김 없이 판단을 지속하고, 업무 로직은 필요에 따라 탄력적으로 확장되며, 판단 결과는 자동으로 축적·보관되어 정밀 경보를 구동하여 오탐·미탐과 수동 검토 비용을 크게 절감합니다. 업무 담당자는 규칙 표현에 집중하고, 플랫폼이 배포·실행·규모 확장을 담당하여 「볼 수 있다」에서 「명확히 판단하고, 통제하며, 실제로 활용한다」로 나아갑니다</li>
   <li><strong>다중 센터 노드 × 다중 워커 노드 연합 클러스터</strong>: 지역 간·다중 데이터센터·클라우드-엣지 협업 배포를 위해 플랫폼은 「N개 센터 노드 + N개 워커 노드」 연합 아키텍처를 채택합니다 — 센터 노드를 통합 제어 평면으로, 워커 노드를 연산·미디어 실행 평면으로 하여 수평 확장 가능한 분산 스케줄링 체계를 구축합니다. 각 센터 노드는 소속 워커 노드 클러스터를 관리하며, 모니터링 에이전트·분산 스토리지·스트리밍 엔진·FFmpeg 트랜스코딩·비디오 분석 런타임·모델 추론·학습 등의 런타임 배포와 원클릭 원격 배포를 지원합니다. 다중 센터 노드 간 상호 연동·동기화가 가능하며, 클러스터 스윔레인 뷰에서 「센터—워커」 토폴로지와 자원 수위를 직관적으로 표시하고, 레인 단위 일괄 유지보수 및 컴포넌트 배포를 지원합니다. 알고리즘 태스크·자동 라벨링 파이프라인·스트림 릴레이 등의 워크로드는 노드 역할과 GPU 역량에 따라 지능적으로 스케줄링되고 큐 탄력 분배되어, 대량 스트림 접속·고동시성 추론·분산 학습이 동일 클러스터에서 협력 실행됩니다 — 「등록 용이, 스케줄 명확, 확장 유연, 통합 관리」를 실현합니다</li>
   <li><strong>SAM 제로 스타트 자동 라벨링 오케스트레이션 파이프라인</strong>: 라벨링 샘플과 사용 가능한 검출 모델이 없는 콜드 스타트 시나리오를 위해, 플랫폼은 SAM 개방 어휘 분할 기능과 지능형 오케스트레이션 엔진을 통합하여 원클릭 무인 라벨링 파이프라인을 제공합니다. 전략에 따라 시스템은 카메라 프레임 추출, SAM 텍스트 프롬프트 초기 라벨링, 기준 달성 시 YOLO 미세 조정 학습 자동 트리거, 양산 단계에서 YOLO 고속 추론을 주력으로 하되 누락 검출에 SAM 지능 보완, 주기적 반복 학습 및 데이터셋 자동 패키징·보내기를 자동으로 연결하여 「수집—라벨링—학습—보내기」 전 과정을 완결합니다. 오케스트레이션 허브는 파이프라인 단계와 라벨링 진행을 실시간으로 감지하며, SAM / YOLO / 혼합 보완 등 라벨링 모드와 학습 트리거 시점을 자율 결정하고, 작업 일시정지·재개 및 로컬/클러스터 컴퓨팅 큐 탄력 스케줄링을 지원합니다. 시각적 전략 설정과 실행 로그와 함께, 사용자는 제로 샘플·제로 모델에서 출발하여 맞춤형 검출 역량을 빠르게 축적할 수 있으며, 「카테고리를 말로 정의하고 모델이 완성되기를 기다리기」가 데이터셋 구축의 기본 경로가 됩니다</li>
   <li><strong>만 노드급 탄력적 컴퓨팅 클러스터 및 수평 확장 풀</strong>: 초대규모 AI·영상 비즈니스를 위해 클라우드-엣지-디바이스 통합 분산 컴퓨팅 기반을 구축하고, 알고리즘 태스크·스트림 릴레이·알고리즘 서비스·모델 학습·추론을 수평 부하 분산과 탄력적 확장 체계로 통합합니다. 신규 서버는 원클릭으로 등록·연동되어 즉시 스케줄 가능한 컴퓨팅 단위가 되며, 스케줄러가 자원 수위와 업무 부하에 따라 작업을 자동 분배·균형 조정합니다. 수백~수만 대 카메라, 단일 머신~만 노드급까지 선형 확장이 가능하며, 재배포나 수동 튜닝 없이 대량 스트림 접속·고동시성 추론·분산 학습이 동일 컴퓨팅 풀에서 협력 실행되어 「확장 가능, 안정 운영, 통합 관리」를 실현합니다</li>
+  <li><strong>무한 연합 엣지 클러스터 모드 (EDGE)</strong>: RK3588, 라즈베리 파이 등 일반 개발 보드·현장 컴퓨팅 노드를 대상으로, 메모리 약 <strong>512MB</strong>의 경량 UI 없는 엣지 알고리즘 런타임을 제공합니다 — <strong>한 줄 명령</strong>으로 제어면 주소를 기록하고 시작하면 일반 개발 보드를 바로 지능화할 수 있으며, 컴퓨팅을 지점별로 펼쳐 배포하면서 알람·이벤트를 클라우드로 집약합니다; 알람 이미지·스냅샷은 공유 Ceph에 기록되고 센터 sink가 아카이브하며, 엣지 측 <strong>비즈니스 저장 0 디스크 점유</strong>(로컬 비즈니스 디스크 없음, MinIO 직접 업로드 없음). 실행면은 VIDEO 제어면에서 분리된 독립 <code>EDGE</code> 모듈: WEB 없음, 로컬 비즈니스 DB 없음, 「명령 수신·추론 실행·이벤트 회신」에 집중합니다. 현장에서는 <code>EDGE_NODE_URL</code> 한 항목만 설정하면 enroll / runtime-config를 통해 EMQX 클러스터 주소, MQTT 자격 증명, Ceph 핫 버퍼 경로, Topic 규약을 자동 수령합니다. 임의 수의 노드가 동일 EMQX 버스를 공유하고, 제어면이 역량에 따라 실시간 / 스냅샷 / 순찰 태스크를 스케줄링합니다. 시작·중지는 <code>mqtt/iot-algo-task-cmd</code>로 전달되고, 하트비트·ack·알람·후처리가 동일 경로로 회신되며, 진정으로 「512MB 시작, Ceph 엣지 0 디스크, 한 줄 명령 배포, 무한 연합 확장, 현장 지능과 클라우드 집약 일체화」를 실현합니다</li>
   <li><strong>천지도 공간 시각화 및 지도 기반 분석</strong>: 국가 천지도를 연동하여 카메라, 알람, 인·차량 인식 역량을 한 장의 지도에 모았습니다. 감시를 「화면 보기」에서 「전체 보기」로 업그레이드합니다. 스트리밍 미디어와 알람 모듈 모두 「지도 분포」 뷰를 제공하며, 장치 디렉터리 트리와 연동해 구역별로 집중 조회할 수 있어 검문소 배치와 온라인 상태를 한눈에 파악합니다. 지도 클릭, 장소 검색, 좌표 일괄 가져오기를 지원하여 GB 채널, NVR 채널, 직접 연결 카메라를 빠르게 배치할 수 있으며, 모든 영상에 명확한 공간 소속을 부여합니다. 알람 이벤트는 카메라 좌표와 자동 연계되어 지도에 표시되며, 시간·이벤트 유형·작업·업무 태그로 필터링하고 선택하면 스냅샷과 녹화를 바로 확인할 수 있어, 「어디서 발생했는지」에서 신속한 대응으로 이어집니다. 얼굴·번호판 라이브러리 인식과 결합하면 동일 대상의 다중 지점 적중 기록을 공간적 맥락으로 연결할 수 있습니다 — <strong>인물 추적</strong>으로 중점 인물의 출현 경로와 활동 범위를 복원하고, <strong>차량 추적</strong>으로 통과 기록을 연결해 차량 경로와 체류 구역을 빠르게 파악하여, 인·차량 수색, 순찰 배치, 사후 복기에 직관적 단서를 제공합니다. 이동형 장치는 궤적 재생을 지원하여 순찰·이동 경로를 시간축으로 재현합니다. 벡터 지도와 위성 영상을 자유롭게 전환하고 시야를 자동 맞춤하여, 관리자가 지도를 중심으로 이상 징후를 발견하고 목표를 잠금하며 지휘·조정할 수 있습니다</li>
   <li><strong>Qwen / DeepSeek 다중 GPU 배포</strong>: Qwen, DeepSeek 등 대규모 언어 모델을 다중 GPU 병렬 방식으로 배포할 수 있습니다. 클러스터 및 Worker 단위로 GPU 자원을 유연하게 스케줄링하여 모델 인스턴스의 탄력적 확장 및 로드 밸런싱을 실현하고, 고동시성 추론 및 긴 컨텍스트 시나리오에서 안정적인 서비스를 제공합니다</li>
   <li><strong>비전 대규모 모델 지능형 이해</strong>: QwenVL3 비전 대규모 모델을 통합하여 실시간 비디오 프레임에 대한 심층 비전 추론 및 의미론적 이해를 지원하며, 프레임 내용에 대한 지능형 분석 및 장면 이해를 수행할 수 있어 더 풍부한 시각적 인지 능력을 제공하며, 픽셀 수준의 인식에서 의미론적 수준의 이해로의 도약을 실현합니다</li>
@@ -224,7 +234,7 @@ Java는 안정적이고 신뢰할 수 있는 플랫폼 아키텍처 구축에 �
 ### 🏗️ 프로젝트 아키텍처 특징
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-EasyAIoT는 사실 하나의 프로젝트가 아닌, 일곱 개의 프로젝트입니다.
+EasyAIoT는 사실 하나의 프로젝트가 아닌, 여덟 개의 프로젝트입니다.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -261,10 +271,10 @@ EasyAIoT는 현지화 전략에 적극적으로 대응하며, 현지화 하드�
 <div style="padding: 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
 <h4 style="margin-top: 0; color: white; font-size: 18px;">📱 엣지 측 지원</h4>
 <ul style="font-size: 14px; line-height: 1.8; margin: 10px 0; padding-left: 20px;">
-  <li>록칩(Rockchip) ARM 아키텍처 칩을 전면적으로 지원합니다.</li>
-  <li>RK3588 등 주류 엣지 컴퓨팅 플랫폼에 완벽하게 적합합니다.</li>
-  <li>엣지 시나리오에 대한 심층 최적화를 수행했습니다.</li>
-  <li>엣지 지능의 경량화 배포를 실현합니다.</li>
+  <li>무한 연합 엣지 클러스터: 약 512MB 메모리로 접속 가능</li>
+  <li>Ceph 엣지 로컬 디스크 점유 0, 비즈니스 객체 로컬 디스크 미저장</li>
+  <li>한 줄 명령으로 RK3588 등 일반 개발 보드를 바로 지능화</li>
+  <li>컴퓨팅을 지점별로 펼쳐 배포, 알람·이벤트 클라우드 집약</li>
 </ul>
 </div>
 
@@ -287,7 +297,7 @@ EasyAIoT는 현지화 전략에 적극적으로 대응하며, 현지화 하드�
 ## 🧩 프로젝트 구조
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT는 일곱 개의 핵심 프로젝트로 구성됩니다:
+EasyAIoT는 여덟 개의 핵심 프로젝트로 구성됩니다:
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
@@ -367,6 +377,20 @@ EasyAIoT는 일곱 개의 핵심 프로젝트로 구성됩니다:
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>TASK 모듈</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">C++ 기반의 고성능 태스크 처리 모듈로, 계산 집약적 태스크 실행을 담당합니다.</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>EDGE 모듈</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>무한 연합 엣지 클러스터 모드</strong>: 여덟 번째 핵심 모듈, 메모리 약 512MB; Ceph 엣지 로컬 디스크 점유 0; 한 줄 명령으로 일반 개발 보드를 바로 지능화, 컴퓨팅을 현장에 펼쳐 배포하고 클라우드로 집약, 무한 연합 확장 지원</li>
+    <li><strong>UI 없는 엣지 알고리즘 런타임</strong>: VIDEO에서 분리한 알고리즘 실행면; 순수 CLI / systemd이며 WEB·로컬 비즈니스 DB를 제공하지 않고 엣지 추론·이벤트 회신에 집중</li>
+    <li><strong>단일 설정 진입점</strong>: 현장에서는 <code>EDGE_NODE_URL</code>(iot-node 제어면 주소)만 설정하면 됩니다. <code>/admin-api/node/edge/enroll</code> 및 <code>runtime-config</code>를 통해 MQTT 브로커 목록, 테넌트 자격 증명, clientId, Ceph 핫 버퍼 경로, 알고리즘 Topic 규약을 자동 수령합니다</li>
+    <li><strong>전 구간 MQTT 버스</strong>: <code>mqtt/iot-algo-task-cmd</code>를 구독해 시작/중지 명령을 수신(<code>targetNodeId</code>로 본 노드 필터), 하트비트 / ack / 알람 / 후처리를 발행합니다. Kafka 직결·HTTP 관리면 없음</li>
+    <li><strong>Ceph 엣지 로컬 디스크 점유 0</strong>: 알람 이미지·스냅샷은 Ceph 공유 경로에 기록하고, 센터 <code>iot-sink</code>가 MinIO로 아카이브합니다. 엣지 측 로컬 비즈니스 디스크 없음, MinIO 동기 업로드 책임 없음</li>
+    <li><strong>무한 클러스터 확장</strong>: 임의 수의 EDGE 노드가 동일 EMQX 클러스터에 접속합니다. 브로커 목록 순서 탐색·장애 시 목록 선두부터 재시도로 실시간 / 스냅샷 / 순찰 알고리즘 태스크 수평 확장을 지원합니다</li>
+    <li><strong>제어면과의 명확한 분담</strong>: VIDEO는 태스크 CRUD·스케줄 정책·로그 조회를 유지하고, EDGE는 <code>runtime/</code> 추론 메인 루프와 워크로드 기동을 담당하며 NODE Agent(범용 HTTP 워크로드)와 병존할 수 있습니다</li>
+  </ul>
+</td>
 </tr>
 </table>
 
@@ -487,6 +511,10 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
 <div>
   <img src=".image/banner/banner1145.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
   <img src=".image/banner/banner1146.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1147.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1148.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
   <img src=".image/banner/banner1129.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
@@ -914,11 +942,19 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>Li</nobr></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">청년 개발자 커뮤니티 및 협업 생태계 구축을 위해 뛰어난 조직 리더십과 모범력으로 교내 학생들을 이끌어 프로젝트 공동 구축에 깊이 참여하게 하고, 청년의 지혜와 팀의 결속력을 모아 EasyAIoT에 끊임없이 지속되는 발전 동력을 불어넣었으며, 프로젝트 홍보·실천 적용·후속 인재 양성 등에서도 중차대하고 대체 불가능한 기여를 하였습니다.</td>
 </tr>
+<tr style="background-color: #f8f9fa;">
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>陈家林</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT의 IoT 장치 상호운용 및 공중–지상 영상 융합 발전을 위해 장치 명령·상태 데이터의 상·하행 폐루프를 열어 플랫폼이 진정으로 「내려보내고, 보고, 제어할 수 있게」 하였으며, 동시에 DJI FlightHub 도크 및 드론 영상 접속 능력을 기여해 공중 순찰 시야를 통합 영상·알람 체계에 포함시키고, 광역 순찰·비상 정찰·천지일체 협동 감지에서의 현장 가치를 크게 확장하였습니다.</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>NULL</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT의 산업 현장 장치 접속 발전을 위해 Modbus 프로토콜 상행 수집 능력을 열어 전력량계·센서·컨트롤러 등 대량의 산업 장치 데이터를 플랫폼에서 통합 집계·모니터링·연동할 수 있게 하였으며, 「현장을 보고 장치도 들을 수 있는」 핵심 퍼즐을 완성해 산업 데이터 수집·라인 지능 제어·보안 연동 시나리오에 견고한 기반을 제공하였습니다.</td>
+</tr>
 </tbody>
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>특별 감사</strong>: 위 기여자들의 노력은 크로스 플랫폼 배포 문서·스크립트, 국가 표준 영상(GB28181) 역량 구현, AI 연동 검증, 다중 브랜드 카메라 직접 연결 발견 및 일괄 온보딩, 천지도 공간 시각화 완전 구현, 이기종 스트리밍 미디어 클러스터 배포 및 스케줄링 아키텍처, 번호판 인식 알고리즘 및 완전한 코드 구현, EasyAIoT-Edge 종단 간 연동(카메라·AI), 교내 개발자 커뮤니티 조직 및 청년 협업 생태계 구축 등 여러 측면에서 EasyAIoT의 발전에 기여했습니다. 그들의 전문성과 헌신은 우리가 배우고 존경할 만합니다. 다시 한 번 이 탁월한 기여자들에게 진심으로 감사드립니다! 🙏
+<strong>특별 감사</strong>: 위 기여자들의 노력은 크로스 플랫폼 배포 문서·스크립트, 국가 표준 영상(GB28181) 역량 구현, AI 연동 검증, 다중 브랜드 카메라 직접 연결 발견 및 일괄 온보딩, 천지도 공간 시각화 완전 구현, 이기종 스트리밍 미디어 클러스터 배포 및 스케줄링 아키텍처, 번호판 인식 알고리즘 및 완전한 코드 구현, EasyAIoT-Edge 종단 간 연동(카메라·AI), 교내 개발자 커뮤니티 조직 및 청년 협업 생태계 구축, IoT 장치 상·하행 폐루프와 DJI FlightHub 공중 시야 접속, 산업 Modbus 장치 상행 수집 등 여러 측면에서 EasyAIoT의 발전에 기여했습니다. 그들의 전문성과 헌신은 우리가 배우고 존경할 만합니다. 다시 한 번 이 탁월한 기여자들에게 진심으로 감사드립니다! 🙏
 </p>
 
 ## 💝 오픈소스 수호자
@@ -928,15 +964,15 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
 <table>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/默者.png" width="80px;" alt="默者"/><br /><sub><b>默者</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/小满藏舟.png" width="80px;" alt="小满藏舟"/><br /><sub><b>小满藏舟</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/空空.png" width="80px;" alt="空空"/><br /><sub><b>空空</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/阿涛.png" width="80px;" alt="阿涛"/><br /><sub><b>阿涛</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/火车叨位去、.png" width="80px;" alt="火车叨位去、"/><br /><sub><b>火车叨位去、</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/NULL.png" width="80px;" alt="NULL"/><br /><sub><b>NULL</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/一片天.png" width="80px;" alt="一片天"/><br /><sub><b>一片天</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/舍得.png" width="80px;" alt="舍得"/><br /><sub><b>舍得</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/M.png" width="80px;" alt="M"/><br /><sub><b>M</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/Louis.png" width="80px;" alt="Louis"/><br /><sub><b>Louis</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/胡首凡 梯控门禁五方对讲.png" width="80px;" alt="胡首凡 梯控门禁五方对讲"/><br /><sub><b>胡首凡 梯控门禁五方对讲</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/袁建华.png" width="80px;" alt="袁建华"/><br /><sub><b>袁建华</b></sub></a></td>
     </tr>
     <tr>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/南北.png" width="80px;" alt="南北"/><br /><sub><b>南北</b></sub></a></td>
@@ -1064,6 +1100,9 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/noname.png" width="80px;" alt="noname"/><br /><sub><b>noname</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/兔子.png" width="80px;" alt="兔子"/><br /><sub><b>兔子</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/ThinkInStack.png" width="80px;" alt="ThinkInStack"/><br /><sub><b>ThinkInStack</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/Louis.png" width="80px;" alt="Louis"/><br /><sub><b>Louis</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/胡首凡 梯控门禁五方对讲.png" width="80px;" alt="胡首凡 梯控门禁五方对讲"/><br /><sub><b>胡首凡 梯控门禁五方对讲</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/袁建华.png" width="80px;" alt="袁建华"/><br /><sub><b>袁建华</b></sub></a></td>
     </tr>
   </tbody>
 </table>
@@ -1094,17 +1133,19 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
 <table>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/默者.png" width="80px;" alt="默者"/><br /><sub><b>默者</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/小满藏舟.png" width="80px;" alt="小满藏舟"/><br /><sub><b>小满藏舟</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/空空.png" width="80px;" alt="空空"/><br /><sub><b>空空</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/chen_jialin123" target="_blank"><img src="./.image/sponsor/陈家林.png" width="80px;" alt="陈家林"/><br /><sub><b>陈家林</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/NULL.png" width="80px;" alt="NULL"/><br /><sub><b>NULL</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/陈勇至.jpg" width="80px;" alt="陈勇至"/><br /><sub><b>陈勇至</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/Dark.jpg" width="80px;" alt="Dark"/><br /><sub><b>Dark</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/machh" target="_blank"><img src="./.image/sponsor/machh.jpg" width="80px;" alt="machh"/><br /><sub><b>machh</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/三块两毛四.jpg" width="80px;" alt="三块两毛四"/><br /><sub><b>三块两毛四</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/嘎嗝.jpg" width="80px;" alt="嘎嗝"/><br /><sub><b>嘎嗝</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/曹.jpg" width="80px;" alt="曹"/><br /><sub><b>曹</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/滔滔.jpg" width="80px;" alt="滔滔"/><br /><sub><b>滔滔</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/物语晨水²⁰²⁶.jpg" width="80px;" alt="物语晨水²⁰²⁶"/><br /><sub><b>物语晨水²⁰²⁶</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/L_Z_M" target="_blank"><img src=".image/sponsor/玖零。.jpg" width="80px;" alt="玖零。"/><br /><sub><b>玖零。</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/物语晨水²⁰²⁶.jpg" width="80px;" alt="物语晨水²⁰²⁶"/><br /><sub><b>物语晨水²⁰²⁶</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/L_Z_M" target="_blank"><img src=".image/sponsor/玖零。.jpg" width="80px;" alt="玖零。"/><br /><sub><b>玖零。</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/36436022" target="_blank"><img src=".image/sponsor/金鸿伟.jpg" width="80px;" alt="金鸿伟"/><br /><sub><b>金鸿伟</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/cnlijf" target="_blank"><img src="./.image/sponsor/李江峰.jpg" width="80px;" alt="李江峰"/><br /><sub><b>李江峰</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src=".image/sponsor/Best%20Yao.jpg" width="80px;" alt="Best Yao"/><br /><sub><b>Best Yao</b></sub></a></td>
@@ -1112,10 +1153,10 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/shup092_admin" target="_blank"><img src="./.image/sponsor/shup.jpg" width="80px;" alt="shup"/><br /><sub><b>shup</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/gampa" target="_blank"><img src="./.image/sponsor/也许.jpg" width="80px;" alt="也许"/><br /><sub><b>也许</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/leishaozhuanshudi" target="_blank"><img src="./.image/sponsor/⁰ʚᦔrꫀꪖꪑ⁰ɞ%20..jpg" width="80px;" alt="⁰ʚᦔrꫀꪖꪑ⁰ɞ ."/><br /><sub><b>⁰ʚᦔrꫀꪖꪑ⁰ɞ .</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/fateson" target="_blank"><img src="./.image/sponsor/逆.jpg" width="80px;" alt="逆"/><br /><sub><b>逆</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/dongGezzz_admin" target="_blank"><img src="./.image/sponsor/廖东旺.jpg" width="80px;" alt="廖东旺"/><br /><sub><b>廖东旺</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/fateson" target="_blank"><img src="./.image/sponsor/逆.jpg" width="80px;" alt="逆"/><br /><sub><b>逆</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/dongGezzz_admin" target="_blank"><img src="./.image/sponsor/廖东旺.jpg" width="80px;" alt="廖东旺"/><br /><sub><b>廖东旺</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/huangzhen1993" target="_blank"><img src="./.image/sponsor/黄振.jpg" width="80px;" alt="黄振"/><br /><sub><b>黄振</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/fengchunshen" target="_blank"><img src="./.image/sponsor/春生.jpg" width="80px;" alt="春生"/><br /><sub><b>春生</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/mrfox_wang" target="_blank"><img src="./.image/sponsor/贵阳王老板.jpg" width="80px;" alt="贵阳王老板"/><br /><sub><b>贵阳王老板</b></sub></a></td>
@@ -1123,10 +1164,10 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/finalice" target="_blank"><img src="./.image/sponsor/尽千.jpg" width="80px;" alt="尽千"/><br /><sub><b>尽千</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/yuer629" target="_blank"><img src="./.image/sponsor/yuer629.jpg" width="80px;" alt="yuer629"/><br /><sub><b>yuer629</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/cai-peikai/ai-project" target="_blank"><img src="./.image/sponsor/kong.jpg" width="80px;" alt="kong"/><br /><sub><b>kong</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/HB1731276584" target="_blank"><img src="./.image/sponsor/岁月静好.jpg" width="80px;" alt="岁月静好"/><br /><sub><b>岁月静好</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/hy5128" target="_blank"><img src="./.image/sponsor/Kunkka.jpg" width="80px;" alt="Kunkka"/><br /><sub><b>Kunkka</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/HB1731276584" target="_blank"><img src="./.image/sponsor/岁月静好.jpg" width="80px;" alt="岁月静好"/><br /><sub><b>岁月静好</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/hy5128" target="_blank"><img src="./.image/sponsor/Kunkka.jpg" width="80px;" alt="Kunkka"/><br /><sub><b>Kunkka</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/guo-dida" target="_blank"><img src="./.image/sponsor/灬.jpg" width="80px;" alt="灬"/><br /><sub><b>灬</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/XyhBill" target="_blank"><img src="./.image/sponsor/Mr.LuCkY.jpg" width="80px;" alt="Mr.LuCkY"/><br /><sub><b>Mr.LuCkY</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/timeforeverz" target="_blank"><img src="./.image/sponsor/泓.jpg" width="80px;" alt="泓"/><br /><sub><b>泓</b></sub></a></td>
@@ -1271,6 +1312,9 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
     </tr>
     <tr>
         <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/常康.jpg" width="80px;" alt="常康"/><br /><sub><b>常康</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/嘎嗝.jpg" width="80px;" alt="嘎嗝"/><br /><sub><b>嘎嗝</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/曹.jpg" width="80px;" alt="曹"/><br /><sub><b>曹</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/滔滔.jpg" width="80px;" alt="滔滔"/><br /><sub><b>滔滔</b></sub></a></td>
     </tr>
   </tbody>
 </table>

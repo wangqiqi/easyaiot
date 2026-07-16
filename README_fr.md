@@ -36,7 +36,7 @@ De nombreux projets IoT intelligents se heurtent au même obstacle lors du dépl
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-La plateforme comprend sept modules principaux — <strong>WEB, APP, DEVICE, NODE, VIDEO, AI et TASK</strong> — avec Java comme socle de contrôle stable, Python pour l'IA et le réseau, et C++ pour les tâches de calcul haute performance, chaque langage exploitant ses forces. Côté capacités : accès caméra multi-protocoles GB28181 / ONVIF, tâches algorithmiques temps réel et par capture, détection d'objets YOLO et annotation automatique SAM zero-shot, reconnaissance faciale/plaques, post-traitement métier orchestrable, planification de clusters de calcul fédérés, et gestion du cycle de vie des appareils IoT MQTT / TCP / HTTP. Côté expérience : la console Web et l'App mobile / mini-programme sont alignées en capacités — centres de commande et inspections terrain partagent la même logique métier, partout et à tout moment.
+La plateforme comprend huit modules principaux — <strong>WEB, APP, DEVICE, NODE, VIDEO, AI, TASK et EDGE</strong> — avec Java comme socle de contrôle stable, Python pour l'IA et le réseau, et C++ pour les tâches de calcul haute performance, chaque langage exploitant ses forces. Côté capacités : accès caméra multi-protocoles GB28181 / ONVIF, tâches algorithmiques temps réel et par capture, détection d'objets YOLO et annotation automatique SAM zero-shot, reconnaissance faciale/plaques, post-traitement métier orchestrable, planification de clusters de calcul fédérés, et <strong>mode cluster edge fédéré illimité</strong> (environ <strong>512 Mo</strong> de mémoire, occupation disque locale nulle côté edge sur Ceph — alertes et objets métier sur Ceph partagé, pas de disque métier local ; une seule commande rend une carte de développement ordinaire intelligente, compute déployable en extension sur site avec agrégation vers le cloud), ainsi que la gestion du cycle de vie des appareils IoT MQTT / TCP / HTTP. Côté expérience : la console Web et l'App mobile / mini-programme sont alignées en capacités — centres de commande et inspections terrain partagent la même logique métier, partout et à tout moment.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -90,6 +90,14 @@ Beaucoup de projets IoT intelligents butent au déploiement : <strong>les foncti
   </div>
 </div>
 
+<div style="margin: 20px 0; padding: 18px 22px; border-radius: 10px; border: 1px solid rgba(52, 152, 219, 0.25); background: linear-gradient(120deg, #f0f7ff 0%, #ffffff 55%, #eef9f4 100%);">
+  <p style="font-size: 16px; font-weight: 700; color: #1a5276; margin: 0 0 8px 0;">🚀 Mode cluster edge fédéré illimité EasyAIoT</p>
+  <p style="font-size: 14px; line-height: 1.8; color: #333; margin: 0;">
+    Environ <strong>512 Mo</strong> de mémoire, <strong>occupation disque locale nulle côté edge sur Ceph</strong> (images d'alerte et objets métier écrits sur Ceph partagé, pas de disque métier local en edge) ; le compute peut être déployé en extension sur chaque site ; <strong>une seule commande</strong> suffit pour rendre intelligente une carte de développement ordinaire, tandis que les alertes et événements remontent vers le cloud.
+    Complémentaire aux trois niveaux full-stack ci-dessus — le full-stack assure le contrôle cloud-edge et l'orchestration métier, les nœuds EDGE assurent l'inférence légère sur site et l'extension horizontale illimitée : « un contrôle central, un déploiement edge à volonté ».
+  </p>
+</div>
+
 #### 🧠 Capacités d'IA
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
@@ -101,12 +109,14 @@ Beaucoup de projets IoT intelligents butent au déploiement : <strong>les foncti
     </ul>
   </li>
   <li><strong>Détection d'objets YOLO26 nouvelle génération</strong> : Détection d'objets de dernière génération intégrée à la plateforme, prête à l'emploi pour l'analyse en temps réel et la reconnaissance sur captures. Sur le même matériel, connectez davantage de caméras avec une réponse plus rapide et moins de fausses alertes. Couvre la boucle complète de la collecte de données, de l'annotation et de l'entraînement jusqu'au déploiement et à l'inférence, permettant d'itérer à moindre coût des modèles de détection sur mesure et de couvrir rapidement les scénarios courants de sécurité et industriels (port du casque, intrusion, risque d'incendie, etc.), pour que « voir juste, calculer vite, évoluer facilement » devienne la norme</li>
+  <li><strong>Analyse de pose humaine YOLO26</strong> : Au-delà de la détection d'objets, ajoute l'analyse des points clés du corps et de la pose squelettique, prête à l'emploi avec le modèle YOLO26 Pose. Prend en charge trois modes d'entrée : images, vidéos et flux caméra en temps réel. Le mode image produit simultanément annotations de squelette et comptage de personnes ; le mode vidéo utilise un traitement asynchrone avec progression consultable par polling et résultats téléchargeables ; le mode caméra se connecte aux flux RTSP/RTMP en temps réel et superpose les résultats de pose sur le flux relayé pour la surveillance à distance et l'analyse comportementale. La page d'inférence de modèle permet de basculer en un clic entre « Analyse de pose » et « Détection d'objets », avec seuil de confiance réglable, intégrée de manière transparente à la gestion des modèles, l'historique et l'aperçu comparatif existants. Adaptée aux normes de travail sur chantier, l'évaluation des mouvements sportifs, la perception des rassemblements de foule et autres scénarios nécessitant de « voir clairement la structure et la forme du corps humain », faisant évoluer la plateforme de « encadrer les cibles » vers « comprendre la pose »</li>
   <li><strong>Support d'accès multi-protocole pour caméras</strong> : Support complet des deux principaux protocoles de vidéosurveillance GB28181 et ONVIF, permettant un accès et une gestion standardisés des appareils. GB28181, en tant que norme nationale chinoise, s'adapte parfaitement aux équipements de vidéosurveillance domestiques principaux ; ONVIF, en tant que norme universelle internationale, est largement compatible avec les principales marques de caméras mondiales. Grâce au support double protocole, la plateforme s'intègre de manière transparente aux systèmes de vidéosurveillance existants, réalisant un accès plug-and-play, une découverte automatique et une gestion unifiée, réduisant considérablement les barrières d'accès, améliorant la compatibilité et l'évolutivité, et fournissant une base technique solide pour le déploiement à grande échelle de caméras. En outre, ajout du scan, de l'enregistrement et de la gestion unifiée en masse des NVR sur le même sous-réseau et entre sous-réseaux, couvrant Hikvision, Dahua, Huawei, Ezviz, Xiaomi et autres marques majeures — découverte par sous-réseau, enregistrement en un clic et importation groupée des canaux via les protocoles natifs des appareils, réduisant davantage les coûts d'intégration et d'exploitation des équipements de vidéosurveillance à grande échelle</li>
   <li><strong>Interphonie en temps réel et contrôle PTZ à distance</strong> : Dépasse la limite traditionnelle de la vidéosurveillance « voir sans agir ». Les opérateurs peuvent effectuer l'annonce vocale et le contrôle PTZ sur le même écran de prévisualisation en temps réel — sans changer de système ni se rendre sur place. Communication à distance, guidage d'évacuation ou interdiction d'actes illicites : la réponse passe de « envoyer quelqu'un sur site » à « parler et agir immédiatement ». Le contrôle PTZ permet d'orienter, zoomer et focaliser la caméra à volonté — en cas d'urgence, viser rapidement la zone concernée et agrandir les détails, formant une boucle de gestion sur site intégrée « voir clairement, viser précisément, parler et toucher ». Pleinement compatible avec les appareils GB28181 et ONVIF, tire parti des actifs de vidéosurveillance existants sans achat d'équipement d'interphonie ou de logiciels tiers, donnant instantanément aux caméras déployées des capacités de communication à distance et de dispatch flexible, réduisant significativement les silos système et les coûts de surveillance</li>
   <li><strong>Post-traitement algorithmique orchestrable</strong> : Dépasse le goulot d'étranglement « détecter sans pouvoir juger » en ajoutant une couche métier d'analyse indépendante au-dessus de la détection d'objets, transformant les résultats de perception visuelle en événements métier exploitables, traçables et statistiquement mesurables. Permet de définir de manière flexible par tâche des règles de scénario telles que le comptage de personnes, le franchissement de ligne, le dépassement de temps de présence, la présence prolongée en zone et les alertes composites multi-conditions — pour s'adapter rapidement aux besoins différenciés de la supervision de chantiers, de la sécurité de campus et du contrôle du trafic sans retoucher constamment les modèles, forgeant les capacités visuelles génériques en leviers de gestion proches du terrain. Le post-traitement et l'analyse en temps réel fonctionnent de manière indépendante et en parallèle — les flux de surveillance continuent d'être analysés sans interruption tandis que la logique métier s'étend élastiquement à la demande ; les résultats d'analyse sont automatiquement archivés et déclenchent des alertes précises, réduisant nettement les faux positifs/négatifs et les coûts de revue manuelle. Les métiers se concentrent sur l'expression des règles, la plateforme assure la distribution, l'exécution et la montée en charge — pour passer réellement de « voir » à « juger clairement, maîtriser et mettre en œuvre »</li>
   <li><strong>Cluster fédéré multi-nœuds centraux × multi-nœuds de travail</strong> : Conçu pour les déploiements inter-régionaux, multi-salles et cloud-bord, la plateforme adopte une architecture fédérée « N nœuds centraux + N nœuds de travail » — les nœuds centraux servent de plan de contrôle unifié et les nœuds de travail d'exécution calcul et média, formant un système de planification distribué horizontalement évolutif. Chaque nœud central gère son cluster de nœuds de travail, avec distribution d'exécution et déploiement distant en un clic des agents de surveillance, stockage distribué, moteurs de streaming, transcodage audio-vidéo, runtime d'analyse vidéo, inférence et entraînement de modèles ; plusieurs nœuds centraux peuvent s'interconnecter et se synchroniser. La vue en couloirs du cluster présente intuitivement la topologie « central — travail » et les niveaux de ressources, avec maintenance et distribution de composants par lot au niveau du couloir. Tâches algorithmiques, pipelines d'annotation automatique et relais de flux sont planifiés intelligemment selon le rôle des nœuds et les capacités GPU, avec files d'attente élastiques — ingestion massive de flux, inférence à haute concurrence et entraînement distribué coexistent dans un même cluster : « intégration fluide, planification claire, extension ouverte, gouvernance complète »</li>
   <li><strong>Pipeline d'orchestration d'annotation automatique SAM à démarrage zéro</strong> : Conçu pour les scénarios de démarrage à froid sans échantillons annotés ni modèle de détection utilisable, la plateforme intègre la segmentation SAM à vocabulaire ouvert et un moteur d'orchestration intelligent pour offrir un pipeline d'annotation sans surveillance en un clic. Selon la stratégie configurée, le système enchaîne automatiquement l'extraction d'images depuis les caméras, l'annotation initiale SAM par invites textuelles, le fine-tuning YOLO déclenché une fois les seuils atteints, l'inférence YOLO à haute vitesse en phase de production avec bascule intelligente vers SAM pour les détections manquées, l'entraînement itératif périodique et l'export automatique des jeux de données — bouclant la chaîne complète « capture — annotation — entraînement — export ». Le hub d'orchestration suit en temps réel la phase du pipeline et la progression de l'annotation, décide de manière autonome entre les modes SAM, YOLO et complément hybride, et détermine le moment de déclencher l'entraînement ; prend en charge la pause/reprise et la planification élastique sur files locales ou cluster. Avec configuration visuelle des stratégies et journaux d'exécution, les utilisateurs peuvent faire émerger une capacité de détection sur mesure à partir de zéro échantillon et zéro modèle — « définir les catégories en mots, laisser le modèle se construire » devient le chemin par défaut pour constituer des jeux de données</li>
   <li><strong>Cluster de calcul élastique à dizaines de milliers de nœuds et pool d'extension horizontale</strong> : Conçu pour les charges de travail IA et vidéo à très grande échelle, la plateforme constitue une base de calcul distribuée cloud-bord-périphérique qui regroupe tâches algorithmiques, relais de flux, services algorithmiques, entraînement et inférence de modèles dans un même cadre d'équilibrage de charge horizontal et d'élasticité. Chaque nouveau serveur intégré en un clic rejoint immédiatement le pool de calcul programmable ; le planificateur répartit automatiquement les tâches selon les niveaux de ressources et la pression métier, permettant une montée en charge linéaire — de quelques centaines à des dizaines de milliers de caméras, d'une machine unique à un cluster de dizaines de milliers de nœuds — sans redéploiement ni réglage manuel. Ingestion massive de flux, inférence à haute concurrence et entraînement distribué coexistent dans un même pool : « extension à la demande, exécution stable, gouvernance maîtrisée »</li>
+  <li><strong>Mode cluster edge fédéré illimité (EDGE)</strong> : Destiné aux cartes de développement ordinaires comme RK3588, Raspberry Pi et autres nœuds de calcul sur site, offre un runtime algorithmique edge léger sans interface, d'environ <strong>512 Mo</strong> de mémoire — <strong>une seule commande</strong> pour renseigner l'adresse du plan de contrôle et démarrer, rendant directement intelligente une carte de développement ordinaire ; le compute peut se déployer en extension sur chaque point, tandis que les alertes et événements remontent vers le cloud ; images d'alerte et captures écrites sur Ceph partagé, archivées par le sink central, <strong>0 occupation disque métier côté edge</strong> (pas de disque métier local, pas d'upload MinIO direct). Le plan d'exécution est extrait du plan de contrôle VIDEO vers un module <code>EDGE</code> indépendant : sans WEB, sans base métier locale, concentré sur « recevoir les commandes, exécuter l'inférence, renvoyer les événements ». Sur site, une seule configuration <code>EDGE_NODE_URL</code> ; via enroll / runtime-config, réception automatique des adresses du cluster EMQX, identifiants MQTT, chemins de tampon chaud Ceph et contrats Topic ; un nombre illimité de nœuds partagent le même bus EMQX, le plan de contrôle planifiant les tâches realtime / snapshot / patrol selon les capacités ; démarrage/arrêt via <code>mqtt/iot-algo-task-cmd</code>, heartbeat, ack, alertes et post-traitement remontant sur le même bus — vraiment « 512 Mo au départ, Ceph edge 0 disque, une commande pour déployer, expansion fédérée illimitée, intelligence sur site et agrégation cloud en un »</li>
   <li><strong>Visualisation spatiale Tianditu et analyse sur carte</strong> : Intégration avec la carte nationale chinoise Tianditu pour rassembler caméras, alertes et reconnaissance personnes/véhicules sur une seule carte, faisant passer la surveillance de « regarder les flux » à « voir l'ensemble ». Les modules média en streaming et alertes proposent une vue « Distribution cartographique » avec arborescence des appareils pour un focus régional, offrant une visibilité immédiate sur la disposition des points de contrôle et l'état en ligne. Clic sur carte, recherche de lieu et import par lot de coordonnées permettent de géolocaliser rapidement les canaux GB, NVR et caméras directes, afin que chaque flux ait un contexte spatial clair. Les alertes sont automatiquement positionnées via les coordonnées des caméras ; filtres par heure, type d'événement, tâche et étiquettes métier, avec accès aux captures et enregistrements en un clic — pour passer rapidement de « où cela s'est-il produit » à l'action. Combiné aux bibliothèques faciales et de plaques, les correspondances sur plusieurs sites forment des fils spatiaux — <strong>recherche de traces par personne</strong> pour reconstituer trajets et présence dans la zone surveillée ; <strong>recherche de traces par véhicule</strong> pour relier les passages et localiser itinéraires et zones d'arrêt, pour retrouver personnes/véhicules, déployer la patrouille et analyser après incident. Les appareils mobiles supportent aussi la relecture de trajectoires sur une frise chronologique. Basculement libre entre fond vectoriel et imagerie satellite avec ajustement automatique de la vue, pour que les responsables utilisent la carte comme levier de détection, ciblage et coordination</li>
   <li><strong>Déploiement multi-GPU Qwen / DeepSeek</strong> : Prend en charge le déploiement de grands modèles de langage tels que Qwen et DeepSeek en parallèle sur plusieurs GPU. Les ressources GPU peuvent être planifiées de manière flexible au niveau du cluster et des Workers, permettant la mise à l'échelle élastique et l'équilibrage de charge des instances de modèles pour fournir une inférence stable en cas de forte concurrence et de contextes longs</li>
   <li><strong>Compréhension intelligente des grands modèles visuels</strong> : Intégré avec le grand modèle visuel QwenVL3, prend en charge le raisonnement visuel profond et la compréhension sémantique des images vidéo en temps réel, capable d'effectuer une analyse intelligente et une compréhension de scène du contenu des images, fournissant des capacités cognitives visuelles plus riches, réalisant un saut de la perception au niveau des pixels à la compréhension au niveau sémantique</li>
@@ -224,7 +234,7 @@ En s'appuyant de manière innovante sur les grands modèles, nous construisons u
 ### 🏗️ Caractéristiques de l'architecture du projet
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-EasyAIoT n'est pas vraiment un seul projet, mais sept projets distincts.
+EasyAIoT n'est pas vraiment un seul projet, mais huit projets distincts.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -261,10 +271,10 @@ EasyAIoT répond activement à la stratégie de localisation, prenant pleinement
 <div style="padding: 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
 <h4 style="margin-top: 0; color: white; font-size: 18px;">📱 Support côté edge (périphérie)</h4>
 <ul style="font-size: 14px; line-height: 1.8; margin: 10px 0; padding-left: 20px;">
-  <li>Support complet des puces d'architecture ARM Rockchip (Ruixinwei)</li>
-  <li>Adaptation parfaite aux plateformes de calcul edge mainstream comme le RK3588</li>
-  <li>Optimisations profondes pour les scénarios edge</li>
-  <li>Réalise un déploiement léger de l'intelligence edge</li>
+  <li>Mode cluster edge fédéré illimité : environ 512 Mo de mémoire suffisent pour rejoindre le cluster</li>
+  <li>Occupation disque locale nulle côté edge sur Ceph — les objets métier ne sont pas stockés sur disque local</li>
+  <li>Une seule commande rend intelligente une carte de développement ordinaire comme le RK3588</li>
+  <li>Compute déployable en extension sur chaque point, alertes et événements agrégés vers le cloud</li>
 </ul>
 </div>
 
@@ -287,7 +297,7 @@ EasyAIoT répond activement à la stratégie de localisation, prenant pleinement
 ## 🧩 Structure du projet
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT est composé de sept projets principaux :
+EasyAIoT est composé de huit projets principaux :
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
@@ -367,6 +377,20 @@ EasyAIoT est composé de sept projets principaux :
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>Module TASK</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">Module de traitement de tâches haute performance basé sur C++, responsable de l'exécution de tâches nécessitant beaucoup de calcul.</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>Module EDGE</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>Mode cluster edge fédéré illimité</strong> : Huitième module principal, environ 512 Mo de mémoire ; occupation disque locale nulle côté edge sur Ceph ; une seule commande rend intelligente une carte de développement ordinaire, compute déployable en extension sur site avec agrégation vers le cloud, support de l'expansion fédérée illimitée</li>
+    <li><strong>Runtime algorithmique edge sans interface</strong> : Plan d'exécution algorithmique extrait de VIDEO ; CLI / systemd uniquement, sans WEB ni base métier locale, centré sur l'inférence edge et le retour d'événements</li>
+    <li><strong>Point de configuration unique</strong> : Sur site, configurer uniquement <code>EDGE_NODE_URL</code> (adresse du plan de contrôle iot-node) ; via <code>/admin-api/node/edge/enroll</code> et <code>runtime-config</code>, réception automatique de la liste des brokers MQTT, identifiants locataire, clientId, chemins de tampon chaud Ceph et contrats Topic algorithmiques</li>
+    <li><strong>Bus MQTT de bout en bout</strong> : Abonnement à <code>mqtt/iot-algo-task-cmd</code> pour les commandes démarrage/arrêt (filtrées par <code>targetNodeId</code>), publication de heartbeat / ack / alertes / post-traitement ; pas de Kafka direct ni de plan de gestion HTTP</li>
+    <li><strong>Occupation disque locale nulle côté edge sur Ceph</strong> : Images d'alerte et captures écrites sur chemins Ceph partagés ; le <code>iot-sink</code> central archive vers MinIO — pas de disque métier local en edge, EDGE n'a pas de responsabilité d'upload synchrone MinIO</li>
+    <li><strong>Extension de cluster illimitée</strong> : Un nombre quelconque de nœuds EDGE rejoignent le même cluster EMQX ; sonde ordonnée des brokers avec reprise en tête de liste en cas de panne ; extension horizontale des tâches realtime / snapshot / patrol</li>
+    <li><strong>Répartition claire avec le plan de contrôle</strong> : VIDEO conserve le CRUD des tâches, la politique de planification et la consultation des journaux ; EDGE prend en charge les boucles d'inférence <code>runtime/</code> et le lancement des workloads, et peut coexister avec l'Agent NODE (workloads HTTP génériques)</li>
+  </ul>
+</td>
 </tr>
 </table>
 
@@ -487,6 +511,10 @@ EasyAIoT est un projet d'apprentissage open source, sans lien avec des activité
 <div>
   <img src=".image/banner/banner1145.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
   <img src=".image/banner/banner1146.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1147.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1148.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
   <img src=".image/banner/banner1129.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
@@ -914,11 +942,19 @@ Voici les contributeurs exceptionnels qui ont apporté une contribution signific
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>Li</nobr></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">Pour faire progresser EasyAIoT dans la construction de la communauté de jeunes développeurs et l'écosystème collaboratif, a fait preuve d'un remarquable leadership organisationnel et d'un grand pouvoir de mobilisation en conduisant l'ensemble des étudiants du campus à participer activement à la co-construction du projet, rassemblant les talents de la jeunesse et la force collective du groupe pour insuffler à EasyAIoT un élan de développement continu et durable ; a également apporté une contribution majeure et irremplaçable à la promotion du projet, à sa mise en œuvre concrète et à la formation des futures générations de contributeurs.</td>
 </tr>
+<tr style="background-color: #f8f9fa;">
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>陈家林</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">Pour faire progresser EasyAIoT dans l’interopérabilité des équipements IoT et la fusion vidéo air–sol, a rendu possible la boucle fermée commandes/état des appareils, permettant à la plateforme de réellement « envoyer, voir et contrôler » ; a également contribué à l’intégration des docks et flux drone DJI FlightHub, intégrant la vision d’inspection aérienne au système unifié de vidéo et d’alarmes, et élargissant nettement la valeur terrain pour la patrouille large zone, la reconnaissance d’urgence et la perception collaborative ciel–terre.</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>NULL</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">Pour faire progresser EasyAIoT dans l’accès aux équipements industriels de terrain, a rendu possible l’acquisition montante du protocole Modbus, permettant aux compteurs, capteurs, contrôleurs et autres équipements industriels d’être agrégés, surveillés et liés de manière unifiée — complétant la pièce manquante « voir le site et entendre les appareils », et offrant une base solide pour l’acquisition industrielle, le pilotage intelligent de ligne et les scénarios de liaison sécurité.</td>
+</tr>
 </tbody>
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>Remerciements spéciaux</strong> : Le travail des contributeurs ci-dessus a fait avancer EasyAIoT sur plusieurs fronts, notamment la documentation et les scripts de déploiement multiplateforme, la mise en œuvre des capacités vidéo selon la norme nationale (dont GB28181), les tests d'intégration IA, la découverte directe multi-marques et l'intégration en masse des caméras, la mise en production de la visualisation spatiale Tianditu, l'architecture de déploiement et d'ordonnancement des clusters multimédia hétérogènes, la mise en production de l'algorithme de reconnaissance de plaques et de son implémentation complète, l'intégration de bout en bout EasyAIoT-Edge reliant l'accès caméra et l'IA sur l'edge, ainsi que l'organisation de la communauté de développeurs sur le campus et la construction d'un écosystème collaboratif pour la jeunesse. Leur professionnalisme et leur dévouement méritent notre reconnaissance et notre respect. Encore une fois, nous exprimons notre gratitude la plus sincère à ces contributeurs exceptionnels ! 🙏
+<strong>Remerciements spéciaux</strong> : Le travail des contributeurs ci-dessus a fait avancer EasyAIoT sur plusieurs fronts, notamment la documentation et les scripts de déploiement multiplateforme, la mise en œuvre des capacités vidéo selon la norme nationale (dont GB28181), les tests d'intégration IA, la découverte directe multi-marques et l'intégration en masse des caméras, la mise en production de la visualisation spatiale Tianditu, l'architecture de déploiement et d'ordonnancement des clusters multimédia hétérogènes, la mise en production de l'algorithme de reconnaissance de plaques et de son implémentation complète, l'intégration de bout en bout EasyAIoT-Edge reliant l'accès caméra et l'IA sur l'edge, l'organisation de la communauté de développeurs sur le campus et la construction d'un écosystème collaboratif pour la jeunesse, la boucle fermée montante/descendante des équipements IoT et l'intégration de la vision aérienne DJI FlightHub, ainsi que l'acquisition montante Modbus des équipements industriels. Leur professionnalisme et leur dévouement méritent notre reconnaissance et notre respect. Encore une fois, nous exprimons notre gratitude la plus sincère à ces contributeurs exceptionnels ! 🙏
 </p>
 
 ## 💝 Gardiens de l'open source
@@ -928,15 +964,15 @@ Le maintien d'un projet open source ne repose pas uniquement sur le code et la d
 <table>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/默者.png" width="80px;" alt="默者"/><br /><sub><b>默者</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/小满藏舟.png" width="80px;" alt="小满藏舟"/><br /><sub><b>小满藏舟</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/空空.png" width="80px;" alt="空空"/><br /><sub><b>空空</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/阿涛.png" width="80px;" alt="阿涛"/><br /><sub><b>阿涛</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/火车叨位去、.png" width="80px;" alt="火车叨位去、"/><br /><sub><b>火车叨位去、</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/NULL.png" width="80px;" alt="NULL"/><br /><sub><b>NULL</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/一片天.png" width="80px;" alt="一片天"/><br /><sub><b>一片天</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/舍得.png" width="80px;" alt="舍得"/><br /><sub><b>舍得</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/M.png" width="80px;" alt="M"/><br /><sub><b>M</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/Louis.png" width="80px;" alt="Louis"/><br /><sub><b>Louis</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/胡首凡 梯控门禁五方对讲.png" width="80px;" alt="胡首凡 梯控门禁五方对讲"/><br /><sub><b>胡首凡 梯控门禁五方对讲</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/袁建华.png" width="80px;" alt="袁建华"/><br /><sub><b>袁建华</b></sub></a></td>
     </tr>
     <tr>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/南北.png" width="80px;" alt="南北"/><br /><sub><b>南北</b></sub></a></td>
@@ -1064,6 +1100,9 @@ Le maintien d'un projet open source ne repose pas uniquement sur le code et la d
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/noname.png" width="80px;" alt="noname"/><br /><sub><b>noname</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/兔子.png" width="80px;" alt="兔子"/><br /><sub><b>兔子</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/ThinkInStack.png" width="80px;" alt="ThinkInStack"/><br /><sub><b>ThinkInStack</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/Louis.png" width="80px;" alt="Louis"/><br /><sub><b>Louis</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/胡首凡 梯控门禁五方对讲.png" width="80px;" alt="胡首凡 梯控门禁五方对讲"/><br /><sub><b>胡首凡 梯控门禁五方对讲</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/袁建华.png" width="80px;" alt="袁建华"/><br /><sub><b>袁建华</b></sub></a></td>
     </tr>
   </tbody>
 </table>
@@ -1094,17 +1133,19 @@ Nous remercions les personnes suivantes pour leur soutien à ce projet, sous for
 <table>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/默者.png" width="80px;" alt="默者"/><br /><sub><b>默者</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/小满藏舟.png" width="80px;" alt="小满藏舟"/><br /><sub><b>小满藏舟</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/空空.png" width="80px;" alt="空空"/><br /><sub><b>空空</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/chen_jialin123" target="_blank"><img src="./.image/sponsor/陈家林.png" width="80px;" alt="陈家林"/><br /><sub><b>陈家林</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/NULL.png" width="80px;" alt="NULL"/><br /><sub><b>NULL</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/陈勇至.jpg" width="80px;" alt="陈勇至"/><br /><sub><b>陈勇至</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/Dark.jpg" width="80px;" alt="Dark"/><br /><sub><b>Dark</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/machh" target="_blank"><img src="./.image/sponsor/machh.jpg" width="80px;" alt="machh"/><br /><sub><b>machh</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/三块两毛四.jpg" width="80px;" alt="三块两毛四"/><br /><sub><b>三块两毛四</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/嘎嗝.jpg" width="80px;" alt="嘎嗝"/><br /><sub><b>嘎嗝</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/曹.jpg" width="80px;" alt="曹"/><br /><sub><b>曹</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/滔滔.jpg" width="80px;" alt="滔滔"/><br /><sub><b>滔滔</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/物语晨水²⁰²⁶.jpg" width="80px;" alt="物语晨水²⁰²⁶"/><br /><sub><b>物语晨水²⁰²⁶</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/L_Z_M" target="_blank"><img src=".image/sponsor/玖零。.jpg" width="80px;" alt="玖零。"/><br /><sub><b>玖零。</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/物语晨水²⁰²⁶.jpg" width="80px;" alt="物语晨水²⁰²⁶"/><br /><sub><b>物语晨水²⁰²⁶</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/L_Z_M" target="_blank"><img src=".image/sponsor/玖零。.jpg" width="80px;" alt="玖零。"/><br /><sub><b>玖零。</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/36436022" target="_blank"><img src=".image/sponsor/金鸿伟.jpg" width="80px;" alt="金鸿伟"/><br /><sub><b>金鸿伟</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/cnlijf" target="_blank"><img src="./.image/sponsor/李江峰.jpg" width="80px;" alt="李江峰"/><br /><sub><b>李江峰</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src=".image/sponsor/Best%20Yao.jpg" width="80px;" alt="Best Yao"/><br /><sub><b>Best Yao</b></sub></a></td>
@@ -1112,10 +1153,10 @@ Nous remercions les personnes suivantes pour leur soutien à ce projet, sous for
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/shup092_admin" target="_blank"><img src="./.image/sponsor/shup.jpg" width="80px;" alt="shup"/><br /><sub><b>shup</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/gampa" target="_blank"><img src="./.image/sponsor/也许.jpg" width="80px;" alt="也许"/><br /><sub><b>也许</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/leishaozhuanshudi" target="_blank"><img src="./.image/sponsor/⁰ʚᦔrꫀꪖꪑ⁰ɞ%20..jpg" width="80px;" alt="⁰ʚᦔrꫀꪖꪑ⁰ɞ ."/><br /><sub><b>⁰ʚᦔrꫀꪖꪑ⁰ɞ .</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/fateson" target="_blank"><img src="./.image/sponsor/逆.jpg" width="80px;" alt="逆"/><br /><sub><b>逆</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/dongGezzz_admin" target="_blank"><img src="./.image/sponsor/廖东旺.jpg" width="80px;" alt="廖东旺"/><br /><sub><b>廖东旺</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/fateson" target="_blank"><img src="./.image/sponsor/逆.jpg" width="80px;" alt="逆"/><br /><sub><b>逆</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/dongGezzz_admin" target="_blank"><img src="./.image/sponsor/廖东旺.jpg" width="80px;" alt="廖东旺"/><br /><sub><b>廖东旺</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/huangzhen1993" target="_blank"><img src="./.image/sponsor/黄振.jpg" width="80px;" alt="黄振"/><br /><sub><b>黄振</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/fengchunshen" target="_blank"><img src="./.image/sponsor/春生.jpg" width="80px;" alt="春生"/><br /><sub><b>春生</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/mrfox_wang" target="_blank"><img src="./.image/sponsor/贵阳王老板.jpg" width="80px;" alt="贵阳王老板"/><br /><sub><b>贵阳王老板</b></sub></a></td>
@@ -1123,10 +1164,10 @@ Nous remercions les personnes suivantes pour leur soutien à ce projet, sous for
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/finalice" target="_blank"><img src="./.image/sponsor/尽千.jpg" width="80px;" alt="尽千"/><br /><sub><b>尽千</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/yuer629" target="_blank"><img src="./.image/sponsor/yuer629.jpg" width="80px;" alt="yuer629"/><br /><sub><b>yuer629</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/cai-peikai/ai-project" target="_blank"><img src="./.image/sponsor/kong.jpg" width="80px;" alt="kong"/><br /><sub><b>kong</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/HB1731276584" target="_blank"><img src="./.image/sponsor/岁月静好.jpg" width="80px;" alt="岁月静好"/><br /><sub><b>岁月静好</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/hy5128" target="_blank"><img src="./.image/sponsor/Kunkka.jpg" width="80px;" alt="Kunkka"/><br /><sub><b>Kunkka</b></sub></a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/HB1731276584" target="_blank"><img src="./.image/sponsor/岁月静好.jpg" width="80px;" alt="岁月静好"/><br /><sub><b>岁月静好</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/hy5128" target="_blank"><img src="./.image/sponsor/Kunkka.jpg" width="80px;" alt="Kunkka"/><br /><sub><b>Kunkka</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/guo-dida" target="_blank"><img src="./.image/sponsor/灬.jpg" width="80px;" alt="灬"/><br /><sub><b>灬</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://github.com/XyhBill" target="_blank"><img src="./.image/sponsor/Mr.LuCkY.jpg" width="80px;" alt="Mr.LuCkY"/><br /><sub><b>Mr.LuCkY</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="https://gitee.com/timeforeverz" target="_blank"><img src="./.image/sponsor/泓.jpg" width="80px;" alt="泓"/><br /><sub><b>泓</b></sub></a></td>
@@ -1271,6 +1312,9 @@ Nous remercions les personnes suivantes pour leur soutien à ce projet, sous for
     </tr>
     <tr>
         <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/常康.jpg" width="80px;" alt="常康"/><br /><sub><b>常康</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/嘎嗝.jpg" width="80px;" alt="嘎嗝"/><br /><sub><b>嘎嗝</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/曹.jpg" width="80px;" alt="曹"/><br /><sub><b>曹</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/滔滔.jpg" width="80px;" alt="滔滔"/><br /><sub><b>滔滔</b></sub></a></td>
     </tr>
   </tbody>
 </table>

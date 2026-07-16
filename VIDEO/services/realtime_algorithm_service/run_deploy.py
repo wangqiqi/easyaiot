@@ -501,16 +501,21 @@ YOLO_DETECT_IOU = float(os.getenv('YOLO_DETECT_IOU', '0.45'))
 
 
 def _get_detect_conf(*, end2end: bool = False, yolo26: bool = False) -> float:
-    """检测置信度阈值；YOLO26 默认更低以提升 1080p 监控场景中人等小目标召回。"""
+    """检测置信度阈值；优先使用任务配置，其次环境变量，默认 0.5。"""
+    if task_config is not None:
+        task_conf = getattr(task_config, 'detect_conf', None)
+        if task_conf is not None:
+            try:
+                return float(task_conf)
+            except (TypeError, ValueError):
+                pass
     raw = os.getenv('YOLO_DETECT_CONF', '').strip()
     if raw:
         try:
             return float(raw)
         except ValueError:
             pass
-    if yolo26 or end2end:
-        return 0.10
-    return 0.25
+    return 0.5
 
 
 def _any_loaded_model_is_end2end() -> bool:
@@ -1680,7 +1685,7 @@ def load_yolo_models(model_ids: List[int]) -> Dict[int, Any]:
                     logger.info(f"正在加载ONNX模型: model_id={model_id}, path={model_path}, gpu_id={gpu_id}")
                     onnx_model = ONNXInference(
                         model_path_str,
-                        conf_threshold=0.25,
+                        conf_threshold=_get_detect_conf(),
                         iou_threshold=0.45,
                         device_id=gpu_id,
                         api_class_names=model_api_class_names,
@@ -1757,6 +1762,11 @@ def load_task_config():
 
     try:
         logger.info(f"🔄 正在从数据库重新加载任务配置: task_id={TASK_ID}")
+        # PostgreSQL 任意一条 SQL 失败后，当前事务会一直处于 aborted 状态，
+        # 必须先 rollback 才能继续查询。启动阶段数据库自动迁移可能与本进程
+        # 并行执行，因此每次重试前都先结束上一次事务，确保迁移完成后可恢复。
+        db_session.rollback()
+
         # 刷新数据库会话，确保获取最新数据
         db_session.expire_all()
 
@@ -1894,6 +1904,11 @@ def load_task_config():
         return True
     except Exception as e:
         logger.error(f"加载任务配置失败: {str(e)}", exc_info=True)
+        try:
+            db_session.rollback()
+        except Exception as rollback_error:
+            logger.error(f"任务配置加载失败后回滚数据库事务失败: {rollback_error}", exc_info=True)
+            db_session.remove()
         return False
 
 
@@ -4270,10 +4285,9 @@ def alert_detection_worker(worker_id: int):
                     stream_info = task_config.device_streams.get(device_id_from_data, {})
                     device_name = stream_info.get('device_name', device_id_from_data)
 
-                post_process_enabled = bool(
-                    task_config and getattr(task_config, 'post_process_enabled', False)
-                )
-                if post_process_enabled:
+                from app.utils.post_process_runner import task_needs_sink_processing
+                sink_enabled = task_needs_sink_processing(task_config)
+                if sink_enabled:
                     alert_image_path = None
                     if detections:
                         alert_image_path = save_alert_image(

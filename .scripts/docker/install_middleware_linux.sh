@@ -103,7 +103,8 @@ MIDDLEWARE_SERVICES=(
     "ZLMediaKit"
 )
 
-# 默认不启动（省内存）；需要时设置 EASYAIOT_ENABLE_TDENGINE=1 / EASYAIOT_ENABLE_EMQX=1
+# 默认不启动（省内存）；TDengine 仅 full 自动开启，EMQX 在 standard/full 自动开启
+# 也可显式设置 EASYAIOT_ENABLE_TDENGINE=1 / EASYAIOT_ENABLE_EMQX=1
 DISABLED_BY_DEFAULT_MIDDLEWARE_SERVICES=(
     "TDengine"
     "TDengine-init"
@@ -213,6 +214,9 @@ check_command() {
     fi
     return 0
 }
+
+# shellcheck source=docker_compose_bundled.sh
+source "${SCRIPT_DIR}/docker_compose_bundled.sh"
 
 # 容器运行状态检查（供 wait_for_postgresql / post-install 等待逻辑使用）
 container_running() {
@@ -1058,43 +1062,6 @@ EOF
 }
 
 
-# 检查 Docker Compose 版本是否符合要求（>=2.35.0）
-check_docker_compose_version() {
-    local compose_version_output=""
-    local version_string=""
-    
-    # 检查 docker-compose 独立版本
-    if check_command docker-compose; then
-        compose_version_output=$(docker-compose --version 2>&1)
-        version_string=$(echo "$compose_version_output" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
-    # 检查 docker compose plugin 版本
-    elif docker compose version &> /dev/null; then
-        compose_version_output=$(docker compose version 2>&1)
-        version_string=$(echo "$compose_version_output" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
-    else
-        return 1
-    fi
-    
-    if [ -z "$version_string" ]; then
-        print_warning "无法解析 Docker Compose 版本: $compose_version_output"
-        return 1
-    fi
-    
-    # 比较版本号
-    local major=$(echo "$version_string" | cut -d. -f1)
-    local minor=$(echo "$version_string" | cut -d. -f2)
-    local patch=$(echo "$version_string" | cut -d. -f3)
-    
-    # 要求版本 >= 2.35.0
-    if [ "$major" -gt 2 ] || ([ "$major" -eq 2 ] && [ "$minor" -gt 35 ]) || ([ "$major" -eq 2 ] && [ "$minor" -eq 35 ] && [ "$patch" -ge 0 ]); then
-        print_success "Docker Compose 版本符合要求: $version_string"
-        return 0
-    else
-        print_warning "Docker Compose 版本过低: $version_string，需要 v2.35.0+"
-        return 1
-    fi
-}
-
 # 检查 Docker 权限
 check_docker_permission() {
     # 先检查 Docker 是否安装
@@ -1314,55 +1281,36 @@ EOF
     fi
 }
 
-# 安装 Docker Compose（直接使用包管理器，不再从 GitHub 下载）
+# 安装 Docker Compose（使用项目内置二进制离线覆盖，无需联网）
 install_docker_compose() {
     print_section "安装 Docker Compose"
     
     if [ "$EUID" -ne 0 ]; then
         print_warning "安装 Docker Compose 需要 root 权限，跳过自动安装"
-        print_info "请手动安装 Docker Compose 后继续，或使用 sudo 运行此脚本"
-        print_info "Docker Compose 会随 Docker 一起安装（docker-compose-plugin）"
+        print_info "请使用 sudo 运行此脚本，或手动执行："
+        bundled_compose_manual_hint
         return 1
     fi
-    
-    # 检测系统类型
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        local os_id="$ID"
-    else
-        print_error "无法检测操作系统类型"
+
+    if ! bundled_compose_available; then
+        print_error "当前架构 $(uname -m) 无内置 Docker Compose 离线包"
         return 1
     fi
-    
-    # 根据系统类型安装 Docker Compose Plugin（使用华为云镜像源）
-    case "$os_id" in
-        ubuntu|debian)
-            print_info "检测到 Debian/Ubuntu 系统，安装 Docker Compose Plugin（使用华为云镜像源）..."
-            apt-get update -qq > /dev/null 2>&1
-            apt-get install -qq -y docker-compose-plugin > /dev/null 2>&1
-            ;;
-        centos|rhel|fedora)
-            print_info "检测到 CentOS/RHEL/Fedora 系统，安装 Docker Compose Plugin（使用华为云镜像源）..."
-            yum install -y docker-compose-plugin
-            ;;
-        *)
-            print_error "不支持的操作系统: $os_id"
-            return 1
-            ;;
-    esac
-    
-    # 验证安装
-    if check_command docker-compose || docker compose version &> /dev/null; then
-        if check_command docker-compose; then
-            print_success "Docker Compose 安装完成: $(docker-compose --version)"
-        else
-            print_success "Docker Compose Plugin 安装完成: $(docker compose version)"
-        fi
-        return 0
+
+    if ! install_bundled_docker_compose; then
+        print_error "Docker Compose 离线安装失败"
+        return 1
+    fi
+
+    if check_command docker-compose; then
+        print_success "Docker Compose 安装完成: $(docker-compose --version)"
+    elif docker compose version &> /dev/null; then
+        print_success "Docker Compose 安装完成: $(docker compose version)"
     else
         print_error "Docker Compose 安装验证失败"
         return 1
     fi
+    return 0
 }
 
 # 检查并安装 Docker
@@ -1452,53 +1400,26 @@ check_and_install_docker_compose() {
                     [yY][eE][sS]|[yY])
                         if [ "$EUID" -ne 0 ]; then
                             print_warning "升级 Docker Compose 需要 root 权限，跳过自动升级"
-                            print_info "请手动升级 Docker Compose 后继续，或使用 sudo 运行此脚本"
-                            print_info "升级命令: sudo apt-get update && sudo apt-get install --upgrade docker-compose-plugin"
+                            print_info "请使用 sudo 运行此脚本，或手动执行："
+                            bundled_compose_manual_hint
                             return 1
                         fi
-                        print_info "正在升级 Docker Compose（使用包管理器）..."
-                        # 检测系统类型
-                        if [ -f /etc/os-release ]; then
-                            . /etc/os-release
-                            local os_id="$ID"
-                        else
-                            print_error "无法检测操作系统类型"
+                        if ! bundled_compose_available; then
+                            print_error "当前架构 $(uname -m) 无内置 Docker Compose 离线包"
                             return 1
                         fi
-                        
-                        # 使用包管理器升级
-                        case "$os_id" in
-                            ubuntu|debian)
-                                apt-get update -qq > /dev/null 2>&1
-                                apt-get install --upgrade -qq -y docker-compose-plugin > /dev/null 2>&1
-                                ;;
-                            centos|rhel|fedora)
-                                yum update -y docker-compose-plugin
-                                ;;
-                            *)
-                                print_error "不支持的操作系统: $os_id"
-                                return 1
-                                ;;
-                        esac
-                        
-                        if check_docker_compose_version; then
-                            # 重新检查并设置 COMPOSE_CMD
-                            if check_command docker-compose; then
-                                COMPOSE_CMD="docker-compose"
-                            else
-                                COMPOSE_CMD="docker compose"
-                            fi
-                            print_success "Docker Compose 升级成功"
+                        if install_bundled_docker_compose && check_docker_compose_version; then
+                            set_compose_cmd_from_system
+                            print_success "Docker Compose 离线升级成功"
                             return 0
-                        else
-                            print_warning "Docker Compose 升级后版本仍不符合要求"
-                            return 1
                         fi
+                        print_warning "Docker Compose 离线升级后版本仍不符合要求"
+                        return 1
                         ;;
                     [nN][oO]|[nN]|"")
                         print_warning "Docker Compose 版本不符合要求，但安装流程将继续"
-                        print_info "请手动升级 Docker Compose 到 v2.35.0+"
-                        print_info "升级命令: sudo apt-get update && sudo apt-get install --upgrade docker-compose-plugin"
+                        print_info "请手动使用项目内置包升级到 v${COMPOSE_MIN_VERSION}+："
+                        bundled_compose_manual_hint
                         return 1
                         ;;
                     *)
@@ -1513,7 +1434,7 @@ check_and_install_docker_compose() {
     echo ""
     print_info "Docker Compose 是运行中间件服务的必需组件"
     print_info "要求版本: v2.35.0 或更高"
-    print_info "Docker Compose 会通过包管理器安装（docker-compose-plugin）"
+    print_info "Docker Compose 将使用项目内置离线包安装（按当前系统架构，无需联网）"
     echo ""
     
     while true; do
@@ -1543,7 +1464,8 @@ check_and_install_docker_compose() {
             [nN][oO]|[nN]|"")
                 print_warning "Docker Compose 是必需的，但安装流程将继续"
                 print_info "请确保已安装 Docker Compose v2.35.0+"
-                print_info "安装命令: sudo apt-get update && sudo apt-get install docker-compose-plugin"
+                print_info "安装方法（离线，按架构覆盖）："
+                bundled_compose_manual_hint
                 return 1
                 ;;
             *)
@@ -4006,6 +3928,21 @@ compose_up_middleware() {
 
     if [ ${#skip_services[@]} -gt 0 ]; then
         print_warning "以下中间件因镜像缺失等原因暂不启动：$(_format_service_list "${skip_services[@]}")"
+        # compose up 指定服务列表不会停掉未列出但仍在 compose 中定义的旧容器；
+        # 从 full/standard 切到 mini 时需主动停掉 Nacos/Kafka/MinIO 等残留。
+        local -a lingering_skips=()
+        local skip_svc
+        for skip_svc in "${skip_services[@]}"; do
+            [ -z "$skip_svc" ] && continue
+            if mw_compose ps -q "$skip_svc" 2>/dev/null | grep -q .; then
+                lingering_skips+=("$skip_svc")
+            fi
+        done
+        if [ ${#lingering_skips[@]} -gt 0 ]; then
+            print_info "停止并移除当前形态不部署的中间件: $(_format_service_list "${lingering_skips[@]}")"
+            mw_compose stop "${lingering_skips[@]}" >/dev/null 2>&1 || true
+            mw_compose rm -f "${lingering_skips[@]}" >/dev/null 2>&1 || true
+        fi
     fi
 
     # ★ 自动检测并设置 NACOS_PLATFORM，避免 ARM/AMD64 跨架构问题
@@ -6020,7 +5957,7 @@ show_help() {
     echo "环境变量:"
     echo "  EASYAIOT_DEPLOY_PROFILE   - 部署规格: mini(1,≥4GB) | standard(2,≥16GB) | full(3,≥20GB，默认)"
     echo "  EASYAIOT_ENABLE_TDENGINE  - 完整版自动为 1；mini/standard 为 0"
-    echo "  EASYAIOT_ENABLE_EMQX      - 完整版自动为 1；mini/standard 为 0"
+    echo "  EASYAIOT_ENABLE_EMQX      - standard/完整版自动为 1；mini 为 0"
     echo "  FORCE_CHMOD=true    - 对已存在的数据目录强制完整递归 chmod 修复（默认只设顶层，数据量大时慢）"
     echo "                        仅在怀疑既有目录权限损坏、容器读写报错时使用一次"
     echo "                        示例: FORCE_CHMOD=true ./install_middleware_linux.sh update"
