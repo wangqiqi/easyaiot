@@ -135,6 +135,7 @@ Many intelligent IoT projects stall at deployment: <strong>full features won't f
     </ul>
   </li>
   <li><strong>Dataset Annotation and Multi-Format Dataset Management</strong>: Provides a visual image annotation workspace supporting rectangle and polygon labeling, category management, and progress tracking; fully supports flexible import and export of mainstream dataset formats including YOLO, COCO, and ImageFolder, with cloud platform dataset integration enabling one-click import and synchronized export of cloud-hosted datasets—seamlessly connecting data collection, annotation, training, and deployment across the full pipeline</li>
+  <li><strong>Multi-GPU Training, Checkpoint Resume, and Node-Side Deployment</strong>: Breaks through the training bottlenecks of “GPUs available but unused, tasks hard to control, and progress lost on interruption” by systematically connecting multi-GPU utilization, controllable task scheduling, and node-side deployment—so on-site GPUs are truly usable and training jobs are truly manageable. The platform automatically discovers and schedules all server GPUs; users can select single- or multi-GPU on the training page instead of being limited to “only one card visible.” It supports common dataset formats and directory layouts, large local dataset uploads, and keeps original data after failed runs for quick retry—greatly reducing data-prep and rework costs. Training progress is fully visible, and jobs can be stopped and resumed—avoiding lost results after interruption or “stop clicked but still spinning in the background.” Local and remote training schedulers also roll back promptly on failure with clear feedback. Front-end GPU selection, resume training, and stop-state display are improved in parallel, and issues such as false failure on model publish, custom preview images being overwritten, models not found by name/version, and dataset sync timeouts/conflicts are fixed—making the train–publish–use loop smoother and more reliable</li>
   <li><strong>Stream Forwarding</strong>: Supports direct viewing of camera real-time feeds without enabling AI analysis functionality. By creating stream forwarding tasks, multiple cameras can be batch-pushed, enabling synchronous viewing of multiple video streams to meet pure video monitoring scenario requirements</li>
   <li><strong>GPU Discovery, Load-Aware Allocation, and Multi-GPU Collaboration</strong>: The platform provides GPU resource discovery and intelligent scheduling: it detects the number of available GPUs and dynamically assigns video encode/decode and algorithm inference work across cards according to per-GPU load, running tasks in parallel where appropriate to raise multi-stream throughput and utilization while keeping the pipeline stable—coordinating frame processing and model inference in multi-GPU deployments</li>
   <li><strong>Smart Transport Selection and Resilient Stream Pull</strong>: On RTSP and similar pull paths, the system can evaluate URL/path and related signals to choose and switch transport-layer modes; camera pulls default to UDP for lower latency. When consecutive frames indicate gray screen, decode errors, or stream collapse (decode stall), RTSP reconnect and link recovery run automatically to limit prolonged artifacts or frozen video</li>
@@ -159,14 +160,45 @@ Many intelligent IoT projects stall at deployment: <strong>full features won't f
 #### 🌐 IoT Capabilities
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
-  <li><strong>Device Access and Management</strong>: Device registration, authentication, status monitoring, lifecycle management</li>
-  <li><strong>Product and Thing Model Management</strong>: Product definition, thing model configuration, product management</li>
-  <li><strong>Multi-Protocol Support</strong>: Multiple IoT protocols including MQTT, TCP, HTTP</li>
-  <li><strong>Device Authentication and Dynamic Registration</strong>: Secure access, identity authentication, dynamic device registration</li>
-  <li><strong>Rule Engine</strong>: Data flow rules, message routing, data transformation</li>
-  <li><strong>Data Collection and Storage</strong>: Device data collection, storage, query, and analysis</li>
-  <li><strong>Device Status Monitoring and Alert Management</strong>: Real-time monitoring, anomaly alerts, intelligent decision-making</li>
-  <li><strong>Notification Management</strong>: Supports 7 notification methods including Feishu, DingTalk, Enterprise WeChat, Email, Tencent Cloud SMS, Alibaba Cloud SMS, and Webhook, enabling flexible and multi-channel alert notifications</li>
+  <li><strong>Product Model Management</strong>: Treat products as templates for similar devices—create, enable/disable, search, and switch between table/card views; configure application scenarios, vendor, model, and other profile fields. <strong>Value</strong>: Define once for a device class and reuse across many units—no need to configure each device from scratch when scaling</li>
+  <li><strong>Multi-Type Product Modeling</strong>: Supports four product forms: direct-connected, gateway, gateway sub-device, and video. <strong>Value</strong>: Edge aggregation, direct terminals, and video devices are modeled separately so topology and access paths are not mixed or misconfigured</li>
+  <li><strong>Product Access Protocol & Auth Configuration</strong>: Configure access protocol, data format, authentication method, and encryption/decryption at the product level. <strong>Value</strong>: Access rules live on the product and are inherited by child devices—no per-device protocol or auth agreements</li>
+  <li><strong>Thing Model Property Definition</strong>: Define reportable/readable-writable properties (metrics), with standard templates and custom ones; edit as draft, take effect after publish. <strong>Value</strong>: Agree first on “what can be observed”—dashboards, rules, and alerts share one field set, fewer reworks from inconsistent metric names</li>
+  <li><strong>Thing Model Service Definition</strong>: Define callable services with input/output parameters; edit as draft, take effect after publish. <strong>Value</strong>: Agree first on “what can be done remotely”—invoke by contract, fewer one-off control APIs</li>
+  <li><strong>Thing Model Event Definition</strong>: Define business event types devices will report; edit as draft, take effect after publish. <strong>Value</strong>: Agree first on “what can happen”—event logs and rule triggers share semantics, alerts speak the same language</li>
+  <li><strong>Thing Model Publish Control</strong>: Thing model changes land as drafts first; only after confirm-and-publish do they take effect on the device side. <strong>Value</strong>: A buffer before impact—unverified changes do not hit online devices, lowering misoperation risk</li>
+  <li><strong>Protocol Script Adaptation</strong>: Standard payloads need no script; private protocols can use uplink/downlink encode-decode scripts with templates, validation, instant debug, and save-to-hot-reload. <strong>Value</strong>: Legacy multi-vendor devices join a unified thing model without firmware changes—integration shifts from “change the device” to “configure a script”</li>
+  <li><strong>Product Access Guide</strong>: Product details include built-in integration parameters, auth, message samples, and acceptance notes. <strong>Value</strong>: Standard handoff playbooks per product—newcomers can accept by following the page, less reliance on on-site expert walkthroughs</li>
+  <li><strong>Product-Linked Device Overview</strong>: View registered devices and online status under a product. <strong>Value</strong>: Inventory online rate and coverage by product—clear ops and acceptance ownership</li>
+  <li><strong>Device Profile Management</strong>: Full CRUD for devices; search by product/identifier/online status; table and card views. <strong>Value</strong>: Scattered devices become a searchable ledger—one entry for inventory and project handoff</li>
+  <li><strong>Device Online & Activation Status</strong>: Lists and details show connection status, activation status, activation time, and last online time. <strong>Value</strong>: Prioritize offline and inactive devices—stop hunting blindly in “all devices”</li>
+  <li><strong>Register Devices by Product</strong>: Bind devices to a product on create to inherit protocol and scenario. <strong>Value</strong>: Registration attaches the right product template—scale by cloning the product, less re-picking protocols and auth</li>
+  <li><strong>Industrial Collection Access Config</strong>: For industrial collection products, configure host, metrics, and collection interval on register. <strong>Value</strong>: Meters, sensors, and field points are set once at registration—fewer separate SCADA/collection tools</li>
+  <li><strong>Device Basic Profile</strong>: Persist name, identifier, SN, product, version, IP, and other one-device-one-record fields. <strong>Value</strong>: Quickly confirm “who is this” during replacement, accountability, and reconciliation—less verbal chasing and on-site digging</li>
+  <li><strong>Device Access Guide</strong>: Per device type: recommended commands, integration parameters, auth, messages, acceptance, and backend residency notes; copyable commands after parameter edits. <strong>Value</strong>: Field integration moves from hunting docs to copy-command acceptance—shorter go-live and PoC cycles</li>
+  <li><strong>Real-Time Running Status</strong>: Show current property live values by thing model; table/card views and refresh. <strong>Value</strong>: Operators judge key metrics without logging into devices or reading raw payloads</li>
+  <li><strong>Device Shadow Comparison</strong>: View reported state, desired state, and diffs side by side, with full JSON retained. <strong>Value</strong>: See at a glance whether “desired” matches “actual”—troubleshooting shifts from guessing to comparing</li>
+  <li><strong>Desired Property Push</strong>: Batch-edit desired values for writable properties and push in one click; track processing/success/failure. <strong>Value</strong>: Remote tuning without site visits—changes have receipts, fewer wasted truck rolls</li>
+  <li><strong>Thing Model Service Invocation</strong>: Fill parameters for published services and invoke; track command receipts. <strong>Value</strong>: Start/stop, reset, and similar actions go out in one click with execution confirmation—auditable closed loop</li>
+  <li><strong>Offline Command Queue</strong>: Commands still write to desired shadow when offline; devices pull or receive them after coming online per protocol. <strong>Value</strong>: Weak network or brief offline does not drop control intent—catch up on reconnect, fewer retries</li>
+  <li><strong>Sub-Device Gateway Proxy Control</strong>: Sub-devices are controlled via their parent gateway. <strong>Value</strong>: Many edge terminals can be remoted without direct platform links—lower terminal access complexity</li>
+  <li><strong>Linked Cameras</strong>: IoT devices can bind/unbind cameras from the device catalog. <strong>Value</strong>: Map telemetry points to video locations—know which stream to watch when something goes wrong</li>
+  <li><strong>Split-Screen Monitoring & AI Linkage</strong>: In function invocation, switch 1/4/9 split-screen preview of linked cameras and enable AI analysis. <strong>Value</strong>: Tune parameters and issue commands while watching the site—“numbers” and “pictures” in one place, fewer system switches and missed judgments</li>
+  <li><strong>Event Logs</strong>: Aggregate info/warning/error events from devices; filter by type, name, and time. <strong>Value</strong>: Answer “what happened on site”—postmortems have raw events, not just pop-ups</li>
+  <li><strong>Command Logs</strong>: Track processing/success/failure for property sets and service calls. <strong>Value</strong>: Answer “did this command reach the device and was it accepted”—end integration blame games</li>
+  <li><strong>Device Logs</strong>: Aggregate multi-level device-side logs; keyword and time search. <strong>Value</strong>: Troubleshoot without logging into devices for local logs—locate firmware and business faults in the cloud</li>
+  <li><strong>Gateway Sub-Device Binding</strong>: Gateway devices can batch bind/unbind sub-devices. <strong>Value</strong>: Clear, manageable edge topology—ownership stays sharp when expanding, replacing gateways, or isolating faults</li>
+  <li><strong>Topic Capability Inventory</strong>: Per device, list uplink/downlink channel docs for config, shadow, properties, services, events, OTA, clock sync, and more. <strong>Value</strong>: R&D and integration share one channel catalog—fewer reworks from mismatched channel contracts</li>
+  <li><strong>OTA Package Management</strong>: Centrally upload and manage software/firmware packages with version, download, edit, delete, and dual views. <strong>Value</strong>: Patches and firmware live in one reusable place—no per-device media copying</li>
+  <li><strong>OTA Upgrade Strategy</strong>: Mark critical versions and choose forced/non-forced upgrade modes. <strong>Value</strong>: Important releases can be flagged and urgent fixes forced—lower risk of missed or chaotic upgrades</li>
+  <li><strong>Rule Chain Management</strong>: Create, enable/disable, batch-delete rules; list/card management. <strong>Value</strong>: Business linkage rules can be toggled centrally—turn off unused chains to avoid false triggers</li>
+  <li><strong>Visual Rule Chain Orchestration</strong>: Chain-style visual editing that links data flow, conditions, and downstream actions by intent. <strong>Value</strong>: Scenarios move from custom code to drag-and-drop config—change the chain for business changes, no waiting on a sprint</li>
+  <li><strong>Rule Import/Export</strong>: Import rules for cross-environment migration and reuse. <strong>Value</strong>: Mature rules become delivery assets—copy across projects instead of rewriting from scratch</li>
+  <li><strong>Message Configuration</strong>: Centrally maintain notification channels and base message settings. <strong>Value</strong>: Notification outlets managed in one place—swap channels or accounts without changing business code</li>
+  <li><strong>Message Templates</strong>: Maintain template content for email, SMS, Enterprise WeChat, DingTalk, Feishu, Webhook, and more. <strong>Value</strong>: Copy once, reuse everywhere—unified alert wording, fewer ad-hoc message mistakes</li>
+  <li><strong>Message Push</strong>: Create push tasks by channel; support test send and start push. <strong>Value</strong>: Alerts and business events reach owners’ daily work tools—not stuck inside the system</li>
+  <li><strong>Push History</strong>: Review push records by channel. <strong>Value</strong>: Trace whether notices were sent and delivered—audit and improve reach strategy</li>
+  <li><strong>Notification Users & Groups</strong>: Maintain notification users and groups for precise reach by role/shift. <strong>Value</strong>: Critical alerts only to the right people—fewer misses, less alert fatigue from all-hands spam</li>
 </ul>
 
 #### 📱 Mobile APP
@@ -744,16 +776,56 @@ compensate third parties for damages caused by usage. All EasyAIoT-related resou
   <img src=".image/banner/banner1002.png" alt="Screenshot 16" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1137.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1138.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1149.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1150.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1139.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1140.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1151.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1152.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1141.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1142.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1153.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1154.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1155.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1156.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1157.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1158.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1159.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1160.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1161.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1162.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1163.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1164.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1165.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1166.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1000.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1001.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1002.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1003.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1004.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1005.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1006.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1007.jpg" alt="Screenshot 1" width="49%">
 </div>
 
 ## 📞 Contact Information
@@ -874,7 +946,7 @@ The following are outstanding contributors who have made significant contributio
 </tr>
 <tr style="background-color: #f8f9fa;">
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>爱吃小柚子</nobr></td>
-<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">To advance EasyAIoT in video surveillance and intelligent analytics, led end-to-end integration and validation testing of the national standard GB28181 with AI business workflows; also carried out dedicated testing and evaluation of image clarity and playback smoothness, providing a strong basis for reliable GB28181 access, link stability, and continuous improvement of the viewing experience.</td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">To advance EasyAIoT toward training that actually runs, stays stable, and stays easy to operate, systematically delivered multi-GPU training, checkpoint resume, and node-side deployment so on-site compute can be fully used and training jobs stay under control: servers can auto-detect and use all GPUs, and users can pick one or more cards on the training page instead of being stuck with a single visible GPU; common dataset formats and directory layouts are supported, large local datasets can be uploaded, and original data is kept after failed runs for quick retries—greatly cutting the cost of data prep and rework; training progress is visible, jobs can be stopped and resumed, avoiding lost results after interruptions or “stop” clicks that leave processes spinning in the background, with clear fallback and feedback when local or remote scheduling fails; also improved frontend GPU selection, resume, and stop-state display, and fixed false “publish failed” results, custom preview images being overwritten, model lookup by name/version not working, and dataset sync timeouts or conflicts—making the train–publish–use loop smoother and more reliable. Previously also led end-to-end GB28181 and AI workflow integration testing and dedicated image-clarity evaluation, providing a strong basis for reliable national-standard access and better viewing experience.</td>
 </tr>
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>Dark</nobr></td>
@@ -916,7 +988,7 @@ The following are outstanding contributors who have made significant contributio
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>Special Thanks</strong>: The work of the above contributors has advanced EasyAIoT in many ways, including cross-platform deployment documentation and scripts, delivery of national-standard video capabilities (including GB28181), AI integration testing, multi-vendor camera direct discovery and batch onboarding, production-ready Tianditu spatial visualization, heterogeneous streaming media cluster deployment and scheduling architecture, production-ready license plate recognition algorithm and complete implementation, EasyAIoT-Edge end-to-end integration linking camera access with AI, campus developer community organization and youth collaborative ecosystem building, IoT device uplink/downlink closed loop and DJI FlightHub aerial view integration, and industrial Modbus device uplink acquisition. Their professionalism and selfless dedication are worthy of our learning and respect. Once again, we express our most sincere gratitude to these outstanding contributors! 🙏
+<strong>Special Thanks</strong>: The work of the above contributors has advanced EasyAIoT in many ways, including cross-platform deployment documentation and scripts, delivery of national-standard video capabilities (including GB28181), AI integration testing, multi-GPU training usability and checkpoint resume, multi-vendor camera direct discovery and batch onboarding, production-ready Tianditu spatial visualization, heterogeneous streaming media cluster deployment and scheduling architecture, production-ready license plate recognition algorithm and complete implementation, EasyAIoT-Edge end-to-end integration linking camera access with AI, campus developer community organization and youth collaborative ecosystem building, IoT device uplink/downlink closed loop and DJI FlightHub aerial view integration, and industrial Modbus device uplink acquisition. Their professionalism and selfless dedication are worthy of our learning and respect. Once again, we express our most sincere gratitude to these outstanding contributors! 🙏
 </p>
 
 ## 💝 Open Source Guardians

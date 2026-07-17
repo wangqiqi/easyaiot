@@ -135,6 +135,7 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
     </ul>
   </li>
   <li><strong>데이터셋 라벨링 및 다중 포맷 데이터셋 관리</strong>: 시각적 이미지 라벨링 작업 공간을 제공하며, 사각형·다각형 등 라벨링 형태와 카테고리 관리, 진행률 추적을 지원합니다. YOLO, COCO, ImageFolder 등 주류 데이터셋 포맷의 유연한 가져오기·내보내기를 전면 지원하고, 클라우드 플랫폼 데이터셋 연동을 통해 클라우드 데이터셋의 원클릭 가져오기 및 동기화 내보내기를 지원하여 데이터 수집, 라벨링, 학습, 배포 추론에 이르는 전 과정을 원활하게 연결합니다.</li>
+  <li><strong>멀티 GPU 학습, 체크포인트 이어학습 및 노드 측 배포</strong>: 「GPU는 있는데 쓰지 못하고, 작업은 통제하기 어렵고, 중단되면 성과가 사라지는」 학습 현장의 병목을 뚫고, 멀티 GPU 활용·작업 통제 가능한 스케줄링·노드 측 배포를 체계적으로 연결하여 현장 GPU를 실제로 쓸 수 있게 하고 학습 작업을 정말로 통제할 수 있게 합니다. 플랫폼은 서버의 모든 GPU를 자동 인식·스케줄링하며, 사용자는 학습 페이지에서 필요에 따라 단일/다중 카드를 선택할 수 있어 더 이상 「한 장만 보이는」 제한에 묶이지 않습니다. 일반 데이터셋 형식과 디렉터리 구조를 폭넓게 호환하고 대용량 로컬 데이터셋 업로드를 지원하며, 학습 실패 후에도 원본 데이터를 남겨 빠르게 재시도할 수 있어 데이터 준비와 반복 작업 비용을 크게 줄입니다. 학습 진행 상황이 전 과정에 걸쳐 보이며 작업을 멈추고 이어갈 수 있어, 중단 후 결과 손실이나 「중지를 눌렀는데도 백그라운드에서 계속 도는」 문제를 줄이고, 로컬·원격 스케줄링 실패 시에도 신속히 되돌리며 명확한 피드백을 제공합니다. 프론트엔드의 GPU 선택·이어학습·중지 상태 표시도 함께 개선하고, 모델 게시 성공이 실패로 오인되거나 사용자 지정 미리보기 이미지가 덮어써지거나 이름/버전으로 모델을 찾지 못하거나 데이터셋 동기화가 타임아웃·충돌하는 문제를 고쳐 「학습—게시—사용」 루프를 더 원활하고 신뢰성 있게 만듭니다</li>
   <li><strong>스트림 전달</strong>: AI 분석 기능을 활성화하지 않고도 카메라 실시간 영상을 직접 시청할 수 있습니다. 스트림 전달 작업을 생성하여 여러 카메라를 일괄 전달할 수 있으며, 여러 비디오 스트림의 동기화된 시청을 실현하여 순수 비디오 모니터링 시나리오 요구사항을 충족합니다.</li>
   <li><strong>GPU 탐지, 부하 기반 할당 및 다중 GPU 협업</strong>: 플랫폼은 GPU 자원을 탐지하고 지능형으로 스케줄링합니다. 사용 가능한 GPU 수를 인식한 뒤 GPU별 실시간 부하에 따라 비디오 인코딩/디코딩과 알고리즘 추론 작업을 다중 GPU에 동적으로 분산·병렬 실행하여 다중 스트림 처리량과 자원 활용도를 높이면서 안정성을 유지하며, 다중 GPU 환경에서 화면 처리와 모델 추론을 조화롭게 운용합니다.</li>
   <li><strong>지능형 전송 선택 및 고신뢰 스트림 수신</strong>: RTSP 등 풀(Pull) 경로에서 URL·경로 등 신호를 바탕으로 전송 계층 프로토콜을 선택·전환할 수 있으며, 카메라 풀은 기본적으로 UDP를 사용하여 지연을 낮춥니다. 연속된 프레임에서 회색 화면, 디코딩 오류 또는 스트림 붕괴(디코딩 정체)가 감지되면 RTSP 재연결 및 링크 복구를 자동 수행하여 장시간의 화면 깨짐·정지 영향을 줄입니다.</li>
@@ -159,14 +160,45 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
 #### 🌐 IoT 기능
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
-  <li><strong>디바이스 접속 및 관리</strong>: 디바이스 등록, 인증, 상태 모니터링, 생명주기 관리</li>
-  <li><strong>제품 및 사물 모델(Thing Model) 관리</strong>: 제품 정의, 사물 모델 구성, 제품 관리</li>
-  <li><strong>다중 프로토콜 지원</strong>: MQTT, TCP, HTTP 등 다양한 IoT 프로토콜</li>
-  <li><strong>디바이스 인증 및 동적 등록</strong>: 안전한 접속, 신원 인증, 동적 디바이스 등록</li>
-  <li><strong>규칙 엔진</strong>: 데이터 흐름 규칙, 메시지 라우팅, 데이터 변환</li>
-  <li><strong>데이터 수집 및 저장</strong>: 디바이스 데이터 수집, 저장, 조회 및 분석</li>
-  <li><strong>디바이스 상태 모니터링 및 경보 관리</strong>: 실시간 모니터링, 이상 경보, 지능형 의사결정</li>
-  <li><strong>알림 관리</strong>: Feishu, DingTalk, Enterprise WeChat, Email, Tencent Cloud SMS, Alibaba Cloud SMS, Webhook 등 7가지 알림 방식을 지원하여 유연한 다채널 경보 알림을 구현합니다.</li>
+  <li><strong>제품 모델 관리</strong>: 제품을 동종 디바이스 템플릿으로 사용 — 생성·시작/중지·검색과 테이블/카드 이중 뷰, 적용 시나리오·제조사·모델 등 기본 프로필 구성. <strong>가치</strong>: 동종 디바이스를 한 번 등록해 다수에 재사용, 확장 시 기기마다 처음부터 설정할 필요 없음</li>
+  <li><strong>다중 유형 제품 모델링</strong>: 직결·게이트웨이·게이트웨이 하위 디바이스·비디오 네 가지 제품 형태 지원. <strong>가치</strong>: 엣지 집약·직결 단말·비디오 장비를 형태별로 분리해 토폴로지와 접속 경로가 혼용·오설정되지 않음</li>
+  <li><strong>제품 접속 프로토콜·인증 구성</strong>: 제품 수준에서 접속 프로토콜·데이터 형식·인증 방식·암복호화 전략 구성. <strong>가치</strong>: 접속 규범이 제품에 있고 하위 디바이스가 자동 상속 — 기기마다 프로토콜·인증을 따로 정하지 않음</li>
+  <li><strong>사물 모델 속성 정의</strong>: 보고/읽기·쓰기 가능한 속성(측정점) 정의, 표준 템플릿·커스텀 지원, 초안 편집 후 게시 시 적용. <strong>가치</strong>: 「무엇을 볼 수 있는지」를 먼저 합의 — 대시보드·규칙·경보가 동일 필드를 공유, 측정점명 불일치로 인한 재작업 감소</li>
+  <li><strong>사물 모델 서비스 정의</strong>: 호출 가능한 서비스와 입·출력 파라미터 정의, 초안 편집 후 게시 시 적용. <strong>가치</strong>: 「원격으로 무엇을 할 수 있는지」를 먼저 합의 — 계약에 따라 파라미터 입력, 일회성 제어 API 감소</li>
+  <li><strong>사물 모델 이벤트 정의</strong>: 디바이스가 보고할 업무 이벤트 유형 정의, 초안 편집 후 게시 시 적용. <strong>가치</strong>: 「어떤 일이 발생할 수 있는지」를 먼저 합의 — 이벤트 로그·규칙 트리거가 통일된 의미, 경보가 제각각이 되지 않음</li>
+  <li><strong>사물 모델 게시 통제</strong>: 사물 모델 변경은 먼저 초안에 반영, 확인·게시 후에야 디바이스 측에 적용. <strong>가치</strong>: 변경에 완충 구간 — 미검증 변경이 온라인 디바이스를 바로 치지 않아 오조작 위험 감소</li>
+  <li><strong>프로토콜 스크립트 어댑트</strong>: 표준 메시지는 스크립트 불필요, 사유 프로토콜은 상·하행 인코딩/디코딩 스크립트 작성 가능, 템플릿·검증·즉시 디버그·저장 후 핫 리로드 지원. <strong>가치</strong>: 이기종 레거시 장비를 펌웨어 수정 없이 통합 사물 모델에 편입 — 연동이 「장비 수정」에서 「스크립트 구성」으로</li>
+  <li><strong>제품 접속 가이드</strong>: 제품 상세에 연동 파라미터·인증·메시지·인수 설명 내장. <strong>가치</strong>: 제품별 표준 연동 매뉴얼 — 신규 인력이 페이지대로 인수 가능, 현장 전문가 구두 의존 감소</li>
+  <li><strong>제품 연동 디바이스 일람</strong>: 제품 아래에서 등록된 디바이스 목록과 온라인 상태 확인. <strong>가치</strong>: 제품별 온라인율·커버리지 점검 — 운영·인수 책임 경계가 명확</li>
+  <li><strong>디바이스 프로필 관리</strong>: 디바이스 CRUD, 제품/식별자/온라인 상태로 검색, 테이블·카드 이중 뷰. <strong>가치</strong>: 흩어진 장비를 검색 가능한 대장으로 — 재고·프로젝트 인계에 통일된 입구</li>
+  <li><strong>온라인·활성화 상태</strong>: 목록·상세에 연결 상태·활성화 상태·활성화 시각·마지막 온라인 시각 표시. <strong>가치</strong>: 오프라인·미활성 장비를 우선 처리 — 「전체 디바이스」에서 맹목적으로 찾지 않음</li>
+  <li><strong>제품별 디바이스 등록</strong>: 생성 시 소속 제품을 바인딩해 프로토콜·시나리오 상속. <strong>가치</strong>: 등록과 동시에 올바른 제품 템플릿 적용 — 확장 시 제품 복제로 충분, 프로토콜·인증 재선택 감소</li>
+  <li><strong>산업 수집 접속 구성</strong>: 산업 수집형 제품 등록 시 호스트·측정점·수집 주기 구성 가능. <strong>가치</strong>: 전력계·센서 등 현장 측정점을 등록 단계에서 한 번에 구성 — 별도 수집 도구 감소</li>
+  <li><strong>디바이스 기초 정보 프로필</strong>: 이름·식별자·SN·제품·버전·IP 등 기기당 1건 정보 축적. <strong>가치</strong>: 교체·책임 추적·대사 시 「이것이 누구인지」 빠르게 확인</li>
+  <li><strong>디바이스 접속 가이드</strong>: 디바이스 유형별 추천 명령·연동 파라미터·인증·메시지·인수·백엔드 상주 설명, 파라미터 변경 후 명령 복사 가능. <strong>가치</strong>: 현장 연동이 문서 찾기에서 명령 복사 인수로 — 상선·PoC 주기 단축</li>
+  <li><strong>실행 상태 실시간 조회</strong>: 사물 모델 기준으로 현재 속성 실황 표시, 테이블/카드·새로고침 지원. <strong>가치</strong>: 근무자가 장비에 로그인하거나 원시 메시지를 보지 않고도 핵심 측정점 정상 여부 판단</li>
+  <li><strong>디바이스 섀도 대조</strong>: 보고 상태·기대 상태·차이를 동시에 보고 전체 JSON 보존. <strong>가치</strong>: 「원하던 것」과 「실제」가 일치하는지 한눈에 — 장애 대응이 추측에서 대조로</li>
+  <li><strong>속성 기대값 하달</strong>: 쓰기 가능 속성의 기대값을 일괄 수정하고 원클릭 하달, 처리 중/성공/실패 추적. <strong>가치</strong>: 원격 튜닝에 출장 불필요 — 변경에 회신이 있어 불필요한 출동 감소</li>
+  <li><strong>사물 모델 서비스 호출</strong>: 게시된 서비스에 파라미터를 채워 호출, 명령 회신 추적. <strong>가치</strong>: 시작/중지·리셋 등을 원클릭으로 내리고 실행 여부를 확인 — 감사 가능한 폐루프</li>
+  <li><strong>오프라인 명령 대기열</strong>: 오프라인 시에도 명령은 기대 섀도에 기록, 온라인 후 프로토콜에 따라 가져오거나 수신. <strong>가치</strong>: 약한 네트워크·일시 오프라인에도 제어 의이 유지 — 재접속 시 보완, 반복 조작 감소</li>
+  <li><strong>하위 디바이스 게이트웨이 프록시 제어</strong>: 하위 디바이스는 소속 게이트웨이를 통해 제어 하달. <strong>가치</strong>: 엣지 측 다수 단말이 플랫폼에 직접 연결되지 않아도 통일 원격 제어 — 단말 접속 복잡도 감소</li>
+  <li><strong>연관 카메라</strong>: IoT 디바이스가 디바이스 카탈로그의 카메라를 바인딩/해제 가능. <strong>가치</strong>: 측정점과 영상 위치를 대응 — 이상 시 어느 영상을 볼지 파악</li>
+  <li><strong>분할 화면 모니터링·AI 연동</strong>: 기능 호출에서 연관 카메라를 1/4/9 분할 미리보기로 전환하고 AI 분석 활성화 가능. <strong>가치</strong>: 파라미터 변경·명령 하달과 동시에 현장 확인 — 「수치」와 「영상」을 한곳에서, 시스템 전환·누락 감소</li>
+  <li><strong>이벤트 로그</strong>: 디바이스가 보고한 정보/경고/오류 이벤트를 집약, 유형·이름·시간으로 필터. <strong>가치</strong>: 「현장에서 무엇이 있었는지」에 답함 — 사후 복기·책임 추적에 원시 이벤트 확보</li>
+  <li><strong>명령 로그</strong>: 속성 설정·서비스 호출의 처리 중/성공/실패 추적. <strong>가치</strong>: 「이 명령이 내려갔는지, 장비가 수락했는지」에 답함 — 연동·장애 대응에서 구두 다툼 종료</li>
+  <li><strong>디바이스 로그</strong>: 디바이스 측 다단계 로그 집약, 키워드·시간 검색 지원. <strong>가치</strong>: 장비에 로그인해 로컬 로그를 뒤질 필요 없음 — 클라우드에서 펌웨어·업무 이상 위치 파악</li>
+  <li><strong>게이트웨이 하위 디바이스 바인딩</strong>: 게이트웨이에서 하위 디바이스를 일괄 바인딩/해제. <strong>가치</strong>: 엣지 토폴로지가 명확하고 관리 가능 — 확장·게이트웨이 교체·장애 격리 시 책임 경계가 흐려지지 않음</li>
+  <li><strong>Topic 기능 목록</strong>: 디바이스별로 구성·섀도·속성·서비스·이벤트·OTA·시계 동기화 등 상·하행 채널 설명 나열. <strong>가치</strong>: 개발·통합이 동일 카탈로그로 연동 — 채널 계약 불일치로 인한 재작업 감소</li>
+  <li><strong>OTA 업그레이드 패키지 관리</strong>: 소프트웨어/펌웨어 패키지 통합 업로드·관리, 버전·다운로드·편집·삭제·이중 뷰 지원. <strong>가치</strong>: 패치·펌웨어를 중앙에 두고 재사용 — 기기마다 매체 복사 불필요</li>
+  <li><strong>OTA 업그레이드 전략</strong>: 핵심 버전 표시와 강제/비강제 업그레이드 방식 지원. <strong>가치</strong>: 중요 버전 식별·긴급 수정의 강제 추진 — 누락·무질서한 업그레이드로 인한 호환·보안 위험 감소</li>
+  <li><strong>규칙 체인 관리</strong>: 규칙 추가·시작/중지·일괄 삭제, 목록/카드 관리. <strong>가치</strong>: 업무 연동 규칙을 중앙에서 켜고 끔 — 불필요한 체인을 끄면 오트리거 방지</li>
+  <li><strong>규칙 체인 시각화 오케스트레이션</strong>: 체인형 시각 편집으로 데이터 흐름·조건 판단·하류 동작을 의도대로 연결. <strong>가치</strong>: 시나리오가 맞춤 개발에서 드래그 구성으로 — 업무 변경은 체인만 수정, 개발 일정 대기 불필요</li>
+  <li><strong>규칙 가져오기/내보내기</strong>: 규칙 가져오기로 환경 간 이전·재사용. <strong>가치</strong>: 성숙한 규칙을 납품 자산으로 축적 — 프로젝트마다 처음부터 작성하지 않음</li>
+  <li><strong>메시지 구성</strong>: 알림 채널과 메시지 기본 설정을 통일 유지. <strong>가치</strong>: 알림 출구를 한곳에서 관리 — 채널·계정 변경 시 업무 코드 수정 불필요</li>
+  <li><strong>메시지 템플릿</strong>: 이메일·SMS·기업 위챗·딩톡·페이슈·Webhook 등 채널별 템플릿 내용 유지. <strong>가치</strong>: 문안을 한 번 확정해 다수에 재사용 — 경보 문구 통일, 임시 조합 실수 감소</li>
+  <li><strong>메시지 푸시</strong>: 채널별 푸시 작업 생성, 테스트 발송·푸시 시작 지원. <strong>가치</strong>: 경보·업무 이벤트를 담당자의 일상 업무 도구로 전달 — 시스템 안에 갇히지 않음</li>
+  <li><strong>푸시 이력</strong>: 채널별로 푸시 기록 회고. <strong>가치</strong>: 알림 발송·도달 여부 추적 — 감사와 도달 전략 최적화에 활용</li>
+  <li><strong>알림 사용자·그룹</strong>: 알림 사용자와 그룹을 유지해 역할/교대별 정밀 도달. <strong>가치</strong>: 핵심 경보는 필요한 사람에게만 — 누락을 줄이면서 전원 스팸으로 인한 경보 피로도 방지</li>
 </ul>
 
 #### 📱 모바일 APP
@@ -745,16 +777,56 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
   <img src=".image/banner/banner1002.png" alt="Screenshot 16" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1137.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1138.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1149.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1150.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1139.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1140.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1151.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1152.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1141.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1142.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1153.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1154.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1155.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1156.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1157.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1158.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1159.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1160.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1161.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1162.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1163.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1164.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1165.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1166.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1000.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1001.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1002.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1003.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1004.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1005.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1006.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1007.jpg" alt="Screenshot 1" width="49%">
 </div>
 
 ## 🛠️ 서비스 지원
@@ -912,7 +984,7 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
 </tr>
 <tr style="background-color: #f8f9fa;">
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>爱吃小柚子</nobr></td>
-<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT의 영상 감시 및 지능형 분석 분야 발전을 위해 국가 표준 GB28181과 AI 업무 프로세스의 종단 간 연동 및 검증 테스트를 주도하고 완료하였으며, 화면 선명도와 재생 부드러움에 대한 전담 테스트 및 평가를 수행하여 GB28181 접속 신뢰성, 링크 안정성 및 시청 경험 개선에 중요한 근거를 제공하였습니다.</td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT가 「제대로 돌아가고, 안정적으로 돌아가며, 부담 없이 돌릴 수 있는」 학습 경험을 갖추도록, 멀티 GPU 학습·체크포인트 이어학습·노드 측 배포를 체계적으로 연결하여 현장 연산력을 실제로 쓸 수 있게 하고 학습 작업을 통제 가능하게 만들었습니다. 서버의 모든 GPU를 자동 인식·활용하고, 학습 페이지에서 필요에 따라 단일/다중 카드를 선택할 수 있어 더 이상 한 장만 보이는 제한에 묶이지 않습니다. 일반 데이터셋 형식과 디렉터리 구조를 폭넓게 호환하고 대용량 로컬 데이터셋 업로드를 지원하며, 학습 실패 후에도 원본 데이터를 남겨 빠르게 재시도할 수 있어 데이터 준비와 반복 작업 비용을 크게 줄였습니다. 학습 진행 상황을 보이게 하고 작업을 멈추고 이어갈 수 있게 하여, 중단 후 결과 손실이나 「중지」를 눌렀는데도 백그라운드에서 계속 도는 문제를 줄였으며, 로컬·원격 스케줄링 실패 시에도 신속히 되돌리고 명확한 피드백을 제공합니다. 프론트엔드의 GPU 선택·이어학습·중지 상태 표시도 함께 개선하고, 모델 게시 성공이 실패로 오인되거나 사용자 지정 미리보기 이미지가 덮어써지거나 이름/버전으로 모델을 찾지 못하거나 데이터셋 동기화가 타임아웃·충돌하는 문제를 고쳐 「학습—게시—사용」 루프를 더 원활하고 신뢰성 있게 만들었습니다. 이전에 국가 표준 GB28181과 AI 업무 프로세스의 종단 간 연동 검증 및 화면 선명도 전담 평가도 주도하여, 국표 접속 신뢰성과 시청 경험 개선에 중요한 근거를 제공하였습니다.</td>
 </tr>
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>Dark</nobr></td>
@@ -954,7 +1026,7 @@ EasyAIoT 플랫폼과 코드를 깊이 이해하실 수 있도록 다양한 서�
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>특별 감사</strong>: 위 기여자들의 노력은 크로스 플랫폼 배포 문서·스크립트, 국가 표준 영상(GB28181) 역량 구현, AI 연동 검증, 다중 브랜드 카메라 직접 연결 발견 및 일괄 온보딩, 천지도 공간 시각화 완전 구현, 이기종 스트리밍 미디어 클러스터 배포 및 스케줄링 아키텍처, 번호판 인식 알고리즘 및 완전한 코드 구현, EasyAIoT-Edge 종단 간 연동(카메라·AI), 교내 개발자 커뮤니티 조직 및 청년 협업 생태계 구축, IoT 장치 상·하행 폐루프와 DJI FlightHub 공중 시야 접속, 산업 Modbus 장치 상행 수집 등 여러 측면에서 EasyAIoT의 발전에 기여했습니다. 그들의 전문성과 헌신은 우리가 배우고 존경할 만합니다. 다시 한 번 이 탁월한 기여자들에게 진심으로 감사드립니다! 🙏
+<strong>특별 감사</strong>: 위 기여자들의 노력은 크로스 플랫폼 배포 문서·스크립트, 국가 표준 영상(GB28181) 역량 구현, AI 연동 검증, 멀티 GPU 학습 가용성 및 체크포인트 이어학습 역량 구현, 다중 브랜드 카메라 직접 연결 발견 및 일괄 온보딩, 천지도 공간 시각화 완전 구현, 이기종 스트리밍 미디어 클러스터 배포 및 스케줄링 아키텍처, 번호판 인식 알고리즘 및 완전한 코드 구현, EasyAIoT-Edge 종단 간 연동(카메라·AI), 교내 개발자 커뮤니티 조직 및 청년 협업 생태계 구축, IoT 장치 상·하행 폐루프와 DJI FlightHub 공중 시야 접속, 산업 Modbus 장치 상행 수집 등 여러 측면에서 EasyAIoT의 발전에 기여했습니다. 그들의 전문성과 헌신은 우리가 배우고 존경할 만합니다. 다시 한 번 이 탁월한 기여자들에게 진심으로 감사드립니다! 🙏
 </p>
 
 ## 💝 오픈소스 수호자

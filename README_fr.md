@@ -135,6 +135,7 @@ Beaucoup de projets IoT intelligents butent au déploiement : <strong>les foncti
     </ul>
   </li>
   <li><strong>Annotation de jeux de données et gestion multi-formats</strong> : Fournit un espace de travail d'annotation d'images visuel, prenant en charge l'annotation par rectangles et polygones, la gestion des catégories et le suivi de progression ; prend en charge l'importation et l'exportation flexibles des formats de jeux de données courants (YOLO, COCO, ImageFolder, etc.), avec intégration aux jeux de données sur plateforme cloud pour l'importation en un clic et l'exportation synchronisée, assurant la continuité du pipeline complet : collecte de données, annotation, entraînement et déploiement.</li>
+  <li><strong>Entraînement multi-GPU, reprise depuis point de contrôle et déploiement côté nœud</strong> : Surmonte les goulots d'étranglement de l'entraînement — « GPU présents mais inutilisés, tâches difficilement maîtrisables, résultats perdus en cas d'interruption » — en reliant de façon systémique l'exploitation multi-GPU, l'ordonnancement contrôlable des tâches et le déploiement côté nœud, pour que la puissance GPU sur site soit réellement exploitable et que les jobs d'entraînement soient réellement maîtrisables. La plateforme détecte et planifie automatiquement l'ensemble des GPU serveur ; l'utilisateur peut choisir une ou plusieurs cartes sur la page d'entraînement, sans être limité à « une seule carte visible ». Compatible avec de nombreux formats et structures de jeux de données courants, elle prend en charge le téléversement de jeux locaux volumineux et conserve les données d'origine après un échec pour une nouvelle tentative rapide, réduisant nettement le coût de préparation et de reprise. La progression est entièrement visible, les tâches peuvent être arrêtées et reprises — évitant la perte de résultats après interruption ou le cas « arrêt demandé mais processus toujours actif en arrière-plan ». Les ordonnanceurs locaux et distants se rétractent aussi rapidement en cas d'échec avec un retour clair. L'interface améliore en parallèle la sélection GPU, la reprise d'entraînement et l'affichage de l'état d'arrêt, et corrige les faux échecs de publication de modèle, l'écrasement des aperçus personnalisés, l'impossibilité de retrouver un modèle par nom/version, ainsi que les timeouts et conflits de synchronisation des jeux de données — pour une boucle « entraîner — publier — utiliser » plus fluide et fiable.</li>
   <li><strong>Redirection de flux</strong> : Prend en charge la visualisation directe des flux vidéo en temps réel des caméras sans activer les fonctionnalités d'analyse IA. En créant des tâches de redirection de flux, plusieurs caméras peuvent être redirigées par lots, permettant la visualisation synchrone de plusieurs flux vidéo pour répondre aux besoins des scénarios de surveillance vidéo pure.</li>
   <li><strong>Détection GPU, répartition de charge et coopération multi-GPU</strong> : La plateforme détecte les GPU disponibles et alloue intelligemment l'encodage/décodage vidéo et l'inférence algorithmique selon la charge en temps réel de chaque carte, avec exécution parallèle sur plusieurs GPU lorsque c'est pertinent, afin d'augmenter le débit multi-flux et l'utilisation des ressources tout en préservant la stabilité et la coordination encodage–inférence en configuration multi-cartes.</li>
   <li><strong>Transport intelligent et tirage de flux hautement fiable</strong> : Sur les chemins RTSP et assimilés, le système peut sélectionner et basculer dynamiquement le protocole de transport (couche transport) à partir de l'URL, du chemin et de signaux associés ; par défaut, le tirage depuis les caméras utilise UDP pour réduire la latence. En cas d'écrans gris consécutifs, d'erreurs de décodage ou d'effondrement du flux (blocage du décodage), une reconnexion RTSP et une restauration de liaison sont déclenchées automatiquement afin de limiter artefacts prolongés ou gel d'image.</li>
@@ -159,14 +160,45 @@ Beaucoup de projets IoT intelligents butent au déploiement : <strong>les foncti
 #### 🌐 Capacités IoT
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
-  <li><strong>Connexion et gestion des appareils</strong> : Enregistrement, authentification, surveillance d'état, gestion du cycle de vie des appareils.</li>
-  <li><strong>Gestion des produits et des modèles d'appareils</strong> : Définition de produit, configuration du modèle d'appareil, gestion des produits.</li>
-  <li><strong>Support multi-protocoles</strong> : MQTT, TCP, HTTP et d'autres protocoles IoT.</li>
-  <li><strong>Authentification des appareils et enregistrement dynamique</strong> : Connexion sécurisée, authentification d'identité, enregistrement dynamique des appareils.</li>
-  <li><strong>Moteur de règles</strong> : Règles de flux de données, routage des messages, transformation des données.</li>
-  <li><strong>Collecte et stockage des données</strong> : Collecte, stockage, requête et analyse des données des appareils.</li>
-  <li><strong>Surveillance d'état des appareils et gestion des alertes</strong> : Surveillance en temps réel, alertes d'anomalies, prise de décision intelligente.</li>
-  <li><strong>Gestion des notifications</strong> : Prend en charge 7 méthodes de notification, notamment Feishu, DingTalk, Enterprise WeChat, Email, Tencent Cloud SMS, Alibaba Cloud SMS et Webhook, permettant des notifications d'alerte flexibles et multi-canaux.</li>
+  <li><strong>Gestion des modèles de produit</strong> : Le produit sert de modèle pour des appareils similaires — création, activation/arrêt, recherche et vues tableau/carte ; configuration du scénario, fabricant, modèle et autres fiches de base. <strong>Valeur</strong> : Une fiche pour une classe d'appareils, réutilisable à grande échelle — plus besoin de tout reconfigurer appareil par appareil</li>
+  <li><strong>Modélisation multi-types de produits</strong> : Quatre formes prises en charge : connexion directe, passerelle, sous-appareil de passerelle et vidéo. <strong>Valeur</strong> : Agrégation périphérique, terminaux directs et appareils vidéo sont modélisés séparément — topologie et chemins d'accès ne se mélangent pas</li>
+  <li><strong>Protocole d'accès et authentification au niveau produit</strong> : Configuration au niveau produit du protocole, format de données, mode d'authentification et stratégie de chiffrement/déchiffrement. <strong>Valeur</strong> : Les règles d'accès vivent sur le produit et sont héritées par les appareils — pas d'accord protocole/auth par appareil</li>
+  <li><strong>Définition des propriétés du modèle d'objet</strong> : Définir les propriétés (points de mesure) reportables/lisibles-écritables, modèles standard ou personnalisés ; édition en brouillon, effet après publication. <strong>Valeur</strong> : Se mettre d'accord d'abord sur « ce que l'on peut observer » — écrans, règles et alertes partagent un même jeu de champs</li>
+  <li><strong>Définition des services du modèle d'objet</strong> : Définir les services invocables avec paramètres d'entrée/sortie ; brouillon puis publication. <strong>Valeur</strong> : Se mettre d'accord sur « ce que l'on peut faire à distance » — appels selon contrat, moins d'API de contrôle ponctuelles</li>
+  <li><strong>Définition des événements du modèle d'objet</strong> : Définir les types d'événements métier que l'appareil remontera ; brouillon puis publication. <strong>Valeur</strong> : Se mettre d'accord sur « ce qui peut arriver » — journaux d'événements et déclencheurs de règles partagent la même sémantique</li>
+  <li><strong>Contrôle de publication du modèle d'objet</strong> : Les modifications partent en brouillon ; elles n'affectent le côté appareil qu'après confirmation et publication. <strong>Valeur</strong> : Un tampon avant impact — les changements non validés ne frappent pas les appareils en ligne</li>
+  <li><strong>Adaptation par scripts de protocole</strong> : Les trames standard n'ont pas besoin de script ; les protocoles propriétaires peuvent utiliser des scripts d'encodage/décodage montée/descente avec modèles, validation, débogage immédiat et rechargement à chaud à l'enregistrement. <strong>Valeur</strong> : Les appareils multi-fournisseurs existants rejoignent un modèle unifié sans changer le firmware — l'intégration passe de « modifier l'appareil » à « configurer un script »</li>
+  <li><strong>Guide d'accès produit</strong> : La fiche produit intègre paramètres d'intégration, authentification, exemples de messages et notes d'acceptance. <strong>Valeur</strong> : Manuel d'intégration standard par produit — les nouveaux peuvent accepter en suivant la page</li>
+  <li><strong>Vue des appareils liés au produit</strong> : Consulter la liste des appareils enregistrés et leur état en ligne sous un produit. <strong>Valeur</strong> : Inventaire du taux en ligne et de la couverture par produit — responsabilités ops/acceptance claires</li>
+  <li><strong>Gestion des fiches appareils</strong> : CRUD complet, recherche par produit/identifiant/état en ligne, vues tableau et carte. <strong>Valeur</strong> : Des appareils dispersés deviennent un registre consultable — une entrée pour inventaire et transfert de projet</li>
+  <li><strong>État en ligne et d'activation</strong> : Listes et détails affichent connexion, activation, heure d'activation et dernière mise en ligne. <strong>Valeur</strong> : Traiter d'abord les hors ligne et non activés — fin de la chasse à l'aveugle dans « tous les appareils »</li>
+  <li><strong>Enregistrement d'appareils par produit</strong> : À la création, lier l'appareil à un produit pour hériter protocole et scénario. <strong>Valeur</strong> : L'enregistrement attache le bon modèle produit — scaler en clonant le produit</li>
+  <li><strong>Configuration d'accès collecte industrielle</strong> : Pour les produits de collecte industrielle, configurer hôte, points de mesure et période à l'enregistrement. <strong>Valeur</strong> : Compteurs, capteurs et points terrain configurés une fois à l'enregistrement — moins d'outils de collecte séparés</li>
+  <li><strong>Fiche d'informations de base</strong> : Conserver nom, identifiant, SN, produit, version, IP et autres champs un-appareil-une-fiche. <strong>Valeur</strong> : Confirmer rapidement « qui est-ce » lors du remplacement, de la responsabilité et du rapprochement</li>
+  <li><strong>Guide d'accès appareil</strong> : Par type d'appareil : commandes recommandées, paramètres d'intégration, auth, messages, acceptance et notes de résidence backend ; commandes copiables après modification des paramètres. <strong>Valeur</strong> : L'intégration terrain passe de la chasse aux docs à l'acceptance par copie de commandes — cycles de mise en service et PoC plus courts</li>
+  <li><strong>État d'exécution en temps réel</strong> : Afficher les valeurs live des propriétés selon le modèle d'objet ; vues tableau/carte et actualisation. <strong>Valeur</strong> : Juger les points clés sans se connecter à l'appareil ni lire les trames brutes</li>
+  <li><strong>Comparaison d'ombre d'appareil</strong> : Voir côte à côte état reporté, état désiré et écarts, avec JSON complet conservé. <strong>Valeur</strong> : Voir d'un coup si le « désiré » correspond au « réel » — le diagnostic passe du guesswork à la comparaison</li>
+  <li><strong>Envoi des propriétés désirées</strong> : Modifier en lot les valeurs désirées des propriétés écrites et pousser en un clic ; suivre en cours/succès/échec. <strong>Valeur</strong> : Réglages à distance sans déplacement — les changements ont un accusé de réception</li>
+  <li><strong>Invocation de services du modèle d'objet</strong> : Remplir les paramètres des services publiés et invoquer ; suivre les accusés de commande. <strong>Valeur</strong> : Démarrage/arrêt, reset, etc. en un clic avec confirmation d'exécution — boucle auditable</li>
+  <li><strong>File d'attente hors ligne</strong> : Hors ligne, les commandes écrivent toujours l'ombre désirée ; à la reconnexion, l'appareil les tire ou les reçoit selon le protocole. <strong>Valeur</strong> : Réseau faible ou brève déconnexion ne perd pas l'intention de contrôle — rattrapage à la reprise</li>
+  <li><strong>Contrôle proxy sous-appareils via passerelle</strong> : Les sous-appareils sont pilotés via leur passerelle parente. <strong>Valeur</strong> : De nombreux terminaux périphériques peuvent être télécommandés sans lien direct à la plateforme</li>
+  <li><strong>Caméras liées</strong> : Les appareils IoT peuvent lier/délier des caméras du catalogue. <strong>Valeur</strong> : Associer points de mesure et points vidéo — savoir quelle voie regarder en cas d'anomalie</li>
+  <li><strong>Supervision multi-écrans et liaison IA</strong> : Dans l'invocation de fonctions, basculer en aperçu 1/4/9 des caméras liées et activer l'analyse IA. <strong>Valeur</strong> : Paramétrer et commander tout en voyant le site — « chiffres » et « images » dans un même geste</li>
+  <li><strong>Journaux d'événements</strong> : Agréger info/avertissement/erreur remontés par les appareils ; filtrer par type, nom et heure. <strong>Valeur</strong> : Répondre à « que s'est-il passé sur site » — rétrospective avec événements bruts, pas seulement des pop-ups</li>
+  <li><strong>Journaux de commandes</strong> : Suivre en cours/succès/échec des réglages de propriétés et appels de services. <strong>Valeur</strong> : Répondre à « la commande est-elle arrivée et a-t-elle été acceptée » — fin des disputes verbales d'intégration</li>
+  <li><strong>Journaux d'appareils</strong> : Agréger les journaux multi-niveaux côté appareil ; recherche par mot-clé et heure. <strong>Valeur</strong> : Diagnostiquer sans se connecter pour lire les logs locaux — localiser firmware et anomalies métier dans le cloud</li>
+  <li><strong>Liaison sous-appareils de passerelle</strong> : Les passerelles peuvent lier/délier des sous-appareils en lot. <strong>Valeur</strong> : Topologie périphérique claire et gérable — frontières nettes lors d'extension, remplacement de passerelle ou isolation de panne</li>
+  <li><strong>Inventaire des capacités Topic</strong> : Par appareil, lister les canaux montée/descente (config, ombre, propriétés, services, événements, OTA, sync d'horloge, etc.). <strong>Valeur</strong> : R&D et intégration partagent un même catalogue de canaux — moins de retouches liées aux contrats de canal divergents</li>
+  <li><strong>Gestion des paquets OTA</strong> : Upload et gestion centralisés des paquets logiciels/firmware avec version, téléchargement, édition, suppression et double vue. <strong>Valeur</strong> : Correctifs et firmwares stockés de façon réutilisable — plus de copie de média appareil par appareil</li>
+  <li><strong>Stratégie de mise à niveau OTA</strong> : Marquer les versions critiques et choisir le mode forcé/non forcé. <strong>Valeur</strong> : Versions importantes identifiables, correctifs urgents forcés — moins de risques de mises à niveau manquées ou chaotiques</li>
+  <li><strong>Gestion des chaînes de règles</strong> : Création, activation/arrêt, suppression en lot ; gestion liste/carte. <strong>Valeur</strong> : Règles de liaison métier activables/désactivables centralement — couper les chaînes inutiles pour éviter les faux déclenchements</li>
+  <li><strong>Orchestration visuelle des chaînes de règles</strong> : Édition visuelle en chaîne reliant flux de données, conditions et actions aval selon l'intention. <strong>Valeur</strong> : Les scénarios passent du développement sur mesure à la configuration par glisser-déposer — changer la chaîne pour le métier, sans attendre un sprint</li>
+  <li><strong>Import/export de règles</strong> : Import de règles pour migration et réutilisation multi-environnements. <strong>Valeur</strong> : Les règles matures deviennent des actifs de livraison — copier d'un projet à l'autre plutôt que tout réécrire</li>
+  <li><strong>Configuration des messages</strong> : Maintenir de façon unifiée les canaux de notification et les réglages de base. <strong>Valeur</strong> : Sorties de notification gérées au même endroit — changer de canal ou de compte sans toucher au code métier</li>
+  <li><strong>Modèles de messages</strong> : Maintenir le contenu des modèles pour e-mail, SMS, Enterprise WeChat, DingTalk, Feishu, Webhook, etc. <strong>Valeur</strong> : Rédaction une fois, réutilisation partout — formulations d'alerte unifiées</li>
+  <li><strong>Envoi de messages</strong> : Créer des tâches de push par canal ; envoi test et démarrage du push. <strong>Valeur</strong> : Alertes et événements métier atteignent les outils quotidiens des responsables — plus bloqués dans le système</li>
+  <li><strong>Historique des envois</strong> : Revoir les enregistrements de push par canal. <strong>Valeur</strong> : Tracer si la notification a été émise et atteinte — audit et optimisation de la stratégie de touch</li>
+  <li><strong>Utilisateurs et groupes de notification</strong> : Maintenir utilisateurs et groupes pour un ciblage précis par rôle/équipe. <strong>Valeur</strong> : Les alertes critiques n'atteignent que les bonnes personnes — moins de manques, moins de fatigue d'alerte</li>
 </ul>
 
 #### 📱 APP mobile
@@ -745,16 +777,56 @@ EasyAIoT est un projet d'apprentissage open source, sans lien avec des activité
   <img src=".image/banner/banner1002.png" alt="Capture d'écran 16" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1137.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1138.jpg" alt="Capture d'écran 1" width="49%">
+  <img src=".image/banner/banner1149.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1150.jpg" alt="Capture d'écran 1" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1139.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1140.jpg" alt="Capture d'écran 1" width="49%">
+  <img src=".image/banner/banner1151.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1152.jpg" alt="Capture d'écran 1" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1141.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1142.jpg" alt="Capture d'écran 1" width="49%">
+  <img src=".image/banner/banner1153.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1154.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1155.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1156.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1157.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1158.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1159.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1160.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1161.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1162.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1163.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1164.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1165.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1166.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1000.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1001.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1002.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1003.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1004.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1005.jpg" alt="Capture d'écran 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1006.jpg" alt="Capture d'écran 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1007.jpg" alt="Capture d'écran 1" width="49%">
 </div>
 
 ## 🛠️ Support de service
@@ -912,7 +984,7 @@ Voici les contributeurs exceptionnels qui ont apporté une contribution signific
 </tr>
 <tr style="background-color: #f8f9fa;">
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>爱吃小柚子</nobr></td>
-<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">Pour faire progresser EasyAIoT dans la vidéosurveillance et l'analyse intelligente, a dirigé et mené à bien l'intégration et les tests de validation de bout en bout entre la norme nationale GB28181 et les flux métier IA ; a également assuré des tests et une évaluation dédiés de la netteté d'image et de la fluidité de lecture, fournissant une base solide pour la fiabilité d'accès GB28181, la stabilité des liaisons et l'amélioration continue de l'expérience visuelle.</td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">Pour faire progresser EasyAIoT vers un entraînement qui démarre vraiment, reste stable et reste simple à piloter, a systématiquement livré l'entraînement multi-GPU, la reprise sur point de contrôle et le déploiement côté nœud, afin que la puissance de calcul sur site soit pleinement utilisable et que les tâches d'entraînement restent maîtrisables : les serveurs détectent et utilisent automatiquement tous les GPU, et l'utilisateur peut choisir une ou plusieurs cartes sur la page d'entraînement au lieu d'être limité à une seule GPU visible ; formats et structures de jeux de données courants pris en charge, upload de grands jeux locaux, conservation des données d'origine après un échec pour réessayer rapidement — ce qui réduit fortement le coût de préparation et des allers-retours ; progression visible, tâches arrêtables et reprenables, évitant la perte de résultats après interruption ou un « stop » qui laisse encore tourner des processus en arrière-plan, avec repli et retour d'information clairs en cas d'échec d'ordonnancement local ou distant ; a aussi amélioré la sélection GPU, la reprise et l'affichage de l'état d'arrêt côté frontend, et corrigé les faux échecs de publication, l'écrasement des images d'aperçu personnalisées, la recherche de modèles par nom/version inopérante, ainsi que les timeouts et conflits de synchronisation des jeux de données — pour un cycle entraîner–publier–utiliser plus fluide et fiable. Auparavant, a également dirigé les tests d'intégration bout en bout GB28181 et flux métier IA ainsi que l'évaluation dédiée de la netteté d'image, fournissant une base solide pour un accès norme nationale fiable et une meilleure expérience visuelle.</td>
 </tr>
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>Dark</nobr></td>
@@ -954,7 +1026,7 @@ Voici les contributeurs exceptionnels qui ont apporté une contribution signific
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>Remerciements spéciaux</strong> : Le travail des contributeurs ci-dessus a fait avancer EasyAIoT sur plusieurs fronts, notamment la documentation et les scripts de déploiement multiplateforme, la mise en œuvre des capacités vidéo selon la norme nationale (dont GB28181), les tests d'intégration IA, la découverte directe multi-marques et l'intégration en masse des caméras, la mise en production de la visualisation spatiale Tianditu, l'architecture de déploiement et d'ordonnancement des clusters multimédia hétérogènes, la mise en production de l'algorithme de reconnaissance de plaques et de son implémentation complète, l'intégration de bout en bout EasyAIoT-Edge reliant l'accès caméra et l'IA sur l'edge, l'organisation de la communauté de développeurs sur le campus et la construction d'un écosystème collaboratif pour la jeunesse, la boucle fermée montante/descendante des équipements IoT et l'intégration de la vision aérienne DJI FlightHub, ainsi que l'acquisition montante Modbus des équipements industriels. Leur professionnalisme et leur dévouement méritent notre reconnaissance et notre respect. Encore une fois, nous exprimons notre gratitude la plus sincère à ces contributeurs exceptionnels ! 🙏
+<strong>Remerciements spéciaux</strong> : Le travail des contributeurs ci-dessus a fait avancer EasyAIoT sur plusieurs fronts, notamment la documentation et les scripts de déploiement multiplateforme, la mise en œuvre des capacités vidéo selon la norme nationale (dont GB28181), les tests d'intégration IA, l'utilisabilité de l'entraînement multi-GPU et de la reprise sur point de contrôle, la découverte directe multi-marques et l'intégration en masse des caméras, la mise en production de la visualisation spatiale Tianditu, l'architecture de déploiement et d'ordonnancement des clusters multimédia hétérogènes, la mise en production de l'algorithme de reconnaissance de plaques et de son implémentation complète, l'intégration de bout en bout EasyAIoT-Edge reliant l'accès caméra et l'IA sur l'edge, l'organisation de la communauté de développeurs sur le campus et la construction d'un écosystème collaboratif pour la jeunesse, la boucle fermée montante/descendante des équipements IoT et l'intégration de la vision aérienne DJI FlightHub, ainsi que l'acquisition montante Modbus des équipements industriels. Leur professionnalisme et leur dévouement méritent notre reconnaissance et notre respect. Encore une fois, nous exprimons notre gratitude la plus sincère à ces contributeurs exceptionnels ! 🙏
 </p>
 
 ## 💝 Gardiens de l'open source

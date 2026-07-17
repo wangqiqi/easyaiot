@@ -135,6 +135,7 @@ EasyAIoT是一個雲邊端一體化的智能物聯網平臺，專註於AI與IoT�
     </ul>
   </li>
   <li><strong>數據集標註與多格式數據集管理</strong>：內建可視化圖像標註工作台，支持矩形框、多邊形等標註形態，以及標註類別管理與進度追蹤；全面兼容 YOLO、COCO、ImageFolder 等主流數據集格式的靈活導入與導出，並打通雲平台數據集通道，支持雲端數據集的一鍵導入與同步導出，貫通「數據采集—人工標註—模型訓練—部署推理」全流程閉環</li>
+  <li><strong>多卡訓練、斷點續訓與節點側部署</strong>：突破「有卡用不上、任務控不住、中斷成果丟」的訓練落地瓶頸，系統性打通多卡算力利用、任務可控調度與節點側部署鏈路，讓現場 GPU 真正用得上、訓練任務真正控得住。平台可自動識別並調度伺服器全部 GPU，用戶可在訓練頁按需選擇單卡或多卡，不再受限於「只能看到一張卡」；兼容多種常見數據集格式與目錄結構，支持大容量本地數據集上傳，訓練失敗後仍可保留原始數據快速重試，顯著降低數據準備與反復折騰的成本。訓練進度全程可見，任務可停可續——避免中斷後成果丟失、點擊停止卻仍在後台空轉等痛點，本地與遠程訓練調度在失敗時也能及時回退並給出清晰反饋。同步完善前端 GPU 選擇、繼續訓練與停止狀態展示，並修復模型發布誤判失敗、自定義預覽圖被覆蓋、按名稱/版本查不到模型以及數據集同步易超時、易衝突等問題，讓「訓練—發布—使用」閉環更順暢可靠</li>
   <li><strong>推流轉發</strong>：支持在無需啟用AI分析功能的情況下，直接觀看攝像頭實時畫面。通過創建推流轉發任務，可將多路攝像頭進行批量推送，實現多路視頻流的同步觀看，滿足純視頻監控場景需求</li>
   <li><strong>GPU 探測、負載分配與多卡協同</strong>：平台具備 GPU 資源探測與智能分配能力，可自動識別可用 GPU 數量，並依據各卡即時負載將視頻編解碼與算法推理任務動態調度至多卡並行執行，在保障穩定性的前提下提升多路流處理吞吐與算力利用率，實現多卡場景下的畫面編解碼與模型推理協同</li>
   <li><strong>智能傳輸協議與拉流高可靠</strong>：在 RTSP 等拉流鏈路上，系統可根據 URL/路徑等條件對傳輸層協議進行動態判斷與切換；預設對攝像頭拉流採用 UDP 傳輸以降低時延。當連續多幀出現灰屏、解碼異常或流塌縮（解碼失敗導致畫面停滯）時，自動觸發 RTSP 重連與鏈路恢復，降低長時間花屏、卡死對業務的影響</li>
@@ -159,14 +160,45 @@ EasyAIoT是一個雲邊端一體化的智能物聯網平臺，專註於AI與IoT�
 #### 🌐 IoT能力
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
-  <li><strong>設備接入與管理</strong>：設備註冊、認證、狀態監控、生命周期管理</li>
-  <li><strong>產品與物模型管理</strong>：產品定義、物模型配置、產品管理</li>
-  <li><strong>多協議支持</strong>：MQTT、TCP、HTTP等多種物聯網協議</li>
-  <li><strong>設備認證與動態註冊</strong>：安全接入、身份認證、動態設備註冊</li>
-  <li><strong>規則引擎</strong>：數據流轉規則、消息路由、數據轉換</li>
-  <li><strong>數據采集與存儲</strong>：設備數據采集、存儲、查詢與分析</li>
-  <li><strong>設備狀態監控與告警管理</strong>：實時監控、異常告警、智能決策</li>
-  <li><strong>通知管理</strong>：支持7種通知方式，包括飛書、釘釘、企業微信、郵件、騰訊雲短信、阿里雲短信、Webhook，實現靈活的多渠道告警通知</li>
+  <li><strong>產品模型管理</strong>：以產品為同類設備模板，支持創建、啟停、檢索與表格/卡片雙視圖，配置應用場景、廠商、型號等基礎檔案。<strong>價值</strong>：同類設備一次建檔、多台復用，擴容不必逐台從零配置</li>
+  <li><strong>多類型產品建模</strong>：支持直連、網關、網關子設備、視頻四類產品形態。<strong>價值</strong>：邊緣匯聚、直連終端與視頻類設備按形態分開建產品，拓撲與接入路徑不會混用、亂配</li>
+  <li><strong>產品接入協議與認證配置</strong>：產品級配置接入協議、數據格式、認證方式與加解密策略。<strong>價值</strong>：接入規範落在產品上，下屬設備自動繼承，避免每台設備單獨約定協議與鑒權</li>
+  <li><strong>物模型屬性定義</strong>：定義設備可上報/可讀寫的屬性（測點），支持標準模板與自定義，草稿編輯、發布後生效。<strong>價值</strong>：先約定「能看哪些量」，大屏、規則、告警認同一套字段，少因測點名不一致返工</li>
+  <li><strong>物模型服務定義</strong>：定義設備可被調用的服務及入參出參，草稿編輯、發布後生效。<strong>價值</strong>：先約定「能遠程做什麼」，功能調用按契約填參，少寫一次性控制接口</li>
+  <li><strong>物模型事件定義</strong>：定義設備會上報的業務事件類型，草稿編輯、發布後生效。<strong>價值</strong>：先約定「會發生哪些事」，事件日誌與規則觸發有統一語義，告警不會各說各話</li>
+  <li><strong>物模型發布管控</strong>：物模型修改先落草稿，確認後發布才對設備側生效。<strong>價值</strong>：改模型有緩衝，避免未驗證改動直接衝擊在線設備，降低誤操作風險</li>
+  <li><strong>協議腳本適配</strong>：標準報文可不配腳本；私有協議可編寫上下行編解碼，支持模板套用、校驗、即時調試與保存熱加載。<strong>價值</strong>：異廠家存量設備不必改固件即可納入統一物模型，對接從「改設備」變為「配腳本」</li>
+  <li><strong>產品接入指引</strong>：產品詳情內置聯調參數、鑒權、報文與驗收說明。<strong>價值</strong>：按產品交付時有標準聯調手冊，新人按頁操作即可驗收，少依賴駐場專家口述</li>
+  <li><strong>產品關聯設備一覽</strong>：在產品下查看已登記設備清單與在線狀態。<strong>價值</strong>：按產品盤點在線率與覆蓋規模，運維與驗收責任邊界清晰</li>
+  <li><strong>設備檔案納管</strong>：設備增刪改查、按產品/標識/在線狀態檢索，表格與卡片雙視圖。<strong>價值</strong>：散落設備收成可檢索台賬，盤點與項目移交有統一入口</li>
+  <li><strong>設備在線與激活狀態</strong>：列表與詳情展示連接狀態、激活狀態、激活時間與最後上線時間。<strong>價值</strong>：優先處理離線與未激活設備，少在「全部設備」裡盲找問題機</li>
+  <li><strong>按產品登記設備</strong>：創建設備時綁定所屬產品，繼承產品協議與場景。<strong>價值</strong>：登記即掛上正確產品模板，擴容時複製產品即可，少反復選協議、填鑒權</li>
+  <li><strong>工業采集接入配置</strong>：工業采集類產品登記時可配置主機、測點與采集周期。<strong>價值</strong>：電表、傳感等現場測點在登記環節一次配齊，少另開數采工具</li>
+  <li><strong>設備基礎信息檔案</strong>：沉澱名稱、標識、SN、產品、版本、IP 等一機一檔信息。<strong>價值</strong>：換機、追責、對賬時快速確認「這是誰」，減少口頭確認與現場翻找</li>
+  <li><strong>設備接入指引</strong>：按設備類型給出推薦命令、聯調參數、鑒權、報文、驗收與後台常駐說明，參數改完命令可複製。<strong>價值</strong>：現場聯調從翻文檔變成抄命令驗收，縮短上線與 PoC 周期</li>
+  <li><strong>運行狀態實時查看</strong>：按物模型展示設備當前屬性實況，支持表格/卡片與刷新。<strong>價值</strong>：值班不登設備、不看原始報文，也能判斷關鍵測點此刻是否正常</li>
+  <li><strong>設備影子對照</strong>：同時查看上報態、期望態與差異，並保留完整 JSON。<strong>價值</strong>：一眼判斷「想讓它怎樣」和「實際怎樣」是否一致，排障從猜測變對照</li>
+  <li><strong>屬性期望下發</strong>：對可寫屬性批量改期望值並一鍵下發，跟踪處理中/成功/失敗。<strong>價值</strong>：遠程調參不必派人到場，改動有回執，少無效出車</li>
+  <li><strong>物模型服務調用</strong>：按已發布服務填參發起調用，跟踪指令回執。<strong>價值</strong>：啟停、復位等動作一鍵下達且可確認是否執行，處置閉環可審計</li>
+  <li><strong>離線指令排隊</strong>：設備離線時指令仍寫入期望影子，上線後按協議拉取或接收。<strong>價值</strong>：弱網或短暫離線不丟控制意圖，上線即補齊，少重複操作</li>
+  <li><strong>子設備網關代理控制</strong>：子設備經所屬網關代理下發控制。<strong>價值</strong>：邊緣側大量終端無需直連平臺也能被統一遙控，降低終端接入複雜度</li>
+  <li><strong>關聯攝像頭</strong>：物聯設備可綁定/解綁設備目錄中的攝像頭。<strong>價值</strong>：測點設備與畫面點位建立對應關係，異常時知道該看哪路視頻</li>
+  <li><strong>分屏監控與 AI 聯動</strong>：在功能調用中切 1/4/9 分屏預覽關聯攝像頭，並可啟用 AI 分析。<strong>價值</strong>：改參數、下指令的同時同屏看現場，「數」與「圖」一體處置，少切系統、少漏判</li>
+  <li><strong>事件日誌</strong>：匯聚設備上報的信息/警告/錯誤事件，可按類型、名稱、時間篩選。<strong>價值</strong>：回答「現場發生過什麼」，事後復盤與追責有原始事件，不只靠瞬時彈窗</li>
+  <li><strong>指令日誌</strong>：跟踪屬性設置與服務調用的處理中/成功/失敗。<strong>價值</strong>：回答「這條指令下沒下到、設備認沒認」，聯調與排障告別口頭扯皮</li>
+  <li><strong>設備日誌</strong>：匯聚設備側多級別日誌，支持關鍵字與時間檢索。<strong>價值</strong>：排障不必登設備翻本地日誌，雲端即可定位固件與業務異常</li>
+  <li><strong>網關子設備綁定</strong>：網關設備可批量綁定/解綁子設備。<strong>價值</strong>：邊緣拓撲清晰可管，擴點、換網關、故障隔離時責任邊界不糊</li>
+  <li><strong>Topic 能力清單</strong>：按設備列出配置、影子、屬性、服務、事件、OTA、時鐘同步等上下行通道說明。<strong>價值</strong>：研發與集成對照同一份目錄對接，少因通道約定不一致返工</li>
+  <li><strong>OTA 升級包管理</strong>：統一上傳與管理軟件包/固件包，支持版本號、下載、編輯、刪除與雙視圖。<strong>價值</strong>：補丁與固件集中存放可復用，不必逐台拷貝介質</li>
+  <li><strong>OTA 升級策略</strong>：支持關鍵版本標記與強制/非強制升級方式。<strong>價值</strong>：重要版本可標識、緊急修復可強制推進，降低漏升、亂升帶來的兼容與安全風險</li>
+  <li><strong>規則鏈管理</strong>：規則新增、啟停、批量刪除與列表/卡片管理。<strong>價值</strong>：業務聯動規則可集中啟停，不用的鏈路隨時關掉，避免誤觸發</li>
+  <li><strong>規則鏈可視化編排</strong>：鏈式可視化編輯，按意圖串聯數據流轉、條件判斷與下游動作。<strong>價值</strong>：場景從定制開發變為拖拽配置，業務變更改鏈即可，不必等開發排期</li>
+  <li><strong>規則導入導出</strong>：支持規則導入，便於跨環境遷移與復用。<strong>價值</strong>：成熟規則可沉澱為交付資產，多項目複製少從零編寫</li>
+  <li><strong>消息配置</strong>：統一維護通知通道與消息基礎設置。<strong>價值</strong>：通知出口集中管理，換通道、改賬號不必改業務代碼</li>
+  <li><strong>消息模板</strong>：按郵件、短信、企業微信、釘釘、飛書、Webhook 等渠道維護模板內容。<strong>價值</strong>：文案一次定稿多處復用，告警話術統一，少臨時拼消息出錯</li>
+  <li><strong>消息推送</strong>：按渠道創建推送任務，支持測試發送與啟動推送。<strong>價值</strong>：告警與業務事件能推到責任人日常辦公入口，不堵在系統內</li>
+  <li><strong>推送歷史</strong>：按渠道回看推送記錄。<strong>價值</strong>：通知是否發出、是否觸達可追溯，便於審計與優化觸達策略</li>
+  <li><strong>通知用戶與分組</strong>：維護通知用戶及用戶分組，按角色/班次精準觸達。<strong>價值</strong>：關鍵告警只到該到的人，既少漏報，又避免全員刷屏造成的告警疲勞</li>
 </ul>
 
 #### 📱 移動端APP
@@ -745,16 +777,56 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
   <img src=".image/banner/banner1002.png" alt="Screenshot 16" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1137.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1138.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1149.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1150.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1139.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1140.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1151.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1152.jpg" alt="Screenshot 1" width="49%">
 </div>
 <div>
-  <img src=".image/banner/banner1141.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1142.jpg" alt="Screenshot 1" width="49%">
+  <img src=".image/banner/banner1153.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1154.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1155.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1156.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1157.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1158.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1159.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1160.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1161.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1162.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1163.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1164.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/banner1165.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner1166.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1000.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1001.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1002.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1003.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1004.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1005.jpg" alt="Screenshot 1" width="49%">
+</div>
+<div>
+  <img src=".image/banner/app/app_1006.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/app/app_1007.jpg" alt="Screenshot 1" width="49%">
 </div>
 
 ## 🛠️ 服務支持
@@ -912,7 +984,7 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
 </tr>
 <tr style="background-color: #f8f9fa;">
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>爱吃小柚子</nobr></td>
-<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">為推動EasyAIoT項目在視訊監控與智能分析方向的發展，主導並完成國標 GB28181 與 AI 業務流程的端到端聯調與驗證測試；同時承擔畫面清晰度與播放流暢度的專項測試與評估，為國標接入可靠性、鏈路穩定性以及視訊觀感體驗的持續優化提供了重要依據。</td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">為推動 EasyAIoT 項目在「訓得動、訓得穩、訓得省心」方向的發展，系統性打通多卡訓練、斷點續訓與節點側部署能力，讓現場算力真正用得上、訓練任務真正控得住：支援自動識別並使用伺服器全部 GPU，使用者可在訓練頁按需選擇單卡或多卡，不再受限於只能看到一張卡；相容多種常見資料集格式與目錄結構，支援大容量本地資料集上傳，訓練失敗後仍可保留原始資料快速重試，顯著降低資料準備與反覆折騰的成本；完善訓練進度可見、任務可停可續，避免中斷後成果遺失、點擊停止卻仍在後台空轉等痛點，使本地與遠端訓練排程在失敗時也能及時回退、給出清晰回饋；同步優化前端訓練任務的 GPU 選擇、繼續訓練與停止狀態展示，並修復模型發佈誤判失敗、自訂預覽圖被覆蓋、按名稱/版本查不到模型以及資料集同步易逾時、易衝突等問題，讓「訓練—發佈—使用」閉環更順暢可靠。此前亦主導國標 GB28181 與 AI 業務流程的端到端聯調驗證及畫面清晰度專項評估，為國標接入可靠性與視訊觀感優化提供了重要依據。</td>
 </tr>
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>Dark</nobr></td>
@@ -954,7 +1026,7 @@ EasyAIoT是一個開源學習項目，與商業行為無關。用戶在使用該
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>特別致謝</strong>：以上貢獻者在跨平台部署文檔與腳本、國標視訊能力落地與 AI 聯調驗證、多品牌攝影機直連發現與批量接入、天地圖空間視覺化完整落地、異構串流媒體叢集部署與排程架構、車牌識別演算法與完整程式碼落地、EasyAIoT-Edge 邊緣側端到端串聯、校園開發者社群組織與青年協作生態構建、物聯網設備上下行閉環與大疆司空空中視角接入、工業 Modbus 設備上行採集等不同方面推動了 EasyAIoT 的發展，他們的專業精神與無私奉獻值得我們學習與尊敬。再次向這些傑出的貢獻者表示最誠摯的感謝！🙏
+<strong>特別致謝</strong>：以上貢獻者在跨平台部署文檔與腳本、國標視訊能力落地與 AI 聯調驗證、多卡訓練可用性與斷點續訓能力落地、多品牌攝影機直連發現與批量接入、天地圖空間視覺化完整落地、異構串流媒體叢集部署與排程架構、車牌識別演算法與完整程式碼落地、EasyAIoT-Edge 邊緣側端到端串聯、校園開發者社群組織與青年協作生態構建、物聯網設備上下行閉環與大疆司空空中視角接入、工業 Modbus 設備上行採集等不同方面推動了 EasyAIoT 的發展，他們的專業精神與無私奉獻值得我們學習與尊敬。再次向這些傑出的貢獻者表示最誠摯的感謝！🙏
 </p>
 
 ## 💝 開源守望者
