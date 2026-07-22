@@ -36,7 +36,7 @@
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-平台由 <strong>WEB、APP、DEVICE、NODE、VIDEO、AI、TASK、EDGE</strong> 八个核心模块组成，以 Java 构建稳定管控底座、Python 承载 AI 与网络能力、C++ 驱动高性能计算任务，三语言混编各取所长。在能力侧，平台覆盖 GB28181 / ONVIF 多协议摄像头接入、<strong>大疆机场与无人机空中视角接入</strong>、实时与抓拍算法任务、YOLO 目标检测与 SAM 零样本自动标注、人脸/车牌识别、可编排业务后处理、联邦算力集群调度，以及 <strong>无限联邦边缘集群模式</strong>（普通开发板可即开即用、现场智能就地决策、告警与证据自动汇聚上云，算力随业务任意铺开），还有 MQTT / TCP / HTTP 物联网设备全生命周期管理；在体验侧，Web 管控台与移动 App / 小程序能力对齐，让指挥中心与现场巡检同一套业务逻辑、随时随地处置。
+平台由 <strong>WEB、APP、DEVICE、NODE、VIDEO、AI、TASK、EDGE、VISUALIZE</strong> 九个核心模块组成，以 Java 构建稳定管控底座、Python 承载 AI 与网络能力、C++ 驱动高性能计算任务，三语言混编各取所长。在能力侧，平台覆盖 GB28181 / ONVIF 多协议摄像头接入、<strong>大疆机场与无人机空中视角接入</strong>、实时与抓拍算法任务、YOLO 目标检测与 SAM 零样本自动标注、人脸/车牌识别、可编排业务后处理、联邦算力集群调度，以及 <strong>无限联邦边缘集群模式</strong>（普通开发板可即开即用、现场智能就地决策、告警与证据自动汇聚上云，算力随业务任意铺开），还有 MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA 物联网设备全生命周期管理，以及<strong>可视化大屏与 Web 工艺组态</strong>，让设备数据既能展成指挥态势、也能落回工艺画面；在体验侧，Web 管控台与移动 App / 小程序能力对齐，让指挥中心与现场巡检同一套业务逻辑、随时随地处置。
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -90,14 +90,6 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
   </div>
 </div>
 
-<div style="margin: 20px 0; padding: 18px 22px; border-radius: 10px; border: 1px solid rgba(52, 152, 219, 0.25); background: linear-gradient(120deg, #f0f7ff 0%, #ffffff 55%, #eef9f4 100%);">
-  <p style="font-size: 16px; font-weight: 700; color: #1a5276; margin: 0 0 8px 0;">🚀 EasyAIoT 无限联邦边缘集群模式</p>
-  <p style="font-size: 14px; line-height: 1.8; color: #333; margin: 0;">
-    把智能从机房搬到现场：普通开发板与边缘盒子也可就近完成感知研判，告警、证据与态势自动汇聚到中心，无需为每处网点再堆一套重装备。
-    业务扩张时按点增配即可，中心统一编排、边缘自主值守，真正实现「算力随业务铺开、智能贴着场景生长」。
-  </p>
-</div>
-
 #### 🧠 AI能力
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
@@ -111,7 +103,7 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
   <li><strong>YOLO26 新一代目标检测能力</strong>：平台内置最新一代目标检测能力，开箱即可用于实时画面分析与抓拍识别，在相同硬件条件下可接入更多路摄像头、响应更快、误报更少。支持从数据采集、标注、训练到上线推理的完整闭环，帮助用户以更低成本持续迭代专属检测模型，快速覆盖安全帽佩戴、人员闯入、烟火隐患等各类常见安防与工业场景，让「看得准、算得快、扩得动」成为默认可用能力</li>
   <li><strong>YOLO26 人体姿态分析</strong>：在目标检测能力之上新增人体关键点与骨架姿态分析，基于 YOLO26 Pose 模型开箱即用，支持图片、视频与摄像头实时流三种输入方式。图片模式可同步输出骨架标注与人数统计；视频模式采用异步任务处理，进度可轮询、结果可下载；摄像头模式可对接 RTSP/RTMP 实时取流，将姿态识别结果叠加推流回显，便于远程盯防与行为研判。模型推理页提供「姿态分析」与「目标检测」一键切换，置信度可调，与现有模型管理、历史记录、对照预览等能力无缝衔接，适用于工地作业规范、健身动作评估、人群聚集态势感知等需要「看清人体结构与动作形态」的场景，让平台从「框出目标」进一步走向「理解姿态」</li>
   <li><strong>多协议摄像头接入支持</strong>：全面支持 GB28181 和 ONVIF 两大主流视频监控协议，实现标准化设备接入与管理。GB28181 作为中国国家标准，完美适配国内主流监控设备；ONVIF 作为国际通用标准，广泛兼容全球主流品牌摄像头。通过双协议支持，平台能够无缝对接现有监控系统，实现设备的即插即用、自动发现与统一管理，大幅降低设备接入门槛，提升系统兼容性与扩展性，为大规模摄像头部署提供坚实的技术基础。此外，新增 NVR 同网段/跨网段批量扫描、注册与统一管控能力，覆盖海康、大华、华为、萤石、小米等主流品牌，支持基于设备原生协议的网段发现、一键登记及通道批量导入，进一步降低大规模监控设备的接入与运维成本</li>
-  <li><strong>大疆司空空中视角接入</strong>：将大疆机场与无人机的高空画面纳入平台统一视频体系，地面监控与空中巡检从此同屏共管、同一套告警与研判闭环。管理者可像管理固定摄像头一样调阅机场与飞行器实况，快速覆盖广域巡查、应急勘察、周界补盲等传统固定点位难以触及的场景，显著缩短「发现异常—锁定现场—联动处置」的响应链条，让智慧安防从平面布控升级到天地一体协同感知</li>
+  <li><strong>大疆机场 / 无人机空中视角接入</strong>：突破固定摄像头「只能看地面、难覆盖广域」的布控局限，将大疆司空体系下的机场与无人机高空画面纳入平台统一视频与 AI 研判闭环。流媒体模块提供「接入大疆直播」能力：支持<strong>司空 API 开启直播</strong>与<strong>手动直播源</strong>两种接入方式——API 模式可配置司空 Host、项目编号、开启直播接口、X-User-Token、工作空间与平台名称，按机场或无人机类型填写设备 SN、camera_index、机场/无人机 SN、清晰度与 Token 有效期，一键拉起厂家直播流并自动登记设备；手动模式则支持直接填入 RTSP / RTMP / HTTP-FLV / HLS 等直播源。接入后系统以厂家回流地址为上游，经本地 SRS 转推分发，前端以火山 RTC 等链路稳定播放；支持自动创建转发任务，使空中画面与国标/ONVIF 固定点位同屏共管。管理者可像管理固定摄像头一样调阅机场与飞行器实况，并进一步挂接实时 AI 分析、告警联动与证据留存，快速覆盖广域巡查、应急勘察、周界补盲等传统固定点位难以触及的场景，显著缩短「发现异常—锁定现场—联动处置」的响应链条，让智慧安防从平面布控升级到天地一体协同感知</li>
   <li><strong>实时对讲与云台远控</strong>：打破「只能看、不能管」的传统监控局限，值守人员在实时预览同屏即可完成语音喊话与云台操控——无需切换系统、不必亲临现场，即可远程沟通、引导疏散或制止违规行为，把响应从「派人到场」压缩到「开口即达」。云台操控让摄像头随心转向、变焦聚焦，突发情况可迅速对准事发区域、放大细节，形成「看得清、指得准、喊得到」的一体化现场处置闭环。全面兼容 GB28181 与 ONVIF 设备，利旧现有监控资产，无需额外购置对讲主机或第三方软件，让存量摄像头即刻具备远程沟通与灵活调度能力，显著降低系统孤岛与值守成本</li>
   <li><strong>可编排算法后处理</strong>：突破「只能检出、难以研判」的能力瓶颈，在目标检测之上增设独立的业务研判层，将画面感知结果转化为可运营、可追责、可统计的业务事件。支持按任务灵活定义人数统计、越线通行、停留超时、区域滞留、多条件复合告警等场景规则，无需反复调整模型即可快速适配工地安监、园区安防、交通管控等差异化需求，把通用视觉能力锻造成贴近现场的管理抓手。后处理与实时分析彼此独立、并行运转——监控画面持续流畅研判，业务逻辑按需弹性扩展，研判结果自动沉淀存档并驱动精准告警，显著降低误报漏报与人工复核成本。业务人员专注规则表达，平台负责分发执行与规模承载，让「看得见」真正走向「判得清、管得住、用得起来」</li>
   <li><strong>多中心节点 × 多工作节点联邦集群</strong>：面向跨区域、多机房与云边协同部署，平台采用「N 个中心节点 + N 个工作节点」联邦架构——以中心节点为统一控制面、工作节点为算力与媒体执行面，构建可横向扩展的分布式调度体系。每个中心节点纳管本域工作节点集群，支持监测代理、分布式存储、流媒体引擎、音视频转码、视频分析运行时、模型推理与训练等运行时分发与一键远程部署；多中心节点可互联同步，集群泳道视图直观呈现「中心—工作」拓扑与资源水位，支持泳道级批量维护与组件分发。算法任务、自动标注流水线、推流转发等工作负载按节点角色与 GPU 能力智能调度、队列弹性分发，让海量路数接入、高并发推理与分布式训练在同一集群中协同运转，真正做到「纳得进、分得清、扩得开、管得全」</li>
@@ -161,13 +153,23 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
 #### 🌐 IoT能力
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0 8px 0;">
-许多项目把 IoT 做成「设备台账 + 报文中转」，结果是：能连上，却管不住；能上报，却推不动；能告警，却看不清现场。EasyAIoT 把 IoT 定位为<strong>感知—理解—决策—执行</strong>闭环里的执行神经：传感器与执行器提供「数」，摄像头与 AI 提供「图」，规则与影子把两者拧成可运营的业务动作——让平台不只「看得见」，更能「管得住、控得准、扩得开」。
+许多项目把 IoT 做成「设备台账 + 报文中转」，结果是：能连上，却管不住；能上报，却推不动；能告警，却看不清现场；有数了，却展不成屏、对不上工艺。EasyAIoT 把 IoT 定位为<strong>感知—理解—决策—执行</strong>闭环里的执行神经：传感器与执行器提供「数」，摄像头与 AI 提供「图」，可视化大屏与工艺组态把「数」变成可指挥的态势，规则与影子把两者拧成可运营的业务动作——让平台不只「看得见」，更能「展得成屏、看得懂工艺、管得住、控得准、扩得开」。
 </p>
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>可视化管理</strong>：设备测点、告警与业务指标若只停在列表与报文里，领导看不全、值班看不清、汇报还得另做 PPT——数据价值卡在「能采不能展」。平台将可视化项目、模板中心、素材库、数据源与服务部署收拢为一套能力：把物联网数据拖拽拼成园区态势、产线 KPI、设备运行等可运营大屏，草稿可改、成熟可发、发布可投——让 IoT 从「后台有数」升级为「前台有屏」，指挥研判与对外展示不必再外挂一套大屏工具</li>
+  <li><strong>可视化项目全生命周期</strong>：大屏工程若散落在个人电脑与临时链接里，交接必乱、版本必丢、上线必扯皮。平台统一管理大屏项目的创建、编辑、预览、发布与下线，表格/卡片双视图随手盘点，已发布与未发布一眼可分——谁在做、做到哪、能不能投屏，项目状态可盘、可交、可验收，把「做一张屏」变成可运营的交付资产</li>
+  <li><strong>可视化模板中心</strong>：每个项目都从空白画布重做，交付周期必然被设计与联调拖长。成熟的园区总览、工厂态势、设备看板等模板可沉淀复用，新建项目一键套用再微调——同类场景少从零画起，PoC 与多项目复制更快、口径更统一，把「会做一次」沉淀成「能交付多次」</li>
+  <li><strong>可视化素材与数据源治理</strong>：图标、背景、视频素材各项目私藏一份，数据接口各屏各写一套，后期必出现风格打架、字段对不上。素材库集中归档可复用视觉资产，数据源统一挂接设备与业务接口——同一套素材风格、同一套数据口径服务多张大屏，改一处多处受益，少重复建设、少口径扯皮</li>
+  <li><strong>可视化发布与服务部署</strong>：大屏做好却投不出去，等于白做。项目确认发布后可关联服务部署，按场景投放到指挥中心、值班室或对外展示入口，预览与正式投放同一套工程——从「编辑态」到「值班态」有明确出口，验收与日常值守不再靠临时链接与口头约定</li>
+  <li><strong>组态管理</strong>：工业与楼宇现场最怕「表盘一堆、工艺看不懂」——电表、阀门、罐体液位有读数，值班却对不上管线与工序，异常只能口头对图、靠经验猜。平台提供 Web 组态能力，将设备测点绑定到水厂工艺总貌、产线运行看板、厂区管网拓扑、配电室电力监视等工艺画面，编辑与预览同入口、发布即可值班——让「数」落回「图」，工艺状态一目了然，值守从翻表猜事变为对着工艺图研判与处置</li>
+  <li><strong>组态画面实时监视与有限控制</strong>：纯列表监控「看得见点位却看不见流程」，异常定位慢、跨班交接难、现场培训靠师傅带。组态运行态把关键测点动画到罐体、阀组、电机与开关上，趋势与状态同屏刷新，必要时可在画面侧完成启停、复位等有限操作——新人也能对着图上手，班组交接看同一套画面，异常从「找点位」压缩到「看工艺」，把工控现场真正纳入可值守、可交代、可扩展的日常运营</li>
   <li><strong>产品模型管理</strong>：物联网落地最贵的往往不是买设备，而是每接一类设备就重配一遍档案。平台以产品为同类设备模板，支持创建、启停、检索与表格/卡片双视图，应用场景、厂商、型号一次配好——后续扩容直接套用产品模板，不用再逐台从零填写，同类设备一次建档、多台复用，把「设备接入成本」从线性增长压成可复制资产</li>
   <li><strong>多类型产品建模</strong>：现场同时存在直连终端、边缘网关、网关子设备与视频设备时，若用同一套接入路径硬套，拓扑必乱、协议必错。平台按直连、网关、网关子设备、视频四类形态分开建产品，边缘汇聚、直连终端与视频设备各走各的接入路径——拓扑不会混、协议不会配错，为后续规模化纳管打好正确的产品骨架</li>
-  <li><strong>产品接入协议与认证配置</strong>：每台设备单独约定协议与鉴权，是联调返工的重灾区。平台在产品级一次定稿接入协议（MQTT / TCP / HTTP）、数据格式、认证方式与加解密策略，下属设备自动继承同一套规范——联调时不再逐台约定鉴权与报文格式，接入规范从「人口口相传」变成「产品级可继承契约」</li>
+  <li><strong>产品接入协议与认证配置</strong>：每台设备单独约定协议与鉴权，是联调返工的重灾区。平台在产品级一次定稿接入协议（MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA）、数据格式、认证方式与加解密策略，下属设备自动继承同一套规范——联调时不再逐台约定鉴权与报文格式，接入规范从「人口口相传」变成「产品级可继承契约」</li>
+  <li><strong>Modbus-TCP 工业以太网接入</strong>：面向电表、PLC、变频器等以太网侧工控设备，平台内置 Modbus-TCP 主站采集能力，按产品/设备配置主机地址、端口、从站号、寄存器测点与采集周期即可上线——轮询读数自动汇入设备影子与在线状态，寄存器写值与属性下发贯通，让工业测点与物联网物模型、规则引擎、告警联动同一套闭环，不必再外挂独立数采软件</li>
+  <li><strong>Modbus-RTU 串口现场接入</strong>：大量现场仪表仍挂在 RS-485 总线，若只能走 TCP 网关转换，接入成本与故障点都会翻倍。平台支持 Modbus-RTU 串口主站采集，可配置串口参数、从站地址、寄存器映射与读写周期，适配虚拟串口与真实串口场景——总线侧设备同样纳入统一纳管与上下行控制，补齐「以太网进不了、串口又管不住」的现场空白</li>
+  <li><strong>OPC UA 工业互联接入</strong>：面向现代化工控与上位系统互联场景，平台支持 OPC UA 客户端接入，按节点地址、命名空间与测点映射完成订阅/读写配置——复杂设备模型可映射为平台物模型属性，上行采集与下行写点与现有设备影子、规则链、消息推送无缝衔接，让 OPC UA 现场资产真正进入「看得见、控得住、可联动」的 AIoT 运营体系</li>
   <li><strong>物模型属性定义</strong>：大屏、规则、告警若各写一套测点名，后期必然互相听不懂。平台先把设备能上报、能读写的测点定清楚，支持标准模板与自定义，草稿改完再发布——大屏、规则、告警从此认同一套字段，「能看哪些量」有统一语义，测点名各说各话的返工从根上被掐掉</li>
   <li><strong>物模型服务定义</strong>：远程启停、复位若每做一个动作就写一次性接口，控制面必然碎片化。平台把设备可被远程调用的服务及入参出参写成契约，草稿编辑、发布后生效——「能远程做什么」按契约填参即可，不必再为每个动作堆一次性接口，控制能力可复用、可审计</li>
   <li><strong>物模型事件定义</strong>：设备会上报哪些业务事件若不事先约定，告警口径必然前后打架。平台先约定事件类型，草稿发布后统一生效——事件日志与规则触发共用同一语义，「会发生哪些事」有统一口径，告警不会各说各话</li>
@@ -182,6 +184,10 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
   <li><strong>设备基础信息档案</strong>：换机、追责、对账时若靠口头确认「这是谁」，责任链必然断。名称、标识、SN、产品、版本、IP 等一机一档沉下来——打开档案即可确认设备身份，减少口头确认与现场翻找</li>
   <li><strong>设备接入指引</strong>：现场联调若仍靠翻厚文档、问专家，上线周期必然被拉长。按设备类型给出推荐命令、联调参数、鉴权、报文与验收说明，参数改完命令可直接复制——联调从翻文档变成抄命令验收，上线与 PoC 节奏更紧</li>
   <li><strong>运行状态实时查看</strong>：值班若每次都要登设备、啃原始报文才能判断测点是否正常，值守成本必然居高不下。按物模型把当前属性实况摊开，表格/卡片可切换、可刷新——不登设备、不看原始报文，也能一眼判断关键测点此刻正不正常</li>
+  <li><strong>传感器浮点数据预测</strong>：关键测点若只能事后翻历史曲线，异常往往等「已经越界」才被看见。平台对传感器浮点属性提供趋势预测，把历史读数推演为可前瞻的走势——运维从「事后看数」升级为「事前洞察」，为处置争取窗口</li>
+  <li><strong>运行状态属性阈值配置</strong>：健康边界若写死在代码或口头约定里，换型号、换场景就要返工。可按物模型为运行状态属性配置上下阈值，边界可定义、可复用、可精细化——设备「正常区间」成为可治理资产，而不是散落各处的经验值</li>
+  <li><strong>阈值告警与阈值规则</strong>：超限若无人知、知了却无法联动，阈值配置只是摆设。测点越界自动告警，并可纳入规则联动处置——「越界即知、知则能管」，把健康边界真正落到可运营闭环</li>
+  <li><strong>中心设备关联子设备一屏掌控</strong>：下属设备健康态势若要逐台翻看，巡检与异常响应必然慢半拍。中心设备视角一屏纵览关联子设备运行状态——不用逐台切换，现场巡检与异常定位效率显著提升，让设备侧真正具备「看得见数、管得住界、告得出警、看得清全局」的能力闭环</li>
   <li><strong>设备影子对照</strong>：传统排障最痛苦的是分不清「想让它怎样」和「实际怎样」。上报态、期望态与差异同屏对照，完整 JSON 可留底——排障从猜测变成对照，期望与实况是否一致一目了然</li>
   <li><strong>属性期望下发</strong>：为改一个参数专程出车，是规模化运维的典型浪费。可写属性批量改期望值后一键下发，处理中/成功/失败全程可跟——远程调参有回执，不必再为改参数派人到场，少无效出车</li>
   <li><strong>物模型服务调用</strong>：启停、复位若下达后无法确认是否执行到位，处置只能靠口头对账。按已发布服务填参发起调用，指令回执可跟踪——动作下达后能确认是否执行到位，处置过程可审计，把「口头说控过了」升级为「有回执的闭环」</li>
@@ -271,7 +277,7 @@ Java擅长构建稳定可靠的平台架构，但不适合网络编程和AI编�
 ### 🏗️ 项目架构特点
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-EasyAIoT其实不是一个项目，而是八个项目。
+EasyAIoT其实不是一个项目，而是九个项目。
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -334,7 +340,7 @@ EasyAIoT积极响应本土化战略，全面支持本土化硬件和操作系统
 ## 🧩 项目结构
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT由八个核心项目组成：
+EasyAIoT由九个核心项目组成：
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
@@ -368,11 +374,12 @@ EasyAIoT由八个核心项目组成：
     <li><strong>技术优势</strong>：基于JDK21，提供更好的性能和现代化特性</li>
     <li><strong>设备管理</strong>：设备注册、认证、状态监控、生命周期管理</li>
     <li><strong>产品管理</strong>：产品定义、物模型管理、产品配置</li>
-    <li><strong>协议支持</strong>：MQTT、TCP、HTTP等多种物联网协议</li>
+    <li><strong>协议支持</strong>：MQTT、TCP、HTTP、Modbus-TCP、Modbus-RTU、OPC UA 等多种物联网与工业协议</li>
     <li><strong>设备认证</strong>：设备动态注册、身份认证、安全接入</li>
     <li><strong>规则引擎</strong>：数据流转规则、消息路由、数据转换</li>
     <li><strong>数据采集</strong>：设备数据采集、存储、查询与分析</li>
     <li><strong>节点控制面</strong>：内置 <code>iot-node</code> 微服务，提供计算/媒体节点 CRUD、SSH 连通测试、Agent 注册与心跳、工作负载调度与媒体节点池分配等统一控制面能力</li>
+    <li><strong>可视化后台</strong>：内置 <code>iot-visualize</code> 微服务（库 <code>iot-visualize20</code>），统一管理大屏/组态项目、模板、素材、数据源与服务部署，为 VISUALIZE 编辑器与 FUXA 组态提供工程元数据与发布能力</li>
   </ul>
 </td>
 </tr>
@@ -424,6 +431,18 @@ EasyAIoT由八个核心项目组成：
     <li><strong>开箱接入、统一纳管</strong>：现场节点快速加入后由中心统一编排任务与策略，减少人工配置与分点分建成本</li>
     <li><strong>业务无缝延展</strong>：中心负责看全局、定规则，边缘负责盯现场、快响应；节点数量可随覆盖范围持续扩展，支撑实时分析、巡检与抓拍等场景横向铺开</li>
     <li><strong>轻装落地</strong>：边缘侧重「干活」而非「堆设备」，让广域布点更容易落地、更容易复制</li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>VISUALIZE模块</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>拖拽式大屏编辑器</strong>：第九核心模块，基于 GoView 的高性能低代码可视化编辑器，专注画布编辑与预览，不含独立登录与项目管理</li>
+    <li><strong>与 WEB 一体联动</strong>：项目创建、模板、素材、数据源、发布与投放在管理后台「可视化」菜单完成；点击「打开编辑器」跳转本模块（默认 <code>:8002</code>）携带 Token 进入画布</li>
+    <li><strong>大屏交付能力</strong>：图表、指标与布局拖拽配置，组件可挂接平台数据源与 IoT 测点，支撑园区态势、产线 KPI、设备运维、能源能耗等指挥大屏快速成屏</li>
+    <li><strong>与组态分工清晰</strong>：大屏（dashboard）走本模块编辑；工艺组态（scada）走 FUXA Web 组态；工程元数据统一由 DEVICE <code>iot-visualize</code> 管理</li>
+    <li><strong>部署形态</strong>：与 APP 同属 full 完整版能力，mini / standard 可按现场硬件跳过，降低边缘精简部署体积</li>
   </ul>
 </td>
 </tr>
@@ -492,7 +511,7 @@ EasyAIoT支持在Linux、Mac、Windows三大主流操作系统上部署，为不
 平台支持两种类型的算法任务：实时算法任务用于RTSP/RTMP流的实时画面分析，提供毫秒级响应能力；抓拍算法任务用于抓拍图像的智能分析，支持事件回溯与图像检索。通过算法任务管理实现灵活的抽帧与排序策略，每个任务可绑定独立的抽帧器和排序器，结合模型服务集群推理能力，确保毫秒级响应与高可用保障。同时，提供全防模式和半防模式两种布防策略，可根据不同时段灵活配置监控规则，实现精准的时段化智能监控与告警。
 </p>
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 10px 0;">
-在物联网设备管理方面，EasyAIoT提供完整的设备生命周期管理能力，支持多种物联网协议（MQTT、TCP、HTTP），实现设备的快速接入、安全认证、实时监控和智能控制。通过规则引擎实现设备数据的智能流转与处理，结合AI能力对设备数据进行深度分析，实现从设备接入、数据采集、智能分析到决策执行的全流程自动化，真正实现万物互联、万物智控。
+在物联网设备管理方面，EasyAIoT提供完整的设备生命周期管理能力，支持多种物联网与工业协议（MQTT、TCP、HTTP、Modbus-TCP、Modbus-RTU、OPC UA），实现设备的快速接入、安全认证、实时监控和智能控制。通过规则引擎实现设备数据的智能流转与处理，结合AI能力对设备数据进行深度分析，实现从设备接入、数据采集、智能分析到决策执行的全流程自动化，真正实现万物互联、万物智控。
 </p>
 </div>
 
@@ -519,326 +538,124 @@ EasyAIoT是一个开源学习项目，与商业行为无关。用户在使用该
 - Github: https://github.com/soaring-xiongkulu/easyaiot
 
 ## 📸 截图
-<div>
-  <img src=".image/banner/banner-video1000.gif" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner-video1001.gif" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1143.jpg" alt="平台标识设置" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1144.jpg" alt="平台标识重置" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1001.png" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1076.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1074.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1075.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1095.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1096.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1127.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1128.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1145.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1146.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1147.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1148.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1129.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1130.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1131.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1132.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1133.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1134.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1135.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1136.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1093.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1094.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1085.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1086.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1087.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1088.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1089.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1090.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1078.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1077.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1079.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1080.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1081.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1082.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1006.jpg" alt="Screenshot 3" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1009.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1051.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1053.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1062.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1063.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1064.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1065.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1066.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1067.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1052.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1054.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1083.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1084.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1121.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1122.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1123.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1124.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1125.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1126.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1117.png" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1118.png" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1119.png" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1120.png" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1057.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1058.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1068.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1069.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1113.png" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1114.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1115.png" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1116.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1026.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1028.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1029.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1030.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1072.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1031.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1070.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1071.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1033.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1035.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1034.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1036.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1037.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1038.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1015.png" alt="Screenshot 5" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1010.jpg" alt="Screenshot 3" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1027.png" alt="Screenshot 2" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1016.jpg" alt="Screenshot 6" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1059.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1060.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1107.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1108.png" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1111.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1112.png" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1109.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1110.png" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1007.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1008.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1103.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1104.png" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1105.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1106.png" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1019.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1020.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1099.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1100.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1101.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1102.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1023.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1024.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1017.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1018.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1097.png" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1098.png" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1039.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1061.jpg" alt="Screenshot 7" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1040.jpg" alt="Screenshot 8" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1042.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1043.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1044.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1021.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1022.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1045.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1046.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1047.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1048.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1049.jpg" alt="Screenshot 7" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1050.jpg" alt="Screenshot 8" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1013.jpg" alt="Screenshot 9" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1014.png" alt="Screenshot 10" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1003.png" alt="Screenshot 13" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1004.png" alt="Screenshot 14" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1005.png" alt="Screenshot 15" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1002.png" alt="Screenshot 16" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1149.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1150.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1151.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1152.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1153.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1154.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1155.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1156.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1157.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1158.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1159.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1160.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1161.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1162.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1163.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1164.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/banner1165.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/banner1166.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/app/app_1000.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/app/app_1001.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/app/app_1002.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/app/app_1003.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/app/app_1004.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/app/app_1005.jpg" alt="Screenshot 1" width="49%">
-</div>
-<div>
-  <img src=".image/banner/app/app_1006.jpg" alt="Screenshot 1" width="49%" style="margin-right: 10px">
-  <img src=".image/banner/app/app_1007.jpg" alt="Screenshot 1" width="49%">
-</div>
+
+<div>
+  <img src=".image/banner/banner-video1000.gif" alt="演示" width="49%" style="margin-right: 10px">
+  <img src=".image/banner/banner-video1001.gif" alt="演示" width="49%">
+</div>
+
+#### 🖥️ 监控大屏
+
+| | | |
+|:---:|:---:|:---:|
+| ![态势](.image/banner/banner1001.png) | ![总览](.image/banner/banner1076.jpg) | ![告警](.image/banner/banner1074.jpg) |
+| ![看板](.image/banner/banner1075.jpg) | ![多维](.image/banner/banner1095.jpg) | ![综合](.image/banner/banner1096.jpg) |
+| ![监控](.image/banner/banner1078.jpg) | ![实时](.image/banner/banner1077.jpg) |  |
+
+#### 📺 可视化组态
+
+| | | |
+|:---:|:---:|:---:|
+| ![项目](.image/banner/banner1185.png) | ![组态](.image/banner/banner1186.png) | ![编辑](.image/banner/banner1187.png) |
+| ![预览](.image/banner/banner1188.png) | ![组件](.image/banner/banner1189.png) | ![数据源](.image/banner/banner1190.png) |
+| ![发布](.image/banner/banner1191.png) | ![运行](.image/banner/banner1192.png) | ![模板](.image/banner/banner1193.png) |
+| ![资产](.image/banner/banner1194.png) | ![大屏](.image/banner/banner1195.png) | ![展示](.image/banner/banner1196.png) |
+
+#### 📹 视频监控
+
+| | | |
+|:---:|:---:|:---:|
+| ![直播](.image/banner/banner1145.jpg) | ![预览](.image/banner/banner1146.jpg) | ![摄像头](.image/banner/banner1051.jpg) |
+| ![列表](.image/banner/banner1053.jpg) | ![推流](.image/banner/banner1083.jpg) | ![转发](.image/banner/banner1084.jpg) |
+| ![存储](.image/banner/banner1121.png) | ![抓拍](.image/banner/banner1122.png) | ![录像](.image/banner/banner1123.png) |
+| ![配置](.image/banner/banner1124.png) | ![容量](.image/banner/banner1125.png) | ![回放](.image/banner/banner1126.png) |
+| ![抓拍](.image/banner/banner1117.png) | ![文件](.image/banner/banner1118.png) | ![策略](.image/banner/banner1119.png) |
+| ![配额](.image/banner/banner1120.png) | ![图库](.image/banner/banner1057.jpg) | ![归档](.image/banner/banner1058.jpg) |
+| ![监控](.image/banner/banner1068.jpg) | ![统计](.image/banner/banner1069.jpg) | ![地图](.image/banner/banner1113.png) |
+| ![定位](.image/banner/banner1114.png) | ![分布](.image/banner/banner1115.png) | ![点位](.image/banner/banner1116.png) |
+| ![实况](.image/banner/banner1026.jpg) | ![多路](.image/banner/banner1028.jpg) | ![推流](.image/banner/banner1103.png) |
+| ![预览](.image/banner/banner1104.png) | ![接入](.image/banner/banner1105.png) | ![NVR](.image/banner/banner1106.png) |
+| ![实况](.image/banner/banner1183.jpg) | ![地图](.image/banner/banner1184.jpg) |  |
+
+#### 🧠 AI模型
+
+| | | |
+|:---:|:---:|:---:|
+| ![Qwen](.image/banner/banner1093.jpg) | ![视觉模型](.image/banner/banner1094.jpg) | ![列表](.image/banner/banner1099.png) |
+| ![配置](.image/banner/banner1100.png) | ![详情](.image/banner/banner1101.png) | ![调用](.image/banner/banner1102.png) |
+| ![训练](.image/banner/banner1019.jpg) | ![任务](.image/banner/banner1020.jpg) | ![列表](.image/banner/banner1023.jpg) |
+| ![进度](.image/banner/banner1024.jpg) | ![参数](.image/banner/banner1017.jpg) | ![评估](.image/banner/banner1018.jpg) |
+| ![详情](.image/banner/banner1021.jpg) | ![日志](.image/banner/banner1022.jpg) | ![管理](.image/banner/banner1097.png) |
+| ![仓库](.image/banner/banner1098.png) | ![版本](.image/banner/banner1039.jpg) | ![资产](.image/banner/banner1061.jpg) |
+| ![推理](.image/banner/banner1040.jpg) | ![配置](.image/banner/banner1042.jpg) | ![结果](.image/banner/banner1043.jpg) |
+| ![在线](.image/banner/banner1044.jpg) | ![批量](.image/banner/banner1047.jpg) | ![监控](.image/banner/banner1048.jpg) |
+| ![服务](.image/banner/banner1045.jpg) | ![部署](.image/banner/banner1046.jpg) | ![集群](.image/banner/banner1049.jpg) |
+| ![调用](.image/banner/banner1050.jpg) | ![权重](.image/banner/banner1111.png) | ![下载](.image/banner/banner1112.png) |
+| ![姿态](.image/banner/banner1147.jpg) | ![识别](.image/banner/banner1148.jpg) | ![任务](.image/banner/banner1085.jpg) |
+| ![配置](.image/banner/banner1086.jpg) | ![详情](.image/banner/banner1087.jpg) | ![运行](.image/banner/banner1088.jpg) |
+| ![区域](.image/banner/banner1079.jpg) | ![检测框](.image/banner/banner1080.jpg) | ![布防](.image/banner/banner1081.jpg) |
+| ![预览](.image/banner/banner1082.jpg) | ![算法](.image/banner/banner1062.jpg) | ![创建](.image/banner/banner1063.png) |
+| ![画面](.image/banner/banner1064.jpg) | ![分析](.image/banner/banner1065.jpg) | ![结果](.image/banner/banner1066.jpg) |
+| ![回看](.image/banner/banner1067.jpg) | ![实况](.image/banner/banner1052.jpg) | ![智能](.image/banner/banner1054.jpg) |
+
+#### 📦 数据集
+
+| | | |
+|:---:|:---:|:---:|
+| ![管理](.image/banner/banner1015.png) | ![列表](.image/banner/banner1010.jpg) | ![标注](.image/banner/banner1027.png) |
+| ![任务](.image/banner/banner1016.jpg) | ![工具](.image/banner/banner1059.jpg) | ![预览](.image/banner/banner1060.jpg) |
+| ![详情](.image/banner/banner1107.png) | ![导入](.image/banner/banner1108.png) | ![项目](.image/banner/banner1109.png) |
+| ![审核](.image/banner/banner1110.png) | ![创建](.image/banner/banner1007.jpg) | ![样本](.image/banner/banner1008.jpg) |
+
+#### 🔌 物联网
+
+| | | |
+|:---:|:---:|:---:|
+| ![物模型](.image/banner/banner1149.jpg) | ![定义](.image/banner/banner1150.jpg) | ![产品](.image/banner/banner1151.jpg) |
+| ![详情](.image/banner/banner1152.jpg) | ![设备](.image/banner/banner1153.jpg) | ![详情](.image/banner/banner1154.jpg) |
+| ![状态](.image/banner/banner1155.jpg) | ![属性](.image/banner/banner1156.jpg) | ![服务](.image/banner/banner1157.jpg) |
+| ![事件](.image/banner/banner1158.jpg) | ![影子](.image/banner/banner1159.jpg) | ![拓扑](.image/banner/banner1160.jpg) |
+| ![子设备](.image/banner/banner1161.jpg) | ![分组](.image/banner/banner1162.jpg) | ![控制](.image/banner/banner1163.jpg) |
+| ![遥测](.image/banner/banner1164.jpg) | ![历史](.image/banner/banner1165.jpg) | ![协议](.image/banner/banner1166.jpg) |
+| ![连接](.image/banner/banner1167.jpg) | ![认证](.image/banner/banner1168.jpg) | ![调试](.image/banner/banner1169.jpg) |
+| ![功能](.image/banner/banner1170.jpg) | ![读写](.image/banner/banner1171.jpg) | ![服务](.image/banner/banner1172.jpg) |
+| ![订阅](.image/banner/banner1173.jpg) | ![日志](.image/banner/banner1174.jpg) | ![在线](.image/banner/banner1175.jpg) |
+| ![统计](.image/banner/banner1176.jpg) | ![总览](.image/banner/banner1177.jpg) | ![看板](.image/banner/banner1178.jpg) |
+| ![产品](.image/banner/banner1006.jpg) | ![设备](.image/banner/banner1009.jpg) | ![OTA](.image/banner/banner1179.jpg) |
+| ![固件](.image/banner/banner1180.jpg) | ![任务](.image/banner/banner1181.jpg) | ![进度](.image/banner/banner1182.jpg) |
+| ![规则](.image/banner/banner1013.jpg) | ![编排](.image/banner/banner1014.png) |  |
+
+#### 🖥️ 集群
+
+| | | |
+|:---:|:---:|:---:|
+| ![概览](.image/banner/banner1127.jpg) | ![算力](.image/banner/banner1128.jpg) | ![节点](.image/banner/banner1129.jpg) |
+| ![详情](.image/banner/banner1130.jpg) | ![监控](.image/banner/banner1131.jpg) | ![调度](.image/banner/banner1132.jpg) |
+| ![列表](.image/banner/banner1133.jpg) | ![状态](.image/banner/banner1134.jpg) | ![配置](.image/banner/banner1135.jpg) |
+| ![分配](.image/banner/banner1136.jpg) |  |  |
+
+#### 🔔 告警
+
+| | | |
+|:---:|:---:|:---:|
+| ![事件](.image/banner/banner1089.jpg) | ![处理](.image/banner/banner1090.jpg) | ![通知](.image/banner/banner1029.jpg) |
+| ![配置](.image/banner/banner1030.jpg) | ![列表](.image/banner/banner1072.jpg) | ![详情](.image/banner/banner1031.jpg) |
+| ![处置](.image/banner/banner1070.jpg) | ![统计](.image/banner/banner1071.jpg) |  |
+
+#### ⚙️ 系统
+
+| | | |
+|:---:|:---:|:---:|
+| ![标识](.image/banner/banner1143.jpg) | ![重置](.image/banner/banner1144.jpg) | ![用户](.image/banner/banner1003.png) |
+| ![权限](.image/banner/banner1004.png) | ![菜单](.image/banner/banner1005.png) | ![配置](.image/banner/banner1002.png) |
+
+#### 📱 APP
+
+| | | |
+|:---:|:---:|:---:|
+| ![首页](.image/banner/app/app_1000.jpg) | ![监控](.image/banner/app/app_1001.jpg) | ![预览](.image/banner/app/app_1002.jpg) |
+| ![告警](.image/banner/app/app_1003.jpg) | ![回放](.image/banner/app/app_1004.jpg) | ![设备](.image/banner/app/app_1005.jpg) |
+| ![消息](.image/banner/app/app_1006.jpg) | ![我的](.image/banner/app/app_1007.jpg) |  |
 
 ## 📞 联系方式
 
@@ -990,17 +807,21 @@ EasyAIoT是一个开源学习项目，与商业行为无关。用户在使用该
 </tr>
 <tr style="background-color: #f8f9fa;">
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>陈家林</nobr></td>
-<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">为推动 EasyAIoT 项目在物联网设备互通与空天视频融合方向的发展，打通设备指令与状态数据的上下行闭环，使平台真正实现「下得去、看得见、控得住」；同时贡献大疆司空机场与无人机画面接入能力，把空中巡检视角纳入统一视频与告警体系，显著拓展平台在广域巡查、应急勘察与天地一体协同感知中的落地价值。</td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">为推动 EasyAIoT 项目在物联网设备互通、工业协议接入与空天视频融合方向的发展，打通设备指令与状态数据的上下行闭环，使平台真正实现「下得去、看得见、控得住」；系统性贡献 Modbus-TCP、Modbus-RTU、OPC UA 工业协议接入能力，完成以太网侧与串口侧工控设备及 OPC UA 节点的统一采集、寄存器/测点读写与物模型映射，使电表、传感器、PLC、控制器等海量工业设备数据可被平台统一汇聚、监测与联动，补齐「看得见现场、也听得到设备」的关键拼图；同时贡献大疆司空机场与无人机画面接入能力，把空中巡检视角纳入统一视频与告警体系，显著拓展平台在工控数采、产线智控、广域巡查、应急勘察与天地一体协同感知中的落地价值。</td>
 </tr>
 <tr>
-<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>NULL</nobr></td>
-<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">为推动 EasyAIoT 项目在工业现场设备接入方向的发展，打通 Modbus 协议上行采集能力，使电表、传感器、控制器等海量工业设备数据可被平台统一汇聚、监测与联动，补齐「看得见现场、也听得到设备」的关键拼图，为工控数采、产线智控与安防联动场景提供坚实底座。</td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>空空</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">为推动 EasyAIoT 项目在摄像头直连「从能发现走向能落地」方向的发展，补齐直连接入在认证、通道同步、配置变更与多品牌出流等关键短板，使平台在真实 NVR / 多厂商现场具备可交付的可用性：打通设备登录凭证链路，让账号密码认证稳定可用，直连设备真正「登得进、管得住」；重塑 NVR 同步通道后的取流模型——此前同步结果把 RTSP 主机写成各通道摄像头自身 IP，与「经 NVR 集中取流」的现场拓扑严重不符，导致同步看似成功、实况却拉不起；修复后统一以 NVR 主机 IP 生成通道 RTSP 地址，让批量同步出来的流可播、可用，显著提升 NVR 规模化接入效率；修复设备编辑保存失败并报错的问题，保障接入参数可持续维护而非「一次写入后无法再改」；同步建设国内常用监控品牌 RTSP URL 规则库，并开放自定义品牌规则，使异厂商、异型号设备可按规则一键拼流出流，不必依赖人工试地址、也不必为每个新品牌改平台代码，把直连能力从「扫得到设备」推进到「登得进、同步准、改得了、多品牌都能出流」的生产可用形态，为后续云台与变焦等操控能力完善奠定坚实基础。</td>
+</tr>
+<tr style="background-color: #f8f9fa;">
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>狗娃</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">为推动 EasyAIoT 项目在「物联网数据可展成屏」方向的发展，前瞻提出基于开源 GoView 落地可视化 Board（拖拽看板）模块的产品构想：传统大屏往往每张屏、每个组件都要独立手写 SQL，交付慢、改一次动全身、业务人员几乎无法自助做屏。Board 方案把图表、指标与布局交给拖拽画布配置，并把组件变量直接挂接平台 IoT 物模型测点——实时值与历史值从设备侧一键取用，不必再为每张看板单独拼查询；让园区态势、产线 KPI、设备运维等大屏从「开发写 SQL 才能出屏」升级为「选测点、拖组件即可成屏」，显著缩短可视化交付周期，把 IoT「后台有数」真正变成「前台有屏」的可运营能力。此前亦贡献传感器浮点数据预测、运行状态属性上下阈值配置、阈值告警与规则联动，以及中心设备关联子设备运行状态一屏展示，打通「预测—定界—告警—规则—一屏掌控」设备运行闭环，使平台设备侧具备「看得见数、管得住界、告得出警、看得清全局」的能力。</td>
 </tr>
 </tbody>
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>特别致谢</strong>：以上贡献者在跨平台部署文档与脚本、国标视频能力落地与 AI 联调验证、多卡训练可用性与断点续训能力落地、多品牌摄像头直连发现与批量接入、天地图空间可视化完整落地、异构流媒体集群部署与调度架构、车牌识别算法与完整代码落地、EasyAIoT-Edge 边缘侧端到端串联、校园开发者社群组织与青年协作生态构建、物联网设备上下行闭环与大疆司空空中视角接入、工业 Modbus 设备上行采集等不同方面推动了 EasyAIoT 的发展，他们的专业精神与无私奉献值得我们学习与尊敬。再次向这些杰出的贡献者表示最诚挚的感谢！🙏
+<strong>特别致谢</strong>：以上贡献者在跨平台部署文档与脚本、国标视频能力落地与 AI 联调验证、多卡训练可用性与断点续训能力落地、多品牌摄像头直连发现与批量接入、天地图空间可视化完整落地、异构流媒体集群部署与调度架构、车牌识别算法与完整代码落地、EasyAIoT-Edge 边缘侧端到端串联、校园开发者社群组织与青年协作生态构建、物联网设备上下行闭环与大疆司空空中视角接入、Modbus-TCP / Modbus-RTU / OPC UA 工业协议接入、摄像头直连从发现到登录/同步/配置/多品牌出流的落地闭环、基于 GoView 的拖拽看板（Board）构想与 IoT 测点实时/历史值直取集成、传感器浮点数据预测与阈值告警规则及中心设备关联子设备运行状态一屏展示等不同方面推动了 EasyAIoT 的发展，他们的专业精神与无私奉献值得我们学习与尊敬。再次向这些杰出的贡献者表示最诚挚的感谢！🙏
 </p>
 
 ## 💝 开源守望者
@@ -1361,6 +1182,7 @@ EasyAIoT是一个开源学习项目，与商业行为无关。用户在使用该
         <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/嘎嗝.jpg" width="80px;" alt="嘎嗝"/><br /><sub><b>嘎嗝</b></sub></a></td>
         <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/曹.jpg" width="80px;" alt="曹"/><br /><sub><b>曹</b></sub></a></td>
         <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/滔滔.jpg" width="80px;" alt="滔滔"/><br /><sub><b>滔滔</b></sub></a></td>
+        <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/sponsor/狗娃.jpg" width="80px;" alt="狗娃"/><br /><sub><b>狗娃</b></sub></a></td>
     </tr>
   </tbody>
 </table>
@@ -1378,4 +1200,5 @@ EasyAIoT是一个开源学习项目，与商业行为无关。用户在使用该
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-<strong>使用许可</strong>：个人与企业可 100% 免费使用，无需保留作者、Copyright 信息。我们相信技术的价值在于被广泛使用和持续创新，而非被版权束缚。希望您能够自由地使用、修改、分发本项目，让 AI 技术真正惠及每一�
+<strong>使用许可</strong>：个人与企业可 100% 免费使用，无需保留作者、Copyright 信息。我们相信技术的价值在于被广泛使用和持续创新，而非被版权束缚。希望您能够自由地使用、修改、分发本项目，让 AI 技术真正惠及每一个人。
+</p>

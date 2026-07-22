@@ -410,6 +410,10 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int insertDevice(Device device) throws Exception {
         Product product = productService.selectByProductIdentification(device.getProductIdentification());
+        if (product == null) {
+            throw new IllegalArgumentException("产品不存在");
+        }
+        validateIndustrialPointBindings(device, product);
         device.setConnectStatus(DeviceConnectStatusEnum.OFFLINE.getValue());
         device.setDeviceType(product.getProductType());
         final int insertDeviceCount = deviceMapper.insertOrUpdateSelective(device);
@@ -455,14 +459,97 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int updateDevice(Device device) throws Exception {
-//        final int insertDeviceCount = deviceMapper.insertOrUpdateSelective(device);
-        /*if (insertDeviceCount > 0) {
-            //设备位置信息存储
-            DeviceLocation deviceLocation = new DeviceLocation();
-            BeanUtils.copyProperties(deviceParams.getDeviceLocation(), deviceLocation);
-            deviceLocationService.insertOrUpdateSelective(deviceLocation);
-        }*/
+        Product product = null;
+        String productIdentification = device.getProductIdentification();
+        if (StrUtil.isBlank(productIdentification) && device.getId() != null) {
+            Device existing = findOneById(device.getId());
+            if (existing != null) {
+                productIdentification = existing.getProductIdentification();
+                if (StrUtil.isBlank(device.getExtension())) {
+                    device.setExtension(existing.getExtension());
+                }
+            }
+        }
+        if (StrUtil.isNotBlank(productIdentification)) {
+            product = productService.selectByProductIdentification(productIdentification);
+        }
+        if (product != null) {
+            validateIndustrialPointBindings(device, product);
+        }
         return deviceMapper.updateDevice(device);
+    }
+
+    private static final Set<String> INDUSTRIAL_PROTOCOLS = Set.of("MODBUS_TCP", "MODBUS_RTU", "OPCUA", "MODBUS");
+
+    /**
+     * 工业协议设备：校验点位已绑定物模型属性，且同一设备内绑定唯一。
+     * 兼容旧配置：仅有 identifier、无 propertyCode 时，以 identifier 作为绑定键。
+     */
+    private void validateIndustrialPointBindings(Device device, Product product) {
+        if (device == null || product == null || !INDUSTRIAL_PROTOCOLS.contains(
+                StrUtil.blankToDefault(product.getProtocolType(), "").toUpperCase())) {
+            return;
+        }
+        if (StrUtil.isBlank(device.getExtension())) {
+            throw new IllegalArgumentException("工业协议设备必须配置协议点位（extension.protocolConfig）");
+        }
+        JSONObject root;
+        try {
+            root = JSONObject.parseObject(device.getExtension());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("设备扩展配置 JSON 无效");
+        }
+        if (root == null) {
+            throw new IllegalArgumentException("工业协议设备必须配置协议点位（extension.protocolConfig）");
+        }
+        JSONObject protocolConfig = root.getJSONObject("protocolConfig");
+        if (protocolConfig == null) {
+            throw new IllegalArgumentException("工业协议设备缺少 protocolConfig");
+        }
+        com.alibaba.fastjson2.JSONArray pointsArr = protocolConfig.getJSONArray("points");
+        if (pointsArr == null || pointsArr.isEmpty()) {
+            throw new IllegalArgumentException("工业协议设备至少配置一个采集点位");
+        }
+        List<JSONObject> points = new ArrayList<>(pointsArr.size());
+        for (int i = 0; i < pointsArr.size(); i++) {
+            points.add(pointsArr.getJSONObject(i));
+        }
+
+        ProductProperties query = new ProductProperties();
+        query.setProductIdentification(product.getProductIdentification());
+        List<ProductProperties> properties = productPropertiesService.selectProductPropertiesList(query);
+        Set<String> modelCodes = properties == null ? Collections.emptySet()
+                : properties.stream()
+                .map(ProductProperties::getPropertyCode)
+                .filter(StrUtil::isNotBlank)
+                .collect(Collectors.toSet());
+
+        Set<String> boundCodes = new LinkedHashSet<>();
+        for (int i = 0; i < points.size(); i++) {
+            JSONObject point = points.get(i);
+            if (point == null) {
+                continue;
+            }
+            String propertyCode = StrUtil.blankToDefault(point.getString("propertyCode"),
+                    point.getString("identifier"));
+            if (StrUtil.isBlank(propertyCode)) {
+                throw new IllegalArgumentException("第 " + (i + 1) + " 个点位未绑定物模型属性");
+            }
+            if (!modelCodes.isEmpty() && !modelCodes.contains(propertyCode)) {
+                throw new IllegalArgumentException("点位绑定的属性「" + propertyCode + "」不存在于产品物模型中");
+            }
+            if (!boundCodes.add(propertyCode)) {
+                throw new IllegalArgumentException("物模型属性「" + propertyCode + "」被多个点位重复绑定");
+            }
+            // 回写规范化：保证持久化含 propertyCode，identifier 缺省时等于 propertyCode
+            point.put("propertyCode", propertyCode);
+            if (StrUtil.isBlank(point.getString("identifier"))) {
+                point.put("identifier", propertyCode);
+            }
+        }
+        protocolConfig.put("points", points);
+        root.put("protocolConfig", protocolConfig);
+        device.setExtension(root.toJSONString());
     }
 
     @Override
@@ -1093,7 +1180,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
                     .build();
             deviceServiceInvokeResponseService.save(pending);
 
-            iotDownstreamMessageApi.sendDownstreamMessage(deviceMessage);
+            iotDownstreamMessageApi.sendDownstreamMessageByDeviceId(deviceId, deviceMessage);
 
             log.info("[invokeService][服务调用消息发送成功，设备ID: {}, 服务标识: {}, Topic: {}, requestId: {}]",
                     deviceId, serviceIdentifier, topic, requestId);
@@ -1176,7 +1263,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
                     .build();
             deviceServiceInvokeResponseService.save(pending);
 
-            iotDownstreamMessageApi.sendDownstreamMessage(deviceMessage);
+            iotDownstreamMessageApi.sendDownstreamMessageByDeviceId(deviceId, deviceMessage);
             log.info("[setProperties][属性期望值下发成功，设备ID: {}, Topic: {}, requestId: {}]",
                     deviceId, topic, requestId);
             return buildDownlinkResult(requestId, device, topic, PROPERTY_SET_SERVICE_ID, coerced);
@@ -1545,6 +1632,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         try {
             switch (datatype) {
                 case "int":
+                case "int32":
                 case "integer":
                 case "long": {
                     long num = Long.parseLong(text);
@@ -1719,6 +1807,113 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
             }
         }
         return successCount;
+    }
+
+    @Override
+    public List<DeviceMapLocationVO> listDevicesForMap(boolean hasLocationOnly) {
+        List<DeviceMapLocationVO> list = deviceMapper.selectDevicesForMap(hasLocationOnly);
+        if (list == null) {
+            return List.of();
+        }
+        for (DeviceMapLocationVO item : list) {
+            boolean located = item.getLongitude() != null && item.getLatitude() != null;
+            item.setHasLocation(located);
+            item.setOnline(DeviceConnectStatusEnum.ONLINE.getValue().equals(item.getConnectStatus()));
+        }
+        return list;
+    }
+
+    @Override
+    public DeviceMapLocationVO getDeviceMapLocation(Long deviceId) {
+        if (deviceId == null) {
+            throw new IllegalArgumentException("设备ID不能为空");
+        }
+        Device device = deviceMapper.selectDeviceById(deviceId);
+        if (device == null) {
+            throw new RuntimeException("设备不存在");
+        }
+        DeviceLocation location = deviceLocationService.findOneByDeviceIdentification(device.getDeviceIdentification());
+        DeviceMapLocationVO vo = new DeviceMapLocationVO();
+        vo.setId(device.getId());
+        vo.setDeviceIdentification(device.getDeviceIdentification());
+        vo.setDeviceName(device.getDeviceName());
+        vo.setConnectStatus(device.getConnectStatus());
+        vo.setOnline(DeviceConnectStatusEnum.ONLINE.getValue().equals(device.getConnectStatus()));
+        vo.setDeviceType(device.getDeviceType());
+        vo.setProductIdentification(device.getProductIdentification());
+        if (location != null) {
+            vo.setLongitude(location.getLongitude());
+            vo.setLatitude(location.getLatitude());
+            vo.setAddress(location.getFullName());
+            vo.setLocationUpdatedAt(location.getUpdateTime());
+            vo.setHasLocation(location.getLongitude() != null && location.getLatitude() != null);
+        } else {
+            vo.setHasLocation(false);
+        }
+        return vo;
+    }
+
+    @Override
+    public int saveOrUpdateDeviceMapLocation(Long deviceId, DeviceLocationUpdateParam param) {
+        if (deviceId == null) {
+            throw new IllegalArgumentException("设备ID不能为空");
+        }
+        if (param == null) {
+            throw new IllegalArgumentException("参数不能为空");
+        }
+        Device device = deviceMapper.selectDeviceById(deviceId);
+        if (device == null) {
+            throw new RuntimeException("设备不存在");
+        }
+        String identification = device.getDeviceIdentification();
+        DeviceLocation existing = deviceLocationService.findOneByDeviceIdentification(identification);
+
+        // 经纬度都为空：清除坐标
+        if (param.getLongitude() == null && param.getLatitude() == null) {
+            if (existing == null || existing.getId() == null) {
+                return 1;
+            }
+            return deviceLocationService.deleteDeviceLocationByIds(new Long[]{existing.getId()});
+        }
+        if (param.getLongitude() == null || param.getLatitude() == null) {
+            throw new IllegalArgumentException("经纬度需成对填写");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        if (existing == null) {
+            DeviceLocation location = DeviceLocation.builder()
+                    .deviceIdentification(identification)
+                    .longitude(param.getLongitude())
+                    .latitude(param.getLatitude())
+                    .fullName(param.getAddress())
+                    .provinceCode(param.getProvinceCode())
+                    .cityCode(param.getCityCode())
+                    .regionCode(param.getRegionCode())
+                    .remark(param.getRemark())
+                    .createTime(now)
+                    .updateTime(now)
+                    .build();
+            return deviceLocationService.insertDeviceLocation(location);
+        }
+        existing.setLongitude(param.getLongitude());
+        existing.setLatitude(param.getLatitude());
+        existing.setUpdateTime(now);
+        if (param.getAddress() != null) {
+            existing.setFullName(param.getAddress());
+        }
+        if (param.getProvinceCode() != null) {
+            existing.setProvinceCode(param.getProvinceCode());
+        }
+        if (param.getCityCode() != null) {
+            existing.setCityCode(param.getCityCode());
+        }
+        if (param.getRegionCode() != null) {
+            existing.setRegionCode(param.getRegionCode());
+        }
+        if (param.getRemark() != null) {
+            existing.setRemark(param.getRemark());
+        }
+        return deviceLocationService.updateDeviceLocation(existing);
     }
 
 }

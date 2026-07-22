@@ -215,11 +215,12 @@ import { hasPlayableStream } from '@/views/camera/utils/devicePlay';
 import { canSetDeviceLocation } from '@/views/camera/utils/deviceLocation';
 import { queryAllVideoList } from '@/api/device/gb28181';
 import {
+  fetchNvrListBrief,
+  type NvrCardItem,
+} from '@/views/camera/utils/nvrDeviceGroup';
+import {
   buildMergedCardRows,
-  type GbSipDeviceSummary,
 } from '@/views/camera/utils/gb28181DeviceGroup';
-import { fetchNvrListBrief } from '@/views/camera/utils/nvrDeviceGroup';
-import type { NvrCardItem } from '@/views/camera/utils/nvrDeviceGroup';
 import Gb28181DeviceCard, {
   type Gb28181CardItem,
 } from '@/views/camera/components/Gb28181DeviceCard/index.vue';

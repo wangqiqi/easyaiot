@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict tkhRGoOleUb8qmUuzZHq8ku7GXlg6Z5vRZgibRA0Zwpyw1riQ1ca3Q8dC0ChoNp
+\restrict xPYi1EkpBOVneb5K5lQZbu9dkE0N7WecYkkbwIjnortYAlfe1m81cfmcUBmC4VP
 
 -- Dumped from database version 18.4 (Debian 18.4-1.pgdg13+1)
 -- Dumped by pg_dump version 18.4 (Debian 18.4-1.pgdg13+1)
@@ -27,10 +27,10 @@ DROP DATABASE IF EXISTS "ruoyi-vue-pro20";
 CREATE DATABASE "ruoyi-vue-pro20" WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'en_US.utf8';
 
 
-\unrestrict tkhRGoOleUb8qmUuzZHq8ku7GXlg6Z5vRZgibRA0Zwpyw1riQ1ca3Q8dC0ChoNp
+\unrestrict xPYi1EkpBOVneb5K5lQZbu9dkE0N7WecYkkbwIjnortYAlfe1m81cfmcUBmC4VP
 \encoding SQL_ASCII
 \connect -reuse-previous=on "dbname='ruoyi-vue-pro20'"
-\restrict tkhRGoOleUb8qmUuzZHq8ku7GXlg6Z5vRZgibRA0Zwpyw1riQ1ca3Q8dC0ChoNp
+\restrict xPYi1EkpBOVneb5K5lQZbu9dkE0N7WecYkkbwIjnortYAlfe1m81cfmcUBmC4VP
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -16613,8 +16613,8 @@ COPY public.qrtz_paused_trigger_grps (sched_name, trigger_group) FROM stdin;
 --
 
 COPY public.qrtz_scheduler_state (sched_name, instance_name, last_checkin_time, checkin_interval) FROM stdin;
-schedulerName	ubuntu1784183090997	1784194448243	15000
-schedulerName	ubuntu1784164969339	1784194449706	15000
+schedulerName	ubuntu1784610926112	1784621037936	15000
+schedulerName	ubuntu1784610868383	1784621042109	15000
 \.
 
 
@@ -20212,6 +20212,8 @@ COPY public.system_login_log (id, log_type, trace_id, user_id, user_type, userna
 3078	100		1	2	admin	0	127.0.0.1	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36	\N	2026-06-12 01:44:18.833648	\N	2026-06-12 01:44:18.833648	0	1
 3079	100		1	2	admin	0	127.0.0.1	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36	\N	2026-07-13 16:23:15.866892	\N	2026-07-13 16:23:15.866892	0	1
 3080	100		1	2	admin	0	127.0.0.1	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36	\N	2026-07-16 09:27:50.128874	\N	2026-07-16 09:27:50.128874	0	1
+3081	200		1	2	admin	0	127.0.0.1	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36	1	2026-07-17 11:29:28.52352	1	2026-07-17 11:29:28.52352	0	1
+3082	100		1	2	admin	0	127.0.0.1	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36	\N	2026-07-17 15:02:47.575923	\N	2026-07-17 15:02:47.575923	0	1
 \.
 
 
@@ -21192,7 +21194,6 @@ COPY public.system_menu (id, name, permission, type, sort, parent_id, path, icon
 2963	模型训练	train:train:query	2	8	0	train/index	ant-design:experiment-twotone	train/index	Train	0	t	t	t	1	2025-06-15 07:18:19.268	1	2025-06-15 07:20:00.691	1
 2944	流媒体管理	video:video:query	2	0	0	/video	ant-design:video-camera-outlined	video/index	Video	0	t	t	t	1	2024-07-25 15:38:20.987	1	2025-04-29 18:34:23.289	1
 2952	车辆识别	car:car:query	2	25	0	/car/index	ant-design:car-twotone	car/index	Car	1	f	f	f	1	2024-09-19 11:21:55.242	1	2024-09-29 09:57:34.424	1
-2959	可视化大屏	view:view:list	2	49	0	/view/index	ant-design:ant-design-outlined	view/index	View	1	f	t	f	1	2024-09-27 16:36:24.602	1	2025-02-10 11:10:57.026	0
 1255	数据源配置	data-source-config:data-source-config:query	2	20	1	code/data-source-config	ep:data-analysis	infra/dataSourceConfig/index	InfraDataSourceConfig	0	t	t	t		2022-04-27 14:37:32	1	2024-12-26 14:41:03.089	0
 2478	单表（增删改查）		2	1	1070	code/demo/demo01-contact	ep:bicycle	infra/demo/demo01/index	Demo01Contact	0	t	t	t		2023-11-15 14:42:30	1	2024-12-26 14:32:28.776	0
 2447	三方登录		1	10	1	social	fa:rocket			0	t	t	t	1	2023-11-04 12:12:01	1	2024-12-26 14:36:10.667	0
@@ -21217,15 +21218,41 @@ COPY public.system_menu (id, name, permission, type, sort, parent_id, path, icon
 2969	告警事件	alert:alert:query	2	35	0	alert	ant-design:alert-outlined	alert/index	Alarm	0	t	t	t	1	2025-11-20 12:41:30.270882	1	2025-11-20 12:41:30.270882	0
 2970	通知管理	notice:notice:query	2	36	0	notice	ant-design:sound-outlined	notice/index	Notice	0	t	t	t	1	2025-11-20 12:42:17.013623	1	2025-11-20 12:43:51.584973	0
 2931	产品管理	product:product:query	2	6	0	product	ant-design:apartment-outlined	product/index	Product	0	t	f	t	1	2024-07-11 05:42:44.432	1	2026-06-11 10:47:23.351937	0
-2965	流媒体	camera:camera:query	2	1	0	camera/index	gala:video	camera/index	Camera	0	t	t	t	1	2025-08-31 18:38:53.702	1	2026-06-11 10:47:38.052375	0
 2966	模型管理	train:train:query	2	9	0	train/index	hugeicons:ai-brain-03	train/index	Train	0	t	t	t	1	2025-08-31 18:41:46.818	1	2025-12-06 14:51:36.602328	0
 2971	通道管理	channel:channel:query	2	99	0	Channel/:deviceIdentification	ant-design:borderless-table-outlined	gb28181/components/Channel/index	Channel	0	f	t	f	1	2026-03-06 14:32:31.248172	1	2026-03-06 14:36:39.101955	0
 2968	OTA升级	ota:ota:query	2	7	0	ota	ant-design:hourglass-outlined	ota/index	OtaVersion	0	t	t	t	1	2025-11-20 12:40:20.867024	1	2026-06-11 10:47:19.091584	0
+2965	流媒体管理	camera:camera:query	2	3	0	camera/index	gala:video	camera/index	Camera	0	t	t	t	1	2025-08-31 18:38:53.702	1	2026-07-21 14:18:05.976289	0
 2762	设备管理	device:device:query	2	4	0	device	ant-design:laptop-outlined	devices/index	Devices	0	t	f	t	1	2024-07-10 22:42:17.76	1	2026-06-11 10:47:27.631261	0
-2972	集群管理	node:node:query	2	0	0	node/index	ant-design:ungroup-outlined	node/index	ComputeNodeManage	0	t	t	t	1	2026-06-11 10:46:06.011163	1	2026-06-11 11:13:26.93809	0
 2940	产品详情	product:detail:query	2	99	0	detail/:id/:productIdentification	ant-design:appstore-add-outlined	product/components/ProductDrawer	ProductDetail	0	f	f	f	1	2024-07-22 15:46:57.693	1	2026-07-16 12:58:34.906457	0
 2888	产品模板		2	10	2939	product-template	ant-design:barcode-outlined	device/product_template/index	ProductTemplate	0	f	t	f		2024-07-11 05:26:18.024696	1	2026-07-16 14:39:58.203559	0
 2798	设备分组		2	2	2761	device-group	ant-design:trophy-filled	device/device_group/index	DeviceGroup	0	f	t	f		2024-07-11 05:21:49.127724	1	2026-07-16 14:40:09.50964	0
+3100	可视化		1	1	0	/visualize	ant-design:fund-projection-screen-outlined	\N	\N	0	t	t	t	1	2026-07-21 10:53:12.992697	1	2026-07-21 13:25:57.709615	1
+3102	项目查询	visualize:project:query	3	1	3101				\N	0	t	t	t	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:20.892831	0
+3103	项目创建	visualize:project:create	3	2	3101				\N	0	t	t	t	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:20.892831	0
+3104	项目更新	visualize:project:update	3	3	3101				\N	0	t	t	t	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:20.892831	0
+3105	项目删除	visualize:project:delete	3	4	3101				\N	0	t	t	t	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:20.892831	0
+3106	项目发布	visualize:project:publish	3	5	3101				\N	0	t	t	t	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:20.892831	0
+2959	可视化大屏	view:view:list	2	49	0	/view/index	ant-design:ant-design-outlined	view/index	View	1	f	t	f	1	2024-09-27 16:36:24.602	1	2026-07-21 10:53:20.892831	0
+3107	模板查询	visualize:template:query	3	10	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3108	模板创建	visualize:template:create	3	11	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3109	模板更新	visualize:template:update	3	12	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3110	模板删除	visualize:template:delete	3	13	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3111	素材查询	visualize:asset:query	3	20	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3112	素材创建	visualize:asset:create	3	21	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3113	素材更新	visualize:asset:update	3	22	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3114	素材删除	visualize:asset:delete	3	23	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3115	数据源查询	visualize:datasource:query	3	30	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3116	数据源创建	visualize:datasource:create	3	31	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3117	数据源更新	visualize:datasource:update	3	32	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3118	数据源删除	visualize:datasource:delete	3	33	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3119	部署查询	visualize:deploy:query	3	40	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3120	部署创建	visualize:deploy:create	3	41	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3121	部署更新	visualize:deploy:update	3	42	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3122	部署删除	visualize:deploy:delete	3	43	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3123	部署上线	visualize:deploy:online	3	44	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+3124	部署下线	visualize:deploy:offline	3	45	3101				\N	0	t	t	t	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0
+2972	集群管理	node:node:query	2	0	0	node/index	ant-design:ungroup-outlined	node/index	ComputeNodeManage	0	t	t	t	1	2026-06-11 10:46:06.011163	1	2026-07-21 13:25:53.05001	0
+3101	可视化管理	visualize:project:query	2	1	0	index	ant-design:fund-outlined	visualize/index	Visualize	0	t	t	t	1	2026-07-21 10:53:12.992697	1	2026-07-21 14:22:48.737176	0
 \.
 
 
@@ -24541,8 +24568,9 @@ COPY public.system_oauth2_access_token (id, user_id, user_type, user_info, acces
 6048	1	2	{"nickname":"IoT","deptId":"103"}	492bb95954a444fd98d0797dae78c4cf	a08a27b638ac4a9db942bde3a41f8071	default	\N	2026-06-12 01:06:56.435435	\N	2026-06-12 00:36:56.436195	\N	2026-06-12 00:36:56.436195	0	1
 6050	1	2	{"nickname":"IoT","deptId":"103"}	46e7a7bdd5cc434abd8c55a4b45495e6	70b1ddbd3fd64062b04ef666434c9237	default	\N	2026-06-12 01:42:21.279666	\N	2026-06-12 01:12:21.280658	\N	2026-06-12 01:12:21.280658	0	1
 6052	1	2	{"nickname":"IoT","deptId":"103"}	eecb183e009d43cbbdbe32b670297953	b1145064fb044c8491ddf988d6b70885	default	\N	2026-06-12 02:14:18.853727	\N	2026-06-12 01:44:18.855158	\N	2026-06-12 01:44:18.855158	0	1
-6054	1	2	{"nickname":"IoT","deptId":"103"}	8c8e11ceeb474fc297e3cbefb052a142	376083153c594f9f8ffb046dd218e635	default	\N	2026-08-12 16:23:15.948964	\N	2026-07-13 16:23:15.962559	\N	2026-07-13 16:23:15.962559	0	1
 6056	1	2	{"nickname":"IoT","deptId":"103"}	04d0a319d8ff44caa5458e5e823fb36c	090307f7e8f24577a6e972bf3a3a8bb0	default	\N	2026-08-15 09:27:50.203873	\N	2026-07-16 09:27:50.206402	\N	2026-07-16 09:27:50.206402	0	1
+6054	1	2	{"nickname":"IoT","deptId":"103"}	8c8e11ceeb474fc297e3cbefb052a142	376083153c594f9f8ffb046dd218e635	default	\N	2026-08-12 16:23:15.948964	\N	2026-07-13 16:23:15.962559	\N	2026-07-13 16:23:15.962559	1	1
+6058	1	2	{"nickname":"IoT","deptId":"103"}	6df89a87b2f646f69e1d42d9362c2c64	41f03be248834709befb77a6b5aa7e86	default	\N	2026-08-16 15:02:47.651361	\N	2026-07-17 15:02:47.65544	\N	2026-07-17 15:02:47.65544	0	1
 \.
 
 
@@ -27360,8 +27388,9 @@ COPY public.system_oauth2_refresh_token (id, user_id, refresh_token, user_type, 
 6047	1	a08a27b638ac4a9db942bde3a41f8071	2	default	\N	2026-07-12 00:36:56.426239	\N	2026-06-12 00:36:56.426958	\N	2026-06-12 00:36:56.426958	0	1
 6049	1	70b1ddbd3fd64062b04ef666434c9237	2	default	\N	2026-07-12 01:12:21.264302	\N	2026-06-12 01:12:21.265497	\N	2026-06-12 01:12:21.265497	0	1
 6051	1	b1145064fb044c8491ddf988d6b70885	2	default	\N	2026-07-12 01:44:18.841163	\N	2026-06-12 01:44:18.841962	\N	2026-06-12 01:44:18.841962	0	1
-6053	1	376083153c594f9f8ffb046dd218e635	2	default	\N	2026-08-12 16:23:15.925684	\N	2026-07-13 16:23:15.92955	\N	2026-07-13 16:23:15.92955	0	1
 6055	1	090307f7e8f24577a6e972bf3a3a8bb0	2	default	\N	2026-08-15 09:27:50.185529	\N	2026-07-16 09:27:50.189243	\N	2026-07-16 09:27:50.189243	0	1
+6053	1	376083153c594f9f8ffb046dd218e635	2	default	\N	2026-08-12 16:23:15.925684	\N	2026-07-13 16:23:15.92955	\N	2026-07-13 16:23:15.92955	1	1
+6057	1	41f03be248834709befb77a6b5aa7e86	2	default	\N	2026-08-16 15:02:47.632455	\N	2026-07-17 15:02:47.635397	\N	2026-07-17 15:02:47.635397	0	1
 \.
 
 
@@ -28418,6 +28447,31 @@ COPY public.system_role_menu (id, role_id, menu_id, creator, create_time, update
 5925	1	1238	1	2024-07-10 23:44:18.377	1	2024-07-10 23:44:18.377	1	1
 1684	101	1242	1	2022-04-01 22:21:37	1	2022-04-01 22:21:37	1	1
 5831	1	1091	1	2024-07-10 23:44:12.722	1	2024-07-10 23:44:12.722	1	1
+5970	1	3101	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:12.992697	0	1
+5971	1	3102	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:12.992697	0	1
+5972	1	3103	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:12.992697	0	1
+5973	1	3104	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:12.992697	0	1
+5974	1	3105	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:12.992697	0	1
+5975	1	3106	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:12.992697	0	1
+5976	1	3107	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5977	1	3108	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5978	1	3109	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5979	1	3110	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5980	1	3111	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5981	1	3112	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5982	1	3113	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5983	1	3114	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5984	1	3115	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5985	1	3116	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5986	1	3117	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5987	1	3118	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5988	1	3119	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5989	1	3120	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5990	1	3121	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5991	1	3122	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5992	1	3123	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5993	1	3124	1	2026-07-21 13:00:39.505445	1	2026-07-21 13:00:39.505445	0	1
+5969	1	3100	1	2026-07-21 10:53:12.992697	1	2026-07-21 10:53:12.992697	1	1
 \.
 
 
@@ -28576,7 +28630,7 @@ COPY public.system_users (id, username, password, nickname, remark, dept_id, pos
 131	hh	$2a$04$jyH9h6.gaw8mpOjPfHIpx.8as2Rzfcmdlj5rlJFwgCw4rsv/MTb2K	呵呵	\N	100	[]	777@qq.com	15601882312	1		0		\N	1	2024-04-27 08:45:56	1	2024-04-27 08:45:56	1	1	0	0
 100	yudao	$2a$10$11U48RhyJ5pSBYWSn12AD./ld671.ycSzJHbyrtpeoMeYiw31eo8a	王总	不要吓我	104	[1]	yudao@iocoder.cn	15601691300	1		1	127.0.0.1	2022-07-09 23:03:33		2021-01-07 09:07:17	1	2025-08-14 09:39:37.486	0	1	0	0
 118	goudan	$2a$04$A7vqK6hfgoPeOGDgZoC1BOnVwTpDyBtQnlsOWBIqM8Wj9A6NTr0Tq	狗蛋	\N	103	[1]		15601691239	1		0	0:0:0:0:0:0:0:1	2024-07-24 11:23:40.932	1	2022-07-09 17:44:43	1	2025-08-14 11:34:37.076	0	1	0	0
-1	admin	$2a$10$mRMIYLDtRHlf6.9ipiqH1.Z.bh/R9dO9d5iHiGYPigi6r5KOoR2Wm	IoT	管理员	103	[1]	aoteman@126.com	18818260277	1	http://test.yudao.iocoder.cn/113dcbab48d22fc988151b98be2b8b4f262effdb5305c171cf1fe9a71801377a.png	0	127.0.0.1	2026-07-16 09:27:50.135711	admin	2021-01-05 17:03:47	\N	2026-07-16 09:27:50.137551	0	1	0	0
+1	admin	$2a$10$mRMIYLDtRHlf6.9ipiqH1.Z.bh/R9dO9d5iHiGYPigi6r5KOoR2Wm	IoT	管理员	103	[1]	aoteman@126.com	18818260277	1	http://test.yudao.iocoder.cn/113dcbab48d22fc988151b98be2b8b4f262effdb5305c171cf1fe9a71801377a.png	0	127.0.0.1	2026-07-17 15:02:47.585333	admin	2021-01-05 17:03:47	\N	2026-07-17 15:02:47.589157	0	1	0	0
 \.
 
 
@@ -28787,7 +28841,7 @@ SELECT pg_catalog.setval('public.system_dict_type_seq', 620, false);
 -- Name: system_login_log_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.system_login_log_seq', 3080, true);
+SELECT pg_catalog.setval('public.system_login_log_seq', 3082, true);
 
 
 --
@@ -28815,7 +28869,7 @@ SELECT pg_catalog.setval('public.system_mail_template_seq', 16, false);
 -- Name: system_menu_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.system_menu_seq', 2972, true);
+SELECT pg_catalog.setval('public.system_menu_seq', 3124, true);
 
 
 --
@@ -28843,7 +28897,7 @@ SELECT pg_catalog.setval('public.system_notify_template_seq', 1, false);
 -- Name: system_oauth2_access_token_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.system_oauth2_access_token_seq', 6056, true);
+SELECT pg_catalog.setval('public.system_oauth2_access_token_seq', 6058, true);
 
 
 --
@@ -28892,7 +28946,7 @@ SELECT pg_catalog.setval('public.system_post_seq', 6, false);
 -- Name: system_role_menu_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.system_role_menu_seq', 5968, true);
+SELECT pg_catalog.setval('public.system_role_menu_seq', 5993, true);
 
 
 --
@@ -29686,5 +29740,5 @@ ALTER TABLE ONLY public.qrtz_triggers
 -- PostgreSQL database dump complete
 --
 
-\unrestrict tkhRGoOleUb8qmUuzZHq8ku7GXlg6Z5vRZgibRA0Zwpyw1riQ1ca3Q8dC0ChoNp
+\unrestrict xPYi1EkpBOVneb5K5lQZbu9dkE0N7WecYkkbwIjnortYAlfe1m81cfmcUBmC4VP
 
