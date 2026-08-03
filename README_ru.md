@@ -25,6 +25,12 @@
   <a href="./README_ko.md">한국어</a>
 </h4>
 
+## 🌐 Официальный сайт
+
+Официальный сайт EasyAIoT: [http://36.111.47.113:8090/](http://36.111.47.113:8090/)
+
+Представляет продукт, возможности, три уровня оборудования, загрузки установщиков и вход в документацию — чтобы быстро понять ценность платформы и начать внедрение.
+
 ## 📖 О проекте
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
@@ -36,7 +42,7 @@
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-Платформа состоит из одиннадцати основных модулей — <strong>WEB, APP, DEVICE, NODE, VIDEO, AI, TASK, EDGE, VISUALIZE, TRANSFORM и PANEL</strong> — а <strong>COMPILE</strong> отвечает за мультиплатформенную упаковку и поставку. На стороне возможностей платформа охватывает многопротокольный доступ к камерам GB28181 / ONVIF, <strong>доступ к аэровзгляду DJI-дока и дрона</strong>, задачи алгоритмов в реальном времени и по снимкам, детекция YOLO и zero-shot авторазметка SAM, распознавание лиц/номеров, оркестрируемая бизнес-постобработка, планирование федеративных вычислительных кластеров и <strong>режим бесконечного федеративного edge-кластера</strong> (обычные платы разработки готовы «из коробки», локальные решения на площадке, оповещения и доказательства автоматически собираются в облако, мощность растёт с бизнесом), плюс жизненный цикл IoT-устройств MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA и <strong>визуализационные экраны и Web SCADA</strong>, чтобы данные устройств становились командной обстановкой и возвращались на технологические мнемосхемы; новый <strong>движок TRANSFORM многонаправленного потока данных</strong> доставляет бизнес-события платформы во внешние MES / ERP / CRM / WMS по контракту — многосторонняя стыковка настраиваема, прослеживаема и переиспользуема; сопутствующая <strong>точка поставки и дежурства PANEL</strong> позволяет в день прибытия установить и сдать комплекс, а дежурство и устранение неисправностей больше не ждут каждый раз удалённых команд разработчиков. На стороне пользовательского опыта веб-консоль управления и мобильное App / мини-приложение выровнены по возможностям — центр командования и полевая проверка делят одну бизнес-логику, в любое время и в любом месте.
+Платформа включает основные модули <strong>WEB, APP, DEVICE, NODE, VIDEO, AI, TASK, EDGE, VISUALIZE, TRANSFORM, PANEL и SITE</strong>, а <strong>COMPILE</strong> отвечает за мультиплатформенную упаковку и поставку. На стороне возможностей платформа охватывает многопротокольный доступ к камерам GB28181 / ONVIF, <strong>доступ к аэровзгляду DJI-дока и дрона</strong>, задачи алгоритмов в реальном времени и по снимкам, детекция YOLO и zero-shot авторазметка SAM, распознавание лиц/номеров, оркестрируемая бизнес-постобработка, планирование федеративных вычислительных кластеров и <strong>режим бесконечного федеративного edge-кластера</strong> (обычные платы разработки готовы «из коробки», локальные решения на площадке, оповещения и доказательства автоматически собираются в облако, мощность растёт с бизнесом), плюс жизненный цикл IoT-устройств MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA и <strong>визуализационные экраны и Web SCADA</strong>, чтобы данные устройств становились командной обстановкой и возвращались на технологические мнемосхемы; новый <strong>движок TRANSFORM многонаправленного потока данных</strong> доставляет бизнес-события платформы во внешние MES / ERP / CRM / WMS по контракту — многосторонняя стыковка настраиваема, прослеживаема и переиспользуема; сопутствующая <strong>точка поставки и дежурства PANEL</strong> позволяет в день прибытия установить и сдать комплекс, а дежурство и устранение неисправностей больше не ждут каждый раз удалённых команд разработчиков; плюс <strong>официальный сайт SITE</strong> представляет ценность продукта, три уровня оборудования и вход к установщикам — сначала понять, затем скачать и развернуть. На стороне пользовательского опыта веб-консоль управления и мобильное App / мини-приложение выровнены по возможностям — центр командования и полевая проверка делят одну бизнес-логику, в любое время и в любом месте.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -44,7 +50,7 @@
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-📄 Для более полного иллюстрированного описания см. <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">Презентация проекта EasyAIoT V2.0 (PPT)</a>.
+📄 Для более полного иллюстрированного описания см. <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">Презентация проекта EasyAIoT V2.0 (PPT)</a>, а также <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">Платформа AI-анализа видеонаблюдения (PDF)</a>.
 </p>
 
 ## 🌟 Размышления о проекте
@@ -349,13 +355,24 @@ EasyAIoT активно поддерживает стратегию локали
 ## 🧩 Структура проекта
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT состоит из одиннадцати основных проектов, плюс COMPILE для мультиплатформенной упаковки и поставки:
+EasyAIoT включает основные модули WEB, APP, DEVICE, NODE, VIDEO, AI, TASK, EDGE, VISUALIZE, TRANSFORM, PANEL и SITE, а также COMPILE для мультиплатформенной упаковки и поставки:
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50; width: 20%;">Модуль</td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50;">Описание</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>SITE модуль</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>Официальная точка входа</strong>: Отдельный официальный сайт для посетителей, интеграторов и заказчиков — ясно объяснить ценность «облако — край — устройство», затем вести к загрузке и развёртыванию</li>
+    <li><strong>Короче путь к пониманию</strong>: Возможности, три уровня оборудования, установщики и документация на одном сайте — меньше поисков по репозиторию и устных уточнений</li>
+    <li><strong>Поддержка выбора уровня</strong>: mini / standard / full для edge-боксов, AI-камер и full-stack комплексов — выбрать подходящий уровень с первого раза</li>
+    <li><strong>От интереса к установке</strong>: Сайт, демо, открытые репозитории и Releases образуют замкнутый цикл — понять → попробовать → скачать → установить</li>
+  </ul>
+</td>
 </tr>
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>WEB модуль</strong></td>
@@ -434,7 +451,7 @@ EasyAIoT состоит из одиннадцати основных проек�
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>EDGE модуль</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>Режим бесконечного федеративного периферийного кластера</strong>: Восьмой основной модуль — переносит интеллект из центра на объект: обычные платы разработки и edge-узлы могут в любой момент присоединиться к сети дежурства; вычисления масштабируются вместе с бизнесом, оповещения и доказательства автоматически агрегируются в облако</li>
+    <li><strong>Режим бесконечного федеративного периферийного кластера</strong>: Переносит интеллект из центра на объект: обычные платы разработки и edge-узлы могут в любой момент присоединиться к сети дежурства; вычисления масштабируются вместе с бизнесом, оповещения и доказательства автоматически агрегируются в облако</li>
     <li><strong>Лёгкое полевое дежурство</strong>: Фокус на локальном восприятии и оценке с обратной передачей — без тяжёлого управляющего интерфейса и локальных бизнес-систем, снижая порог edge-развёртывания и долгосрочную нагрузку на эксплуатацию</li>
     <li><strong>Быстрое подключение, единое управление</strong>: Полевые узлы быстро присоединяются, центр единообразно оркестрирует задачи и политики — меньше ручной настройки и затрат на раздельное создание точек</li>
     <li><strong>Бесшовное расширение бизнеса</strong>: Центр отвечает за общую картину и правила, периферия — за наблюдение на месте и быстрый отклик; число узлов растёт вместе с зоной покрытия — поддержка горизонтального масштабирования анализа в реальном времени, патрулирования и снимков</li>
@@ -446,7 +463,7 @@ EasyAIoT состоит из одиннадцати основных проек�
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>VISUALIZE модуль</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>Редактор больших экранов drag-and-drop</strong>: Девятый основной модуль — высокопроизводительный low-code редактор визуализации, сфокусированный на редактировании холста и предпросмотре.</li>
+    <li><strong>Редактор больших экранов drag-and-drop</strong>: Высокопроизводительный low-code редактор визуализации, сфокусированный на редактировании холста и предпросмотре.</li>
     <li><strong>Интеграция с WEB</strong>: Создание проектов, шаблоны, ресурсы, источники данных, публикация и вывод выполняются в меню «Визуализация» консоли администрирования; «Открыть редактор» переходит в этот модуль для работы на холсте.</li>
     <li><strong>Поставка больших экранов</strong>: Диаграммы, показатели и компоновка настраиваются перетаскиванием; компоненты подключаются к источникам данных платформы и IoT-точкам — быстрое создание экранов ситуации кампуса, KPI линии, эксплуатации оборудования, энергопотребления и т. п.</li>
     <li><strong>Чёткое разделение с SCADA</strong>: Большие экраны (dashboard) редактируются в этом модуле; технологическая SCADA — в Web-SCADA; метаданные проектов единообразно управляются бэкендом визуализации модуля DEVICE.</li>
@@ -458,7 +475,7 @@ EasyAIoT состоит из одиннадцати основных проек�
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>Модуль TRANSFORM</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>Многонаправленный бизнес-поток</strong>: Десятый ключевой модуль — доставляет оповещения, события устройств и бизнес-результаты во внешние MES / ERP / CRM / WMS по контракту, закрывая «последнюю милю» от «данные есть на платформе» до «бизнес-системы их используют»</li>
+    <li><strong>Многонаправленный бизнес-поток</strong>: Доставляет оповещения, события устройств и бизнес-результаты во внешние MES / ERP / CRM / WMS по контракту, закрывая «последнюю милю» от «данные есть на платформе» до «бизнес-системы их используют»</li>
     <li><strong>Настраиваемая интеграция</strong>: Назначения, правила пересылки и маппинг полей настраиваются один раз и переиспользуются — меньше «кастомных API под каждого клиента»</li>
     <li><strong>Проверяемая доставка</strong>: Кластеры исполнения и трейлы доставки мониторятся и просматриваются — приёмка отвечает «дошло ли, где застряло», меньше устных сверок</li>
     <li><strong>Горизонтальное масштабирование</strong>: При росте трафика расширяйте потребление и доставку по бизнес-контракту — параллельная стыковка линий, заводов и систем</li>
@@ -469,7 +486,7 @@ EasyAIoT состоит из одиннадцати основных проек�
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>Модуль PANEL</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>Точка поставки и дежурства</strong>: Одиннадцатый ключевой модуль — независимо от бизнес-консоли: установить, сдать и держать в день прибытия — короче приёмка, меньше стоимость присутствия и удалённой поддержки</li>
+    <li><strong>Точка поставки и дежурства</strong>: Независимо от бизнес-консоли: установить, сдать и держать в день прибытия — короче приёмка, меньше стоимость присутствия и удалённой поддержки</li>
     <li><strong>Замкнутый цикл в тот же день</strong>: Установка по уровню через UI, прогресс и результат видны сразу; поднять и сдать комплекс ещё до готовности бизнес-консоли</li>
     <li><strong>Самостоятельная диагностика</strong>: Здоровье контейнеров, уровень ресурсов, логи задач и готовность образов с первого взгляда — типовые старт/стоп, pull и очистка кэша без ожидания команд разработчиков</li>
     <li><strong>Переиспользование на многих площадках</strong>: Одна точка для многих комплексов и машинных залов — PoC и серийная поставка в одном каноне</li>
@@ -853,11 +870,19 @@ EasyAIoT — это проект с открытым исходным кодом
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>狗娃</nobr></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">Внёс вклад в развитие EasyAIoT в направлении «IoT-данные можно вывести на экран», опережающе предложив продуктовую концепцию модуля Board (drag-and-drop панели): традиционные большие экраны часто требуют отдельных запросов для каждого экрана и компонента — медленная поставка, любое изменение затрагивает всё, бизнес-пользователи почти не могут делать экраны сами. Решение Board передаёт диаграммы, показатели и компоновку в drag-and-drop холст и напрямую связывает переменные компонентов с IoT-точками модели вещи — текущие и исторические значения берутся с устройств в один клик, без отдельных запросов для каждой панели; экраны ситуации кампуса, KPI линии, эксплуатации оборудования переходят от «разработчик пишет запросы» к «выбрать точку, перетащить компонент» — заметно сокращая цикл визуальной поставки и превращая IoT «данные в бэкенде» в управляемую способность «экран на фронте». Ранее также внёс прогноз float-данных датчиков, настройку верхних/нижних порогов атрибутов рабочего состояния, пороговые оповещения и правила со связкой, а также отображение рабочего состояния связанных подчинённых центрального устройства на одном экране — замкнув контур «прогноз — границы — оповещение — правила — управление на одном экране», чтобы сторона устройств могла «видеть цифры, держать границы, поднимать тревогу и видеть картину целиком».</td>
 </tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>大老刘</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">Внёс вклад в развитие EasyAIoT в направлении внешней коммуникации и представления решений, подготовив иллюстрированные материалы «Платформа AI-анализа видеонаблюдения»: системно изложил полный спектр возможностей платформы и ценность внедрения в сценариях AI-анализа видеонаблюдения, чтобы пользователи, интеграторы и партнёры быстрее понимали позиционирование и ключевые преимущества — заметно повысив эффективность внешней презентации и делового общения.</td>
+</tr>
+<tr style="background-color: #f8f9fa;">
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>刘兆中ᯤ⁵ᴳ</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">Внёс вклад в развитие EasyAIoT в направлении однокнопочного развёртывания на macOS: первым предложил часть скриптов однокнопочного развёртывания для Mac и в основном проложил магистральный путь — загрузку образов, оркестрацию контейнеров и предварительные проверки среды, — так что дальнейшая доработка свелась к «последней миле». Его исследования помогли команде прояснить ключевые узлы и риски цепочки развёртывания на Mac, заметно сократив путь к инженерному завершению; это незаменимый фундамент на пути macOS-развёртывания от нуля к рабочему состоянию.</td>
+</tr>
 </tbody>
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>Особая благодарность</strong>: Перечисленные участники способствовали развитию EasyAIoT в разных направлениях — документация и сценарии кроссплатформенного развёртывания, видеовозможности по национальному стандарту и интеграционное тестирование с ИИ, многокарточное обучение и возобновление с контрольной точки, прямое обнаружение многобрендовых камер и массовое подключение, пространственная визуализация Tianditu, развёртывание и планирование гетерогенных стриминговых кластеров, алгоритм распознавания номеров и полная реализация кода, сквозная интеграция EasyAIoT-Edge на периферии, организация кампусного сообщества разработчиков и экосистема молодёжного сотрудничества, замкнутый контур IoT-устройств и интеграция воздушного обзора DJI, доступ Modbus-TCP / Modbus-RTU / OPC UA к промышленным протоколам, замкнутый контур прямого подключения камер от обнаружения до входа/синхронизации/конфигурации/многобрендовой выдачи потока, концепция drag-and-drop панели (Board) с прямой интеграцией текущих/исторических значений IoT-точек, а также прогноз float-данных датчиков с пороговыми оповещениями и отображение рабочего состояния связанных подустройств центральных устройств на одном экране. Их профессионализм и самоотверженная преданность достойны нашего изучения и уважения. Ещё раз выражаем нашу самую искреннюю благодарность этим выдающимся участникам! 🙏
+<strong>Особая благодарность</strong>: Перечисленные участники способствовали развитию EasyAIoT в разных направлениях — документация и сценарии кроссплатформенного развёртывания, закладка основ и исследование цепочки однокнопочного развёртывания на macOS, видеовозможности по национальному стандарту и интеграционное тестирование с ИИ, многокарточное обучение и возобновление с контрольной точки, прямое обнаружение многобрендовых камер и массовое подключение, пространственная визуализация Tianditu, развёртывание и планирование гетерогенных стриминговых кластеров, алгоритм распознавания номеров и полная реализация кода, сквозная интеграция EasyAIoT-Edge на периферии, организация кампусного сообщества разработчиков и экосистема молодёжного сотрудничества, замкнутый контур IoT-устройств и интеграция воздушного обзора DJI, доступ Modbus-TCP / Modbus-RTU / OPC UA к промышленным протоколам, замкнутый контур прямого подключения камер от обнаружения до входа/синхронизации/конфигурации/многобрендовой выдачи потока, концепция drag-and-drop панели (Board) с прямой интеграцией текущих/исторических значений IoT-точек, прогноз float-данных датчиков с пороговыми оповещениями и отображение рабочего состояния связанных подустройств центральных устройств на одном экране, а также иллюстрированные материалы о платформе AI-анализа видеонаблюдения. Их профессионализм и самоотверженная преданность достойны нашего изучения и уважения. Ещё раз выражаем нашу самую искреннюю благодарность этим выдающимся участникам! 🙏
 </p>
 
 ## 💝 Хранители open source
@@ -900,15 +925,15 @@ EasyAIoT — это проект с открытым исходным кодом
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/子非鱼.png" width="80px;" alt="子非鱼"/><br /><sub><b>子非鱼</b></sub></a></td>
     </tr>
     <tr>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/在路上.png" width="80px;" alt="在路上"/><br /><sub><b>在路上</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/忘记时间.png" width="80px;" alt="忘记时间"/><br /><sub><b>忘记时间</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/苏州小朱.jpg" width="80px;" alt="苏州小朱"/><br /><sub><b>苏州小朱</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/空白.jpg" width="80px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/HuaZy.jpg" width="80px;" alt="HuaZy"/><br /><sub><b>HuaZy</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/ANDY.png" width="80px;" alt="ANDY"/><br /><sub><b>ANDY</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/A许庆.png" width="80px;" alt="A许庆"/><br /><sub><b>A许庆</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/刘兆中📶⁵ᴳ.png" width="80px;" alt="刘兆中📶⁵ᴳ"/><br /><sub><b>刘兆中📶⁵ᴳ</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/冯.png" width="80px;" alt="冯"/><br /><sub><b>冯</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/莫斯克.png" width="80px;" alt="莫斯克"/><br /><sub><b>莫斯克</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/赵欢.png" width="80px;" alt="赵欢"/><br /><sub><b>赵欢</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/越南打印机网络监控电脑门禁何工.jpg" width="80px;" alt="越南打印机网络监控电脑门禁何工"/><br /><sub><b>越南打印机网络监控电脑门禁何工</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/熊勇辉.jpg" width="80px;" alt="熊勇辉"/><br /><sub><b>熊勇辉</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/旭.jpg" width="80px;" alt="旭"/><br /><sub><b>旭</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/心远.jpg" width="80px;" alt="心远"/><br /><sub><b>心远</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/Mr.Peng.jpg" width="80px;" alt="Mr.Peng"/><br /><sub><b>Mr.Peng</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/舒韩春💭成都云速广告💭.jpg" width="80px;" alt="舒韩春💭成都云速广告💭"/><br /><sub><b>舒韩春💭成都云速广告💭</b></sub></a></td>
     </tr>
     <tr>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/前进!.png" width="80px;" alt="前进!"/><br /><sub><b>前进!</b></sub></a></td>
@@ -1039,6 +1064,16 @@ EasyAIoT — это проект с открытым исходным кодом
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/西乡一粒沙.png" width="80px;" alt="西乡一粒沙"/><br /><sub><b>西乡一粒沙</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/yang.png" width="80px;" alt="yang"/><br /><sub><b>yang</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/何行者.png" width="80px;" alt="何行者"/><br /><sub><b>何行者</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/在路上.png" width="80px;" alt="在路上"/><br /><sub><b>在路上</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/ANDY.png" width="80px;" alt="ANDY"/><br /><sub><b>ANDY</b></sub></a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/冯.png" width="80px;" alt="冯"/><br /><sub><b>冯</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/忘记时间.png" width="80px;" alt="忘记时间"/><br /><sub><b>忘记时间</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/A许庆.png" width="80px;" alt="A许庆"/><br /><sub><b>A许庆</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/刘兆中📶⁵ᴳ.png" width="80px;" alt="刘兆中📶⁵ᴳ"/><br /><sub><b>刘兆中📶⁵ᴳ</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/莫斯克.png" width="80px;" alt="莫斯克"/><br /><sub><b>莫斯克</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/赵欢.png" width="80px;" alt="赵欢"/><br /><sub><b>赵欢</b></sub></a></td>
     </tr>
   </tbody>
 </table>

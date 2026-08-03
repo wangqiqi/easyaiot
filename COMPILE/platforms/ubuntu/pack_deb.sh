@@ -239,6 +239,12 @@ printf '%s\n' '/etc/easyaiot-panel/panel.env' > "${STAGE}/DEBIAN/conffiles"
 
 # --- build ---
 mkdir -p "$OUT_DIR"
+# 清理同版本曾用中横线命名的产物，避免混淆
+if [ "$DEB_VARIANT" = "ubuntu" ]; then
+  rm -f "${OUT_DIR}/${PKG_NAME}-${DEB_VERSION}-${ARCH}.deb"
+else
+  rm -f "${OUT_DIR}/${PKG_NAME}-${DEB_VERSION}-${DEB_VARIANT}-${ARCH}.deb"
+fi
 dpkg-deb --root-owner-group --build "$STAGE" "$DEB_FILE"
 
 log "完成: ${DEB_FILE}"

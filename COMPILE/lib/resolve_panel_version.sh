@@ -87,6 +87,9 @@ _scan_dist_max_version() {
     "${dist_root}"/ubuntu/easyaiot-panel_*.deb \
     "${dist_root}"/ubuntu-arm/easyaiot-panel_*.deb \
     "${dist_root}"/ubuntu-kylin/easyaiot-panel_*.deb \
+    "${dist_root}"/ubuntu/easyaiot-panel-*.deb \
+    "${dist_root}"/ubuntu-arm/easyaiot-panel-*.deb \
+    "${dist_root}"/ubuntu-kylin/easyaiot-panel-*.deb \
     "${dist_root}"/centos/easyaiot-panel-*.rpm \
     "${dist_root}"/windows/easyaiot-panel-*-setup.exe \
     "${dist_root}"/macos/easyaiot-panel-*.dmg
@@ -94,12 +97,18 @@ _scan_dist_max_version() {
     base="$(basename "$f")"
     ver=""
     if [[ "$base" =~ ^easyaiot-panel_([0-9]+([.][0-9]+)*)_ ]]; then
+      # deb：easyaiot-panel_<ver>_amd64.deb / _arm_arm64.deb / _kylin_arm64.deb
       ver="${BASH_REMATCH[1]}"
     elif [[ "$base" =~ ^easyaiot-panel-([0-9]+([.][0-9]+)*)-setup\.exe$ ]]; then
       ver="${BASH_REMATCH[1]}"
+    elif [[ "$base" =~ ^easyaiot-panel-([0-9]+([.][0-9]+)*)-(arm64|amd64)\.dmg$ ]]; then
+      # macOS：easyaiot-panel-<ver>-arm64.dmg / -amd64.dmg
+      ver="${BASH_REMATCH[1]}"
     elif [[ "$base" =~ ^easyaiot-panel-([0-9]+([.][0-9]+)*)\.dmg$ ]]; then
+      # 兼容旧 macOS 命名（无架构后缀）
       ver="${BASH_REMATCH[1]}"
     elif [[ "$base" =~ ^easyaiot-panel-([0-9]+([.][0-9]+)*)- ]]; then
+      # rpm / 兼容曾用中横线的 deb、windows 命名
       ver="${BASH_REMATCH[1]}"
     fi
     if [ -n "$ver" ]; then

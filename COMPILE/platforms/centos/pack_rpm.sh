@@ -147,4 +147,6 @@ log "rpmbuild 生成 RPM"
 rpmbuild --define "_topdir ${RPMBUILD_ROOT}" -bb "${SPEC_PATH}"
 mkdir -p "${OUT_DIR}"
 cp -f "${RPMBUILD_ROOT}/RPMS/${ARCH}/${PKG_NAME}-${VERSION}-${RELEASE}."*.rpm "${OUT_DIR}/"
+# 清理曾用中横线架构后缀的产物，避免混淆
+rm -f "${OUT_DIR}/${PKG_NAME}-${VERSION}-amd64.rpm" "${OUT_DIR}/${PKG_NAME}-${VERSION}-arm64.rpm"
 ls -lh "${OUT_DIR}/${PKG_NAME}-${VERSION}-${RELEASE}."*.rpm

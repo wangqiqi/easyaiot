@@ -25,6 +25,12 @@
   <a href="./README_ko.md">한국어</a>
 </h4>
 
+## 🌐 공식 웹사이트
+
+EasyAIoT 공식 웹사이트: [http://36.111.47.113:8090/](http://36.111.47.113:8090/)
+
+제품 소개, 기능 설명, 3단계 하드웨어 선택, 설치 패키지 다운로드와 문서 진입점을 제공하여 플랫폼 가치를 빠르게 이해하고 배포를 시작할 수 있습니다.
+
 ## 📖 프로젝트 소개
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
@@ -36,7 +42,7 @@
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-플랫폼은 <strong>WEB, APP, DEVICE, NODE, VIDEO, AI, TASK, EDGE, VISUALIZE, TRANSFORM, PANEL</strong> 열한 개 핵심 모듈로 구성되며, <strong>COMPILE</strong>이 다중 플랫폼 패키징·납품을 담당합니다. 역량 측면에서 GB28181 / ONVIF 다중 프로토콜 카메라 접속, <strong>DJI 도크·드론 공중 시점 접속</strong>, 실시간·스냅샷 알고리즘 작업, YOLO 객체 검출과 SAM 제로샷 자동 라벨링, 얼굴/번호판 인식, 오케스트레이션 가능한 업무 후처리, 연합 연산 클러스터 스케줄링, 그리고 <strong>무한 연합 엣지 클러스터 모드</strong>(일반 개발보드도 즉시 사용, 현장 지능의 로컬 의사결정, 경보·증거 자동 클라우드 집약, 업무에 따른 연산 확장)와 MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA IoT 장치 수명주기 관리, <strong>시각화 대형 화면과 Web SCADA 구성</strong>으로 장치 데이터를 지휘 상황으로 펼치고 공정 화면에 되돌리며; 신규 <strong>TRANSFORM 다방향 데이터 흐름 엔진</strong>으로 플랫폼 측 업무 이벤트를 MES / ERP / CRM / WMS 등 외부 시스템에 계약대로 전달해 다자 연동을 구성·추적·재사용 가능하게 하고; 동반 <strong>PANEL 납품·당직 진입점</strong>으로 일체기가 도착한 당일 설치·인수가 가능하고, 당직·장애 대응이 매번 개발자 원격 명령을 기다리지 않게 합니다. 경험 측면에서는 Web 콘솔과 모바일 App / 미니프로그램 능력이 정렬되어 지휘 센터와 현장 순찰이 동일한 업무 논리로 언제 어디서나 처리합니다.
+플랫폼은 <strong>WEB, APP, DEVICE, NODE, VIDEO, AI, TASK, EDGE, VISUALIZE, TRANSFORM, PANEL, SITE</strong> 등 핵심 모듈로 구성되며, <strong>COMPILE</strong>이 다중 플랫폼 패키징·납품을 담당합니다. 역량 측면에서 GB28181 / ONVIF 다중 프로토콜 카메라 접속, <strong>DJI 도크·드론 공중 시점 접속</strong>, 실시간·스냅샷 알고리즘 작업, YOLO 객체 검출과 SAM 제로샷 자동 라벨링, 얼굴/번호판 인식, 오케스트레이션 가능한 업무 후처리, 연합 연산 클러스터 스케줄링, 그리고 <strong>무한 연합 엣지 클러스터 모드</strong>(일반 개발보드도 즉시 사용, 현장 지능의 로컬 의사결정, 경보·증거 자동 클라우드 집약, 업무에 따른 연산 확장)와 MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA IoT 장치 수명주기 관리, <strong>시각화 대형 화면과 Web SCADA 구성</strong>으로 장치 데이터를 지휘 상황으로 펼치고 공정 화면에 되돌리며; 신규 <strong>TRANSFORM 다방향 데이터 흐름 엔진</strong>으로 플랫폼 측 업무 이벤트를 MES / ERP / CRM / WMS 등 외부 시스템에 계약대로 전달해 다자 연동을 구성·추적·재사용 가능하게 하고; 동반 <strong>PANEL 납품·당직 진입점</strong>으로 일체기가 도착한 당일 설치·인수가 가능하고, 당직·장애 대응이 매번 개발자 원격 명령을 기다리지 않게 하며; <strong>SITE 공식 웹사이트</strong>로 제품 가치·3단계 하드웨어 선택·설치 패키지 진입점을 제시해 방문자가 먼저 이해한 뒤 다운로드하고 배포하도록 합니다. 경험 측면에서는 Web 콘솔과 모바일 App / 미니프로그램 능력이 정렬되어 지휘 센터와 현장 순찰이 동일한 업무 논리로 언제 어디서나 처리합니다.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -44,7 +50,7 @@
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-📄 보다 완전한 그림·문자 소개는 <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">EasyAIoT 프로젝트 소개 V2.0 (PPT)</a>를 참조하세요.
+📄 보다 완전한 그림·문자 소개는 <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">EasyAIoT 프로젝트 소개 V2.0 (PPT)</a>, 그리고 <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">AI 영상 감시 분석 플랫폼 (PDF)</a>를 참조하세요.
 </p>
 
 ## 🌟 프로젝트에 대한 몇 가지 생각
@@ -348,13 +354,24 @@ EasyAIoT는 현지화 전략에 적극적으로 대응하며, 현지화 하드�
 ## 🧩 프로젝트 구조
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT는 열한 개의 핵심 프로젝트로 구성되며, COMPILE 다중 플랫폼 패키징·납품 능력을 함께 제공합니다:
+EasyAIoT는 WEB, APP, DEVICE, NODE, VIDEO, AI, TASK, EDGE, VISUALIZE, TRANSFORM, PANEL, SITE 등 핵심 모듈로 구성되며, COMPILE 다중 플랫폼 패키징·납품 능력을 함께 제공합니다:
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50; width: 20%;">모듈</td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50;">설명</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>SITE 모듈</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>공식 가치 진입점</strong>: 방문자·통합사·최종 고객을 위한 독립 공식 웹사이트 — 클라우드-엣지-디바이스 통합 가치를 명확히 설명한 뒤 다운로드와 배포로 안내</li>
+    <li><strong>인지 경로 단축</strong>: 제품 특성, 3단계 하드웨어 선택, 설치 패키지, 문서를 한 사이트에서 제공 — 저장소 검색·문의·패키지 찾기 비용 감소</li>
+    <li><strong>선택 의사결정 지원</strong>: mini / standard / full로 엣지 박스, AI 일체형 카메라, 풀스택 일체기 시나리오를 제시해 현장에서 한 번에 맞는 등급을 선택</li>
+    <li><strong>관심에서 설치까지</strong>: 공식 사이트, 데모, 오픈소스 저장소, Releases가 하나의 흐름을 형성 — 이해 → 체험 → 다운로드 → 설치</li>
+  </ul>
+</td>
 </tr>
 <tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>WEB 모듈</strong></td>
@@ -433,7 +450,7 @@ EasyAIoT는 열한 개의 핵심 프로젝트로 구성되며, COMPILE 다중 �
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>EDGE 모듈</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>무한 연합 엣지 클러스터 모드</strong>: 여덟 번째 핵심 모듈, 지능 역량을 중앙에서 현장으로 확장 — 일반 개발 보드와 엣지 노드가 언제든 근무 네트워크에 가입, 연산이 비즈니스에 따라 확장, 경보와 증거가 자동으로 클라우드에 집약</li>
+    <li><strong>무한 연합 엣지 클러스터 모드</strong>: 지능 역량을 중앙에서 현장으로 확장 — 일반 개발 보드와 엣지 노드가 언제든 근무 네트워크에 가입, 연산이 비즈니스에 따라 확장, 경보와 증거가 자동으로 클라우드에 집약</li>
     <li><strong>현장 경량 근무</strong>: 근접 인지·판단·회송에 집중, 무거운 관제 UI와 로컬 업무 시스템을 지지 않아 엣지 배포·장기 운영 부담 감소</li>
     <li><strong>즉시 접속·통합 관리</strong>: 현장 노드가 빠르게 가입하면 중앙이 작업·전략을 통합 오케스트레이션, 수동 구성·분점 분산 구축 비용 감소</li>
     <li><strong>비즈니스 seamless 확장</strong>: 중앙은 전역·규칙 담당, 엣지는 현장 감시·빠른 대응; 노드 수가 커버리지에 따라 지속 확장, 실시간 분석·순찰·캡처 등 시나리오 수평 확장</li>
@@ -445,7 +462,7 @@ EasyAIoT는 열한 개의 핵심 프로젝트로 구성되며, COMPILE 다중 �
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>VISUALIZE 모듈</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>드래그식 대형 화면 편집기</strong>: 아홉 번째 핵심 모듈, 고성능 로우코드 시각화 편집기, 캔버스 편집·미리보기에 집중</li>
+    <li><strong>드래그식 대형 화면 편집기</strong>: 고성능 로우코드 시각화 편집기, 캔버스 편집·미리보기에 집중</li>
     <li><strong>WEB 일체 연동</strong>: 프로젝트 생성, 템플릿, 소재, 데이터 소스, 배포·투입은 관리 백엔드 「시각화」 메뉴에서 완료; 「편집기 열기」 클릭 시 캔버스로 바로 진입</li>
     <li><strong>대형 화면 납품 역량</strong>: 차트, 지표, 레이아웃 드래그 구성, 컴포넌트가 플랫폼 데이터 소스·IoT 측정점에 연결, 단지 상황, 생산라인 KPI, 장비 운영, 에너지·소비 등 지휘 대형 화면 빠른 완성</li>
     <li><strong>SCADA와 역할 분담 명확</strong>: 지휘 대형 화면은 본 모듈에서 편집; 공정 SCADA는 Web SCADA 역량; 엔지니어링 메타데이터는 DEVICE 측 시각화 백엔드에서 통합 관리</li>
@@ -457,7 +474,7 @@ EasyAIoT는 열한 개의 핵심 프로젝트로 구성되며, COMPILE 다중 �
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>TRANSFORM 모듈</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>다방향 업무 흐름</strong>: 열 번째 핵심 모듈 — 플랫폼 측 경보·장치 이벤트·업무 결과를 계약에 따라 MES / ERP / CRM / WMS 등 외부 시스템으로 전달해 「플랫폼에 데이터 있음 → 업무 시스템이 쓸 수 있음」의 마지막 구간을 연결</li>
+    <li><strong>다방향 업무 흐름</strong>: 플랫폼 측 경보·장치 이벤트·업무 결과를 계약에 따라 MES / ERP / CRM / WMS 등 외부 시스템으로 전달해 「플랫폼에 데이터 있음 → 업무 시스템이 쓸 수 있음」의 마지막 구간을 연결</li>
     <li><strong>구성 가능 연동</strong>: 데이터 목적지·전달 규칙·필드 매핑을 한 번 구성해 재사용 — 「고객 시스템마다 맞춤 API」 비용을 줄임</li>
     <li><strong>검증 가능한 전달</strong>: 런타임 클러스터와 전달 궤적을 모니터링·회고 가능 — 「전달됐는지, 어디서 막혔는지」를 인수·연동에서 답할 수 있음</li>
     <li><strong>수평 확장</strong>: 트래픽 증가 시 업무 계약에 맞춰 소비·전달 능력을 확장 — 다수 라인·공장·시스템 병렬 연동 지원</li>
@@ -468,7 +485,7 @@ EasyAIoT는 열한 개의 핵심 프로젝트로 구성되며, COMPILE 다중 �
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>PANEL 모듈</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>납품·당직 진입점</strong>: 열한 번째 핵심 모듈 — 업무 콘솔과 독립: 도착 당일 설치·인수·당직 — 인수 주기 단축, 상주·원격 지원 비용 절감</li>
+    <li><strong>납품·당직 진입점</strong>: 업무 콘솔과 독립: 도착 당일 설치·인수·당직 — 인수 주기 단축, 상주·원격 지원 비용 절감</li>
     <li><strong>당일 폐쇄 루프</strong>: UI로 등급별 설치, 진행·결과를 현장에서 확인 — 업무 콘솔 준비 전에도 장비를 올리고 넘겨줄 수 있음</li>
     <li><strong>자체 장애 대응</strong>: 컨테이너 건강·자원 수위·작업 로그·이미지 준비도가 한눈에 — 흔한 기동/정지·pull·캐시 정리를 개발자 명령 없이 처리</li>
     <li><strong>다수 현장 재사용</strong>: 동일 진입점이 다수 일체형·다수 기기를 관통 — PoC와 양산 납품 기준 일치</li>
@@ -853,11 +870,19 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>狗娃</nobr></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT의 「IoT 데이터를 화면으로 전시」 방향 발전을 위해, 시각화 Board(드래그 대시보드) 모듈 제품 구상을 선제적으로 제안: 전통 대형 화면은 화면마다·컴포넌트마다 SQL을 따로 작성해야 해 납품이 느리고 한 번 수정하면 전체가 움직이며, 업무 담당자가 스스로 화면을 만들기 거의 불가능. Board 방안은 차트, 지표, 레이아웃을 드래그 캔버스로 구성하고, 컴포넌트 변수를 플랫폼 IoT 사물 모델 측정점에 직접 연결 — 실시간·이력 값을 장치 측에서 원클릭 취득, 대시보드마다 쿼리를 따로 짤 필요 없음; 단지 상황, 생산라인 KPI, 장비 운영 등 대형 화면을 「개발이 SQL을 써야 화면이 나옴」에서 「측정점 선택·컴포넌트 드래그로 화면 완성」으로 업그레이드, 시각화 납품 주기를 크게 단축, IoT 「백엔드에 데이터」를 「프론트에 화면」 운영 역량으로. 이전에도 센서 부동 데이터 예측, 운행 상태 속성 상·하한 임계값 설정, 임계값 알람·규칙 연동, 중심 장치 연관 하위 장치 운행 상태 한 화면 표시를 기여해 「예측—경계—알람—규칙—한 화면 장악」 장치 운행 폐루프를 열었으며, 플랫폼 장치 측이 「숫자를 보고, 경계를 관리하고, 알람을 내고, 전체를 파악하는」 역량을 갖추게 하였습니다.</td>
 </tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>大老刘</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT의 대외 소개 및 솔루션 표현 방향 발전을 위해 《AI 영상 감시 분석 플랫폼》 도문 소개 자료를 기여하여, AI 영상 감시 분석 시나리오에서 플랫폼의 역량 전모와 현장 가치를 체계적으로 정리함으로써, 더 많은 사용자·시스템 통합사·파트너가 플랫폼 포지셔닝과 핵심 강점을 빠르게 이해하도록 도왔으며, 프로젝트의 대외 전파와 비즈니스 커뮤니케이션 효율을 크게 높였습니다.</td>
+</tr>
+<tr style="background-color: #f8f9fa;">
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>刘兆中ᯤ⁵ᴳ</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT의 macOS 원클릭 배포 방향 발전을 위해 Mac 원클릭 배포 스크립트의 일부를 선도적으로 기여하여, 이미지 풀·컨테이너 오케스트레이션·환경 사전 검사 등 주요 경로를 대부분 열어 「마지막 1마일」만 보완하면 되도록 만들었습니다. 그의 탐색과 실천은 팀이 Mac 측 배포 체인의 핵심 노드와 리스크를 명확히 하는 데 도움을 주었고, 이후 엔지니어링 마무리 경로를 크게 단축시켰으며, macOS 배포 역량이 제로에서 가용까지 이르는 과정에서 없어서는 안 될 기반 기여입니다.</td>
+</tr>
 </tbody>
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>특별 감사</strong>: 위 기여자들의 노력은 크로스 플랫폼 배포 문서·스크립트, 국가 표준 영상(GB28181) 역량 구현, AI 연동 검증, 멀티 GPU 학습 가용성 및 체크포인트 이어학습 역량 구현, 다중 브랜드 카메라 직접 연결 발견 및 일괄 온보딩, 천지도 공간 시각화 완전 구현, 이기종 스트리밍 미디어 클러스터 배포 및 스케줄링 아키텍처, 번호판 인식 알고리즘 및 완전한 코드 구현, EasyAIoT-Edge 종단 간 연동(카메라·AI), 교내 개발자 커뮤니티 조직 및 청년 협업 생태계 구축, IoT 장치 상·하행 폐루프와 DJI FlightHub 공중 시야 접속, Modbus-TCP / Modbus-RTU / OPC UA 산업 프로토콜 접속, 카메라 직접 연결의 발견부터 로그인/동기화/설정/다중 브랜드 출류까지의 현장 폐루프, 드래그 대시보드(Board) 구상 및 IoT 측정점 실시간/이력 값 직접 연동, 센서 부동 데이터 예측과 임계값 알람·규칙 및 중심 장치 연관 하위 장치 운행 상태 한 화면 표시 등 여러 측면에서 EasyAIoT의 발전에 기여했습니다. 그들의 전문성과 헌신은 우리가 배우고 존경할 만합니다. 다시 한 번 이 탁월한 기여자들에게 진심으로 감사드립니다! 🙏
+<strong>특별 감사</strong>: 위 기여자들의 노력은 크로스 플랫폼 배포 문서·스크립트, macOS 원클릭 배포 스크립트 기반 구축과 경로 탐색, 국가 표준 영상(GB28181) 역량 구현, AI 연동 검증, 멀티 GPU 학습 가용성 및 체크포인트 이어학습 역량 구현, 다중 브랜드 카메라 직접 연결 발견 및 일괄 온보딩, 천지도 공간 시각화 완전 구현, 이기종 스트리밍 미디어 클러스터 배포 및 스케줄링 아키텍처, 번호판 인식 알고리즘 및 완전한 코드 구현, EasyAIoT-Edge 종단 간 연동(카메라·AI), 교내 개발자 커뮤니티 조직 및 청년 협업 생태계 구축, IoT 장치 상·하행 폐루프와 DJI FlightHub 공중 시야 접속, Modbus-TCP / Modbus-RTU / OPC UA 산업 프로토콜 접속, 카메라 직접 연결의 발견부터 로그인/동기화/설정/다중 브랜드 출류까지의 현장 폐루프, 드래그 대시보드(Board) 구상 및 IoT 측정점 실시간/이력 값 직접 연동, 센서 부동 데이터 예측과 임계값 알람·규칙 및 중심 장치 연관 하위 장치 운행 상태 한 화면 표시, AI 영상 감시 분석 플랫폼 도문 소개 자료 등 여러 측면에서 EasyAIoT의 발전에 기여했습니다. 그들의 전문성과 헌신은 우리가 배우고 존경할 만합니다. 다시 한 번 이 탁월한 기여자들에게 진심으로 감사드립니다! 🙏
 </p>
 
 ## 💝 오픈소스 수호자
@@ -900,15 +925,15 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/子非鱼.png" width="80px;" alt="子非鱼"/><br /><sub><b>子非鱼</b></sub></a></td>
     </tr>
     <tr>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/在路上.png" width="80px;" alt="在路上"/><br /><sub><b>在路上</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/忘记时间.png" width="80px;" alt="忘记时间"/><br /><sub><b>忘记时间</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/苏州小朱.jpg" width="80px;" alt="苏州小朱"/><br /><sub><b>苏州小朱</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/空白.jpg" width="80px;" alt=""/><br /><sub><b></b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/HuaZy.jpg" width="80px;" alt="HuaZy"/><br /><sub><b>HuaZy</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/ANDY.png" width="80px;" alt="ANDY"/><br /><sub><b>ANDY</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/A许庆.png" width="80px;" alt="A许庆"/><br /><sub><b>A许庆</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/刘兆中📶⁵ᴳ.png" width="80px;" alt="刘兆中📶⁵ᴳ"/><br /><sub><b>刘兆中📶⁵ᴳ</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/冯.png" width="80px;" alt="冯"/><br /><sub><b>冯</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/莫斯克.png" width="80px;" alt="莫斯克"/><br /><sub><b>莫斯克</b></sub></a></td>
-      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/赵欢.png" width="80px;" alt="赵欢"/><br /><sub><b>赵欢</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/越南打印机网络监控电脑门禁何工.jpg" width="80px;" alt="越南打印机网络监控电脑门禁何工"/><br /><sub><b>越南打印机网络监控电脑门禁何工</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/熊勇辉.jpg" width="80px;" alt="熊勇辉"/><br /><sub><b>熊勇辉</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/旭.jpg" width="80px;" alt="旭"/><br /><sub><b>旭</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/心远.jpg" width="80px;" alt="心远"/><br /><sub><b>心远</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/Mr.Peng.jpg" width="80px;" alt="Mr.Peng"/><br /><sub><b>Mr.Peng</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/舒韩春💭成都云速广告💭.jpg" width="80px;" alt="舒韩春💭成都云速广告💭"/><br /><sub><b>舒韩春💭成都云速广告💭</b></sub></a></td>
     </tr>
     <tr>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/前进!.png" width="80px;" alt="前进!"/><br /><sub><b>前进!</b></sub></a></td>
@@ -1039,6 +1064,16 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/西乡一粒沙.png" width="80px;" alt="西乡一粒沙"/><br /><sub><b>西乡一粒沙</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/yang.png" width="80px;" alt="yang"/><br /><sub><b>yang</b></sub></a></td>
       <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/何行者.png" width="80px;" alt="何行者"/><br /><sub><b>何行者</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/在路上.png" width="80px;" alt="在路上"/><br /><sub><b>在路上</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/ANDY.png" width="80px;" alt="ANDY"/><br /><sub><b>ANDY</b></sub></a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/冯.png" width="80px;" alt="冯"/><br /><sub><b>冯</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/忘记时间.png" width="80px;" alt="忘记时间"/><br /><sub><b>忘记时间</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/A许庆.png" width="80px;" alt="A许庆"/><br /><sub><b>A许庆</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/刘兆中📶⁵ᴳ.png" width="80px;" alt="刘兆中📶⁵ᴳ"/><br /><sub><b>刘兆中📶⁵ᴳ</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/莫斯克.png" width="80px;" alt="莫斯克"/><br /><sub><b>莫斯克</b></sub></a></td>
+      <td align="center" valign="top" width="11.11%"><a href="javascript:void(0)" target="_blank"><img src="./.image/open-source-guardian/赵欢.png" width="80px;" alt="赵欢"/><br /><sub><b>赵欢</b></sub></a></td>
     </tr>
   </tbody>
 </table>
