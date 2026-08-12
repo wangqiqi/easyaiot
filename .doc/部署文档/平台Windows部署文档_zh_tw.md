@@ -27,7 +27,7 @@ Windows 桌面端與 macOS 一樣，**只透過遠端預建構映像部署**，�
 
 | 規格 | 主機建議 | Docker / WSL2 引擎目標記憶體 |
 |------|----------|------------------------------|
-| mini | ≥ 8 GB | **4 GB** |
+| mini | ≥ 8 GB | **8 GB** |
 | standard | ≥ 24 GB | **16 GB** |
 | full | ≥ 32 GB | **24 GB** |
 
@@ -47,7 +47,7 @@ Windows 桌面端與 macOS 一樣，**只透過遠端預建構映像部署**，�
 .\.scripts\docker\install_windows.ps1 bootstrap   # WSL2 + Docker Desktop + mirrors + resources
 .\.scripts\docker\install_windows.ps1 check
 .\.scripts\docker\install_windows.ps1 mirrors     # 國內 registry-mirrors（對齊 Linux）
-.\.scripts\docker\install_windows.ps1 resources   # mini 4G / standard 16G / full 24G
+.\.scripts\docker\install_windows.ps1 resources   # mini 8G / standard 16G / full 24G
 ```
 
 驗證：
@@ -260,7 +260,7 @@ F:\EASYLOT\easyaiot-V4.0.0\
 F:\EASYLOT\PostgreSQL16\
 F:\EASYLOT\Redis\
 F:\EASYLOT\nacos\     ####要開啟鑒權   自行百度
-F:\EASYLOT\minio\  #####項目裡邊有數據庫或者說minio的密碼  所有密碼都要和項目的配套一至  如minion  賬號：minionminion 密碼iot******
+F:\EASYLOT\minio\  #####項目裡邊有數據庫或者說minio的密碼  所有密碼都要和項目的配套一至  如minion  賬號：minionminion 密碼iot**
 F:\EASYLOT\kafka\   ###自行下載
 F:\EASYLOT\TDengine\  ####自行下載
 ```

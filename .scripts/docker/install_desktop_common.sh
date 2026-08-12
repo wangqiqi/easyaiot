@@ -59,6 +59,7 @@ MODULES=(
   ".scripts/docker"
   "DEVICE"
   "AI"
+  "RTC"
   "VIDEO"
   "WEB"
   "APP"
@@ -67,12 +68,38 @@ MODULES=(
   "PANEL"
 )
 
+# 面板分拆部署：EASYAIOT_DEPLOY_SCOPE=all|middleware|business
+apply_deploy_scope() {
+  local scope="${EASYAIOT_DEPLOY_SCOPE:-all}"
+  case "$scope" in
+    middleware)
+      MODULES=(".scripts/docker")
+      ;;
+    business)
+      local _filtered=()
+      local _m
+      for _m in "${MODULES[@]}"; do
+        [ "$_m" = ".scripts/docker" ] && continue
+        _filtered+=("$_m")
+      done
+      MODULES=("${_filtered[@]}")
+      ;;
+    all|"")
+      ;;
+    *)
+      echo -e "${YELLOW}[WARN]${NC} 未知 EASYAIOT_DEPLOY_SCOPE=${scope}，按 all 处理" >&2
+      ;;
+  esac
+}
+apply_deploy_scope
+
 # bash 3.2 兼容：用函数代替关联数组
 module_name() {
   case "$1" in
     ".scripts/docker") echo "基础服务" ;;
     "DEVICE") echo "Device服务" ;;
     "AI") echo "AI服务" ;;
+    "RTC") echo "RTC服务" ;;
     "VIDEO") echo "Video服务" ;;
     "WEB") echo "Web前端服务" ;;
     "APP") echo "App移动端H5" ;;
@@ -88,6 +115,7 @@ module_port() {
     ".scripts/docker") echo "8848" ;;
     "DEVICE") echo "48080" ;;
     "AI") echo "5000" ;;
+    "RTC") echo "6100" ;;
     "VIDEO") echo "6000" ;;
     "WEB") echo "8888" ;;
     "APP") echo "9010" ;;
@@ -103,6 +131,7 @@ module_health() {
     ".scripts/docker") echo "/nacos/actuator/health" ;;
     "DEVICE") echo "/actuator/health" ;;
     "AI") echo "/actuator/health" ;;
+    "RTC") echo "/actuator/health" ;;
     "VIDEO") echo "/actuator/health" ;;
     "WEB") echo "/health" ;;
     "APP") echo "/health" ;;
@@ -1143,7 +1172,7 @@ execute_module_command() {
   # Docker Desktop：host 网络无法把端口暴露到宿主机，启用 bridge override
   unset COMPOSE_FILE 2>/dev/null || true
   case "$module" in
-    VIDEO|AI|DEVICE)
+    VIDEO|AI|RTC|DEVICE)
       export EASYAIOT_COMPOSE_DESKTOP=1
       if [ -f docker-compose.desktop.yaml ]; then
         local base_compose="docker-compose.yaml"
@@ -1167,7 +1196,7 @@ execute_module_command() {
 
   local defer_agent_sync=0
   case "$module" in
-    DEVICE|AI|VIDEO|WEB|APP|VISUALIZE|TRANSFORM) defer_agent_sync=1 ;;
+    DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM) defer_agent_sync=1 ;;
   esac
   if [ "$defer_agent_sync" -eq 1 ]; then
     export EASYAIOT_DEFER_PLATFORM_AGENT_SYNC=1
@@ -1308,6 +1337,8 @@ desktop_install() {
   local -a failed_modules=()
   local -a succeeded_modules=()
   local module name
+  local _n=0 _m=$(( (total_count + 1) / 2 ))
+  [ "$_m" -lt 1 ] && _m=1
 
   for module in "${MODULES[@]}"; do
     if ! module_enabled_for_deploy_profile "$module"; then
@@ -1340,6 +1371,10 @@ desktop_install() {
       fi
     else
       failed_modules+=("$(module_name "$module")")
+    fi
+    _n=$((_n + 1))
+    if [ "$_n" -eq "$_m" ]; then
+      _fs_align || exit 1
     fi
     echo ""
   done

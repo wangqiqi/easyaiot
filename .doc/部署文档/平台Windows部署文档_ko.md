@@ -27,7 +27,7 @@ Windows 데스크톱은 macOS와 같이 **원격 사전 빌드 이미지만으�
 
 | 프로파일 | 호스트 권장 | Docker / WSL2 엔진 목표 메모리 |
 |----------|-------------|-------------------------------|
-| mini | ≥ 8 GB | **4 GB** |
+| mini | ≥ 8 GB | **8 GB** |
 | standard | ≥ 24 GB | **16 GB** |
 | full | ≥ 32 GB | **24 GB** |
 
@@ -47,7 +47,7 @@ Windows 데스크톱은 macOS와 같이 **원격 사전 빌드 이미지만으�
 .\.scripts\docker\install_windows.ps1 bootstrap   # WSL2 + Docker Desktop + mirrors + resources
 .\.scripts\docker\install_windows.ps1 check
 .\.scripts\docker\install_windows.ps1 mirrors     # 중국 registry-mirrors (Linux와 정렬)
-.\.scripts\docker\install_windows.ps1 resources   # mini 4G / standard 16G / full 24G
+.\.scripts\docker\install_windows.ps1 resources   # mini 8G / standard 16G / full 24G
 ```
 
 검증:
@@ -260,7 +260,7 @@ F:\EASYLOT\easyaiot-V4.0.0\
 F:\EASYLOT\PostgreSQL16\
 F:\EASYLOT\Redis\
 F:\EASYLOT\nacos\     ####要开启鉴权   自行百度
-F:\EASYLOT\minio\  #####项目里边有数据库或者说minio的密码  所有密码都要和项目的配套一至  如minion  账号：minionminion 密码iot******
+F:\EASYLOT\minio\  #####项目里边有数据库或者说minio的密码  所有密码都要和项目的配套一至  如minion  账号：minionminion 密码iot**
 F:\EASYLOT\kafka\   ###自行下载
 F:\EASYLOT\TDengine\  ####自行下载
 ```

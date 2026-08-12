@@ -346,8 +346,8 @@ services:
     volumes:
       - "./srs_data/conf:/usr/local/srs/conf:rw"
       - "./srs_data/conf:/opt/srs/trunk/conf:rw"
-      # 宿主机数据目录映射为容器内录像与日志目录（统一 ~/easyaiot/data）
-      - "~/easyaiot/data:/data:rw"
+      # NFS 媒体根挂载为容器 /data（playbacks/logs 与 sink/VIDEO 同根）
+      - "${EASYAIOT_MEDIA_ROOT:-/mnt/easyaiot-media}:/data:rw"
       - "./srs-entrypoint.sh:/usr/local/bin/srs-entrypoint.sh:ro"
       - "./srs-healthcheck.sh:/usr/local/bin/srs-healthcheck.sh:ro"
     entrypoint: ["/bin/bash", "/usr/local/bin/srs-entrypoint.sh"]
@@ -504,7 +504,7 @@ services:
       - "host.docker.internal:host-gateway"
     # 健康检查需带 secret（与 config.ini [api] secret 一致），否则 ZLM 返回 Required parameter missed: "secret"
     healthcheck:
-      test: ["CMD-SHELL", "SECRET=$$(grep '^[[:space:]]*secret=' /conf/config.ini 2>/dev/null | head -1 | cut -d= -f2); if [ -n \"$$SECRET\" ]; then curl -f \"http://localhost:80/index/api/getServerConfig?secret=$$SECRET\"; else curl -f http://localhost:80/index/api/getServerConfig; fi || exit 1"]
+      test: ["CMD-SHELL", "SECRET=$$(grep '^[[:space:]]*secret=' /conf/config.ini 2>/dev/null | head -1 | cut -d= -f2 | tr -d '[:space:]'); if [ -n \"$$SECRET\" ]; then curl -fsS -o /dev/null \"http://localhost:80/index/api/getServerConfig?secret=$$SECRET\"; else curl -fsS -o /dev/null http://localhost:80/index/api/getServerConfig; fi || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5

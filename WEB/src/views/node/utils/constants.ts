@@ -51,7 +51,10 @@ export const NODE_TERM = {
   agentPort: '监测代理端口',
   mediaService: '流媒体引擎',
   mqttService: 'MQTT 网关',
-  storageService: 'Ceph 存储',
+  storageCephTopology: 'NFS 集群拓扑',
+  storageBatchOps: '批量运维',
+  storageFileOps: '文件运维',
+  storageService: 'NFS 共享存储',
   mediaPort: '流媒体端口',
   mqttPort: 'MQTT 端口',
   platformUrl: '平台接入地址',
@@ -150,7 +153,7 @@ export const NODE_ROLE_DESC: Record<string, string> = {
   gpu: '配备 GPU，用于模型推理、深度学习算法等算力密集型任务',
   media: '用于 SRS/ZLM 流媒体集群，设备拉流/推流',
   mqtt: '用于 EMQX MQTT 集群，设备物联网协议接入',
-  storage: 'Ceph OSD 节点，承载录像/抓拍分布式存储',
+  storage: 'NFS 存储节点，export 共享媒体目录（录像/抓拍/告警图）',
   hybrid: '同时承担计算与媒体调度',
 };
 
@@ -212,8 +215,6 @@ export const NODE_DASHBOARD = {
   overviewCentralNodeAll: '全部中心节点',
   overviewBackToAll: '返回全部节点',
   overviewNodeFocusHint: '选择单个节点后，下方资源图表仅展示该节点数据',
-  openPanel: '容器运维控制台',
-  openPanelHint: '容器管理、一键部署与运行诊断',
   openPanelAction: '打开控制台',
   clusterLoad: '集群资源负载',
   sectionVram: '节点显存分布',
@@ -360,9 +361,9 @@ export const CLUSTER_NODE_ROLE_FILTERS = {
   media: ['media', 'hybrid'] as const,
   /** MQTT 网关节点 */
   mqtt: ['mqtt'] as const,
-  /** Ceph 存储/MON 节点 */
+  /** NFS 存储/MON 节点 */
   storage: ['storage'] as const,
-  /** 需挂载 CephFS 的节点 */
+  /** 需挂载 NFS 的节点（兼容键名 cephClient） */
   cephClient: ['compute', 'gpu', 'hybrid', 'media'] as const,
 } as const;
 
@@ -497,6 +498,12 @@ export const WORKLOAD_BUNDLE_COPY = {
   ffmpegDeploy: '分发 FFmpeg',
   ffmpegCheck: '检测 FFmpeg',
   ffmpegRemove: '删除 FFmpeg',
+  runtimeCppHint:
+    '一键分发：点击「分发 RUNTIME」即可。控制面若尚未编译会自动 install → 导出离线包 → SSH 安装到 /opt/easyaiot/RUNTIME（首次较久）。算法类「全量分发」也会自动带上。模型走 Ceph；推理默认 prefer GPU、失败回退 CPU。装好后可在算法任务里选「高性能」+「自动/指定节点」把任务调度到该节点。检测会对照控制面与节点 VERSION，不一致时建议重新分发升级。',
+  runtimeCppPath: '/opt/easyaiot/RUNTIME/bin/RUNTIME',
+  runtimeCppDeploy: '分发 RUNTIME',
+  runtimeCppCheck: '检测 RUNTIME',
+  runtimeCppRemove: '删除 RUNTIME',
 } as const;
 
 /** 集群洞察文案 */
@@ -750,9 +757,9 @@ export function readStorageTagsFromTags(tags?: Record<string, string | undefined
 export type CephMountStatus = 'ready' | 'not_ready' | 'unknown';
 
 export const CEPH_MOUNT_LABELS: Record<CephMountStatus, string> = {
-  ready: 'Ceph 已挂载',
-  not_ready: 'Ceph 未就绪',
-  unknown: 'Ceph 未上报',
+  ready: 'NFS 已挂载',
+  not_ready: 'NFS 未就绪',
+  unknown: 'NFS 未上报',
 };
 
 export function isClusterComputeRole(role?: string): boolean {
@@ -763,8 +770,9 @@ export function readCephMountFromTags(tags?: Record<string, string | undefined>)
   status: CephMountStatus;
   mountPath?: string;
 } {
-  const raw = tags?.ceph_mount_ready;
-  const mountPath = tags?.ceph_mount_path || tags?.media_mount_path || undefined;
+  const raw = tags?.nfs_mount_ready ?? tags?.ceph_mount_ready;
+  const mountPath =
+    tags?.media_mount_path || tags?.ceph_mount_path || tags?.nfs_mount_path || undefined;
   if (raw == null || raw === '') {
     return { status: 'unknown', mountPath };
   }

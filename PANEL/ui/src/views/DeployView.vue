@@ -1,8 +1,9 @@
 <template>
   <StackWorkspace
     category="lifecycle"
-    title="一键部署"
-    subtitle="安装 · 启停 · 更新；右侧实时展示任务日志"
+    scope="all"
+    title="全量部署"
+    subtitle="中间件 + 业务一次安装 / 启停 / 更新（完整平台）；右侧实时展示任务日志"
   />
 </template>
 

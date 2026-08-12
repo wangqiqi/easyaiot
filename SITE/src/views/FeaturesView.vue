@@ -13,7 +13,7 @@ import { features } from '../data/features'
           :key="item.id"
           :class="`reveal-delay-${(index % 3) + 1}`"
         >
-          <article class="feature-block" :class="{ reverse: index % 2 === 1 }">
+          <article class="feature-block" :id="item.id" :class="{ reverse: index % 2 === 1 }">
             <div class="feature-copy">
               <h2 class="display feature-title">{{ item.title }}</h2>
               <p class="feature-summary">{{ item.summary }}</p>
@@ -33,7 +33,9 @@ import { features } from '../data/features'
       <div class="container cta">
         <SectionReveal>
           <h2 class="display">准备好落地了吗？</h2>
-          <p>按系统与架构下载安装包，三档部署任选。</p>
+          <p>
+            Ubuntu / CentOS / Windows / macOS / 麒麟 (Kylin) / 欧拉 (openEuler)，按系统与架构下载，三档部署任选。
+          </p>
           <RouterLink class="btn btn-primary" to="/download">前往下载</RouterLink>
         </SectionReveal>
       </div>
@@ -59,6 +61,7 @@ import { features } from '../data/features'
   align-items: start;
   padding: 36px 0;
   border-bottom: 1px solid var(--line);
+  scroll-margin-top: calc(var(--header-h) + 16px);
 }
 
 .feature-block.reverse {

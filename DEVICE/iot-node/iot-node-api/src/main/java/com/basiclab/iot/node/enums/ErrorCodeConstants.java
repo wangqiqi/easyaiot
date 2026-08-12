@@ -27,10 +27,17 @@ public interface ErrorCodeConstants {
     ErrorCode MEDIA_CLUSTER_SOURCE_NOT_FOUND = new ErrorCode(1_005_004_002, "控制面未找到 media-cluster 源目录");
     ErrorCode VIDEO_SOURCE_NOT_FOUND = new ErrorCode(1_005_004_003, "控制面未找到 VIDEO 源码目录");
     ErrorCode AI_SOURCE_NOT_FOUND = new ErrorCode(1_005_004_004, "控制面未找到 AI 源码目录");
+    ErrorCode RUNTIME_SOURCE_NOT_FOUND = new ErrorCode(1_005_004_005, "控制面未找到 RUNTIME 源码目录（需已编译并可导出离线包）");
     ErrorCode AGENT_SOURCE_NOT_FOUND = new ErrorCode(1_005_005_000, "控制面未找到 Agent 源目录");
 
     ErrorCode STORAGE_CLUSTER_SOURCE_NOT_FOUND = new ErrorCode(1_005_006_000, "控制面未找到 Ceph storage-cluster 源目录");
     ErrorCode STORAGE_NODE_ROLE_INVALID = new ErrorCode(1_005_006_001, "当前节点角色不支持该 Ceph 存储操作");
+    ErrorCode STORAGE_FILE_PATH_INVALID = new ErrorCode(1_005_006_002, "文件路径非法或超出媒体挂载根");
+    ErrorCode STORAGE_FILE_TOO_LARGE = new ErrorCode(1_005_006_003, "文件超过允许大小限制");
+    ErrorCode STORAGE_FILE_NOT_FOUND = new ErrorCode(1_005_006_004, "远程文件不存在或不是普通文件");
+    ErrorCode STORAGE_FILE_NAME_INVALID = new ErrorCode(1_005_006_005, "文件或目录名非法");
+    ErrorCode STORAGE_FILE_ROOT_FORBIDDEN = new ErrorCode(1_005_006_006, "禁止删除媒体挂载根目录");
+    ErrorCode STORAGE_FILE_EXISTS = new ErrorCode(1_005_006_007, "目标文件或目录已存在");
 
     ErrorCode MQTT_CLUSTER_SOURCE_NOT_FOUND = new ErrorCode(1_005_008_000, "控制面未找到 mqtt-cluster 源目录");
     ErrorCode MQTT_NODE_ROLE_INVALID = new ErrorCode(1_005_008_001, "仅 MQTT 网关节点支持 EMQX 集群部署");

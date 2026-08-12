@@ -126,6 +126,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   max-width: 100%;
   position: relative;
   z-index: 1;

@@ -1,6 +1,6 @@
 import type { Router } from 'vue-router';
 import { NODE_SERVICE_TAB, resolveOnboardServiceTab, type NodeServiceTabKey } from './constants';
-import { requestNodePageTab } from './useNodePageTab';
+import { requestNodePageTab, type StorageSubTabKey } from './useNodePageTab';
 
 function isNodeIndexRoute(router: Router) {
   return router.currentRoute.value.path === '/node/index';
@@ -24,6 +24,27 @@ export function navigateToNodeServiceTab(
     path: '/node/index',
     query: {
       tab: tabKey,
+      ...(nodeId ? { nodeId: String(nodeId) } : {}),
+    },
+  });
+}
+
+/** 分布式存储子 Tab：topology | ops | files（同页仅用页内状态，避免 query 触发布局刷页） */
+export function navigateToStorageSubTab(
+  router: Router,
+  subTab: StorageSubTabKey = 'topology',
+  nodeId?: number,
+) {
+  const tabKey = NODE_SERVICE_TAB.storage;
+  if (isNodeIndexRoute(router)) {
+    requestNodePageTab({ tab: tabKey, nodeId, storageTab: subTab });
+    return;
+  }
+  router.push({
+    path: '/node/index',
+    query: {
+      tab: tabKey,
+      storageTab: subTab,
       ...(nodeId ? { nodeId: String(nodeId) } : {}),
     },
   });

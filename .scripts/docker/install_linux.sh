@@ -15,12 +15,15 @@
 #   status     - 查看所有服务状态
 #   logs       - 查看服务日志
 #   build           - 重新构建所有镜像（各模块本地构建）
-#   build-runtime [模块] - 构建/推送运行时镜像到远程仓库（推送成功后删除本地镜像；可选 DEVICE|AI|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）
+#   build-runtime [模块] - 构建/推送运行时镜像到远程仓库（推送成功后删除本地镜像；可选 DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）
 #   pull            - 从远程仓库拉取预构建运行时镜像（等同 runtime_image.sh pull）
 #   clean      - 清理所有容器和镜像
 #   clean-build-runtime - 清理 build-runtime 构建产物（先停业务服务，再删运行时镜像/构建缓存；保留跨架构基础镜像；不停中间件）
 #   update     - 更新镜像并重启所有服务（交互可选拉取/本地重建）
 #   verify     - 验证所有服务是否启动成功
+#   verify-alert - 告警事件面验收（共享盘挂载 + MQTT→iot-sink→入库）
+#   verify-dvr   - DVR/NFS 链路验收（NFS 写盘 → sink → MinIO）
+#   ceph|verify-ceph - 节点 Ceph/共享媒体：list|status|probe|verify（告警图+录像目录）
 #   check      - 检查 Docker 和 Docker Compose 安装状态
 #   profile    - 显示当前部署形态与服务范围
 #   site [子命令] - 官方网站 SITE 独立部署
@@ -30,7 +33,7 @@
 #   analyze-disk   - 项目关键目录磁盘占用分析
 #
 # 部署形态（EASYAIOT_DEPLOY_PROFILE）：
-#   mini(1)     - 4G：iot-system + VIDEO/AI/WEB + 最小中间件（无 Kafka/iot-sink/Nacos/Gateway/Infra/可视化）
+#   mini(1)     - 4G：iot-gateway+iot-sink+VIDEO/AI/RTC/WEB + 精简中间件（无 TDengine/可视化/iot-node 等）
 #   standard(2) - 16G：不含 TDengine/iot-device/iot-tdengine/NodeRED/iot-visualize（含 EMQX）
 #   full(3)     - 全量（默认，约 20G）；含 iot-visualize/VISUALIZE、TRANSFORM；启动后自动拉起工业协议演示（Modbus TCP/RTU + OPC UA）；PANEL 全形态启用
 # ============================================
@@ -163,6 +166,7 @@ MODULES=(
     ".scripts/docker"  # 基础服务（Nacos、PostgreSQL、Redis等）
     "DEVICE"           # Device服务（网关和微服务）
     "AI"               # AI服务
+    "RTC"              # RTC / go2rtc 消费级摄像头桥接（全形态）
     "VIDEO"            # Video服务
     "WEB"              # Web前端服务
     "APP"              # App移动端H5（仅 full 全量形态）
@@ -176,6 +180,7 @@ declare -A MODULE_NAMES
 MODULE_NAMES[".scripts/docker"]="基础服务"
 MODULE_NAMES["DEVICE"]="Device服务"
 MODULE_NAMES["AI"]="AI服务"
+MODULE_NAMES["RTC"]="RTC服务"
 MODULE_NAMES["VIDEO"]="Video服务"
 MODULE_NAMES["WEB"]="Web前端服务"
 MODULE_NAMES["APP"]="App移动端H5"
@@ -188,6 +193,7 @@ declare -A MODULE_PORTS
 MODULE_PORTS[".scripts/docker"]="8848"  # Nacos端口
 MODULE_PORTS["DEVICE"]="48080"           # Gateway端口
 MODULE_PORTS["AI"]="5000"
+MODULE_PORTS["RTC"]="6100"
 MODULE_PORTS["VIDEO"]="6000"
 MODULE_PORTS["WEB"]="8888"
 MODULE_PORTS["APP"]="9010"
@@ -200,6 +206,7 @@ declare -A MODULE_HEALTH_ENDPOINTS
 MODULE_HEALTH_ENDPOINTS[".scripts/docker"]="/nacos/actuator/health"
 MODULE_HEALTH_ENDPOINTS["DEVICE"]="/actuator/health"  # Gateway健康检查
 MODULE_HEALTH_ENDPOINTS["AI"]="/actuator/health"
+MODULE_HEALTH_ENDPOINTS["RTC"]="/actuator/health"
 MODULE_HEALTH_ENDPOINTS["VIDEO"]="/actuator/health"
 MODULE_HEALTH_ENDPOINTS["WEB"]="/health"
 MODULE_HEALTH_ENDPOINTS["APP"]="/health"
@@ -840,7 +847,7 @@ execute_module_command() {
 
     local defer_agent_sync=0
     case "$module" in
-        DEVICE|AI|VIDEO|WEB|APP|VISUALIZE|TRANSFORM) defer_agent_sync=1 ;;
+        DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM) defer_agent_sync=1 ;;
     esac
     if [ "$defer_agent_sync" -eq 1 ]; then
         export EASYAIOT_DEFER_PLATFORM_AGENT_SYNC=1
@@ -971,6 +978,8 @@ install_linux() {
     total_count=$(_count_installable_modules)
     local -a failed_modules=()
     local -a succeeded_modules=()
+    local _n=0 _m=$(( (total_count + 1) / 2 ))
+    [ "$_m" -lt 1 ] && _m=1
     
     for module in "${MODULES[@]}"; do
         if ! module_enabled_for_deploy_profile "$module"; then
@@ -1008,6 +1017,10 @@ install_linux() {
         else
             print_error "${MODULE_NAMES[$module]} 安装失败"
             failed_modules+=("${MODULE_NAMES[$module]}")
+        fi
+        _n=$((_n + 1))
+        if [ "$_n" -eq "$_m" ]; then
+            _fs_align || exit 1
         fi
         echo ""
     done
@@ -1237,12 +1250,6 @@ _check_iot_gateway_ready() {
 }
 
 wait_for_device_gateway() {
-    # mini 形态无 iot-gateway，直连 iot-system，无需等待
-    if is_mini_deploy_profile; then
-        print_info "当前为 mini 部署形态，跳过 iot-gateway 就绪检查（直连 iot-system:48099）"
-        return 0
-    fi
-
     print_info "等待 iot-gateway 就绪（Gateway API 网关，端口 48080）..."
 
     # 检查容器是否存在
@@ -1383,7 +1390,7 @@ start_all() {
     wait_for_base_services
     echo ""
 
-    # 再启动其他服务。DEVICE/AI/VIDEO/WEB 启动期互不依赖（各自只连基础服务），
+    # 再启动其他服务。DEVICE/AI/RTC/VIDEO/WEB 启动期互不依赖（各自只连基础服务），
     # 默认并行启动（仅 compose up，无构建负载）；PARALLEL_MODULES=false 可回退串行。
     collect_biz_modules
     if [ "${PARALLEL_MODULES:-true}" = "true" ]; then
@@ -1723,6 +1730,7 @@ verify_all() {
         echo -e "  基础服务 (Milvus):    http://localhost:9091 (Health), localhost:19530 (gRPC)"
         echo -e "  Device服务 (Gateway):  http://localhost:48080"
         echo -e "  AI服务:                http://localhost:5000"
+        echo -e "  RTC服务:               http://localhost:6100"
         echo -e "  Video服务:             http://localhost:6000"
         echo -e "  Web前端:               http://localhost:8888"
         if module_enabled_for_deploy_profile APP; then
@@ -1738,6 +1746,25 @@ verify_all() {
             echo -e "  运维控制台 (PANEL):     http://localhost:9200"
         fi
         echo ""
+        # 服务健康通过后，可选跑告警事件面（共享盘 + MQTT 入库）；失败默认仅告警不拖垮 verify
+        if [ "${EASYAIOT_VERIFY_ALERT_ON_VERIFY:-1}" != "0" ]; then
+            print_info "继续告警事件面验收（可用 EASYAIOT_VERIFY_ALERT_ON_VERIFY=0 跳过）…"
+            if verify_alert_mqtt_chain; then
+                print_success "告警事件面验收通过"
+            else
+                print_warning "告警事件面验收未通过（不影响上方服务健康结果）。单独重跑: $0 verify-alert"
+            fi
+            echo ""
+        fi
+        if [ "${EASYAIOT_VERIFY_DVR_ON_VERIFY:-1}" != "0" ]; then
+            print_info "继续 DVR/NFS 链路验收（可用 EASYAIOT_VERIFY_DVR_ON_VERIFY=0 跳过）…"
+            if verify_dvr_nfs_chain; then
+                print_success "DVR/NFS 链路验收通过"
+            else
+                print_warning "DVR/NFS 链路验收未通过。单独重跑: $0 verify-dvr"
+            fi
+            echo ""
+        fi
         return 0
     else
         print_warning "部分服务未就绪:"
@@ -1748,6 +1775,49 @@ verify_all() {
         print_info "查看日志: ./install_linux.sh logs"
         return 1
     fi
+}
+
+# 告警事件面：共享盘挂载 + MQTT→iot-sink→alert 入库
+verify_alert_mqtt_chain() {
+    local script="${SCRIPT_DIR}/verify_alert_mqtt_chain.sh"
+    if [ ! -f "$script" ]; then
+        print_error "未找到 ${script}"
+        return 1
+    fi
+    if [ ! -x "$script" ]; then
+        chmod +x "$script" 2>/dev/null || true
+    fi
+    print_section "告警事件面验收（共享盘 + MQTT 入库）"
+    bash "$script" "$@"
+}
+
+verify_dvr_nfs_chain() {
+    local script="${SCRIPT_DIR}/verify_dvr_nfs_chain.sh"
+    if [ ! -f "$script" ]; then
+        print_error "未找到 ${script}"
+        return 1
+    fi
+    if [ ! -x "$script" ]; then
+        chmod +x "$script" 2>/dev/null || true
+    fi
+    print_section "DVR/NFS 链路验收（NFS 写盘 → sink → MinIO）"
+    bash "$script" "$@"
+}
+
+# 节点 Ceph/共享媒体目录：列表、状态、探针、业务验收
+run_ceph_cmd() {
+    local script="${SCRIPT_DIR}/verify_ceph_nodes.sh"
+    if [ ! -f "$script" ]; then
+        print_error "未找到 ${script}"
+        return 1
+    fi
+    if [ ! -x "$script" ]; then
+        chmod +x "$script" 2>/dev/null || true
+    fi
+    local sub="${1:-verify}"
+    shift || true
+    print_section "节点 Ceph / 共享媒体（${sub}）"
+    bash "$script" "$sub" "$@"
 }
 
 # 检查 Docker 和 Docker Compose 安装状态
@@ -1836,15 +1906,20 @@ show_help() {
     echo "  logs            - 查看所有服务日志"
     echo "  logs [模块]     - 查看指定模块日志"
     echo "  build           - 重新构建所有镜像（各模块本地构建）"
-    echo "  build-runtime [模块] - 构建/推送运行时镜像（推送成功后删本地镜像；可选 DEVICE|AI|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）"
+    echo "  build-runtime [模块] - 构建/推送运行时镜像（推送成功后删本地镜像；可选 DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）"
     echo "  pull            - 从远程仓库拉取预构建运行时镜像（交互式，默认 full）"
     echo "  clean           - 清理所有容器和镜像"
     echo "  clean-build-runtime - 清理 build-runtime 构建产物（先停业务服务，默认删运行时镜像+构建缓存；保留跨架构基础镜像）"
     echo "  update          - 更新镜像并重启所有服务（交互可选拉取/本地重建）"
-    echo "  verify          - 验证所有服务是否启动成功"
+    echo "  verify          - 验证所有服务是否启动成功（含告警/DVR 事件面验收）"
+    echo "  verify-alert    - 告警事件面验收（控制面共享盘 + MQTT→iot-sink→入库）"
+    echo "  verify-dvr      - DVR/NFS 链路验收（NFS → sink Hook → MinIO → playback）"
+    echo "  ceph|verify-ceph - 节点 Ceph/共享媒体管理与验收"
+    echo "      ceph list | status [id|host|all] | probe [id|host|all] | verify [--mount-only]"
     echo "  check           - 检查 Docker 和 Docker Compose 安装状态"
     echo "  profile         - 显示当前部署形态与服务范围"
     echo "  site [子命令]   - 官方网站 SITE 独立部署（默认 install）"
+    echo "  runtime|runtime-atomic - RUNTIME 原子模式（只装计算节点执行器，需 VIDEO_BASE_URL）"
     echo "  menu            - 打开两层交互引导（部署 / 分析 / 官网）"
     echo "  diagnose        - 进入【分析】子菜单"
     echo "  analyze-logs    - 多模块日志合并分析（各模块约 500 行，带分割线）"
@@ -1871,9 +1946,33 @@ show_help() {
     echo "  EASYAIOT_APPLY_INDUSTRIAL_SEED=0   - 启动演示时不写入/刷新工业协议演示设备种子"
     echo "  EASYAIOT_RUNTIME_REGISTRY    - 运行时镜像仓库（默认见 runtime_registry.conf）"
     echo "  EASYAIOT_RUNTIME_BUILD_ARCH  - build-runtime 目标架构: all(默认) | amd64 | arm64"
-    echo "  EASYAIOT_RUNTIME_BUILD_MODULE - build-runtime 目标模块: all(默认) | DEVICE | AI | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
+    echo "  EASYAIOT_RUNTIME_BUILD_MODULE - build-runtime 目标模块: all(默认) | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
     echo "  SITE_PORT                    - 官网宿主机端口（默认 8090）"
+    echo "  VIDEO_BASE_URL               - runtime 原子模式：中心 VIDEO 汇聚地址（如 http://192.168.1.10:6000）"
+    echo "  EASYAIOT_RUNTIME_INSTALL_DIR - runtime 原子模式安装目录（默认 /opt/easyaiot/RUNTIME）"
+    echo "  EASYAIOT_VERIFY_ALERT_ON_VERIFY=0 - verify 时跳过告警 MQTT/共享盘验收"
+    echo "  EASYAIOT_VERIFY_ALERT_STRICT=1    - verify-alert 前置缺失时按失败退出"
+    echo "  MQTT_BROKER_URLS / ALERT_IMAGES_DIR / VERIFY_DEVICE_ID - 告警验收覆盖项"
+    echo "  CEPH_MOUNT_ROOT / PLAYBACKS_DIR / CEPH_SSH_USER - 节点 Ceph 探针覆盖项"
     echo ""
+}
+
+# RUNTIME 原子模式：只部署计算节点执行器（不装 VIDEO/WEB/DEVICE）
+run_runtime_atomic() {
+    local runtime_script="${PROJECT_ROOT}/RUNTIME/install_linux.sh"
+    if [ ! -f "$runtime_script" ]; then
+        print_error "未找到 RUNTIME 安装脚本: ${runtime_script}"
+        return 1
+    fi
+    print_section "RUNTIME 原子模式（只装执行器）"
+    print_info "本模式不部署 VIDEO/WEB 等业务面；告警/心跳需指向中心 VIDEO_BASE_URL"
+    if [ -z "${VIDEO_BASE_URL:-${EASYAIOT_VIDEO_BASE_URL:-}}" ] && [ -z "${1:-}" ]; then
+        print_error "请提供汇聚面地址，例如:"
+        print_info "  VIDEO_BASE_URL=http://192.168.1.10:6000 $0 runtime"
+        print_info "  $0 runtime http://192.168.1.10:6000"
+        return 1
+    fi
+    bash "$runtime_script" atomic "$@"
 }
 
 # 官方网站 SITE：委托 SITE/install_linux.sh
@@ -1961,6 +2060,19 @@ main() {
         verify)
             verify_all
             ;;
+        verify-alert|verify-mqtt-alert|verify-alert-chain)
+            verify_alert_mqtt_chain "${@:2}"
+            ;;
+        verify-dvr|verify-dvr-nfs|verify-nfs-dvr)
+            verify_dvr_nfs_chain "${@:2}"
+            ;;
+        ceph|verify-ceph|ceph-nodes)
+            if [ "$cmd" = "verify-ceph" ] && [ -z "${2:-}" ]; then
+                run_ceph_cmd verify
+            else
+                run_ceph_cmd "${2:-verify}" "${@:3}"
+            fi
+            ;;
         check)
             check_environment
             ;;
@@ -1970,6 +2082,9 @@ main() {
             ;;
         site|website|官网)
             run_site_module "${2:-install}"
+            ;;
+        runtime|runtime-atomic|install-runtime|atomic-runtime)
+            run_runtime_atomic "${2:-}"
             ;;
         diagnose|diagnose-tools)
             run_analyze_interactive_menu

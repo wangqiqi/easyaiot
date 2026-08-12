@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import SectionReveal from '../components/SectionReveal.vue'
-import { profiles } from '../data/downloads'
+import { packages, platformGroups, profiles } from '../data/downloads'
 import { TAGLINE } from '../data/site'
+
+const platformCount = packages.length
 </script>
 
 <template>
@@ -16,7 +18,7 @@ import { TAGLINE } from '../data/site'
         <h1 class="brand-title hero-anim">EasyAIoT</h1>
         <p class="hero-line hero-anim delay-1">{{ TAGLINE }}</p>
         <p class="hero-support hero-anim delay-2">
-          同一套软件贯穿边缘盒子、AI 一体摄像头与全栈一体机——从设备接入到视觉研判，全链路贯通。
+          同一套软件贯穿边缘盒子、AI 一体摄像头与全栈一体机；安装包覆盖 Ubuntu、CentOS、Windows、macOS、麒麟 (Kylin) 与 欧拉 (openEuler)。
         </p>
         <div class="hero-actions hero-anim delay-3">
           <RouterLink class="btn btn-primary" to="/download">立即下载</RouterLink>
@@ -58,6 +60,85 @@ import { TAGLINE } from '../data/site'
       </div>
     </section>
 
+    <section class="section platform-section">
+      <div class="container grid-2">
+        <SectionReveal>
+          <h2 class="display section-title">更多系统，直接下载</h2>
+          <p class="lead">
+            现已提供 {{ platformCount }} 类官方安装包：Debian 系 .deb、CentOS/RHEL el7–el9（x86 /
+            ARM）.rpm、Windows / macOS 桌面包，以及 麒麟 (Kylin) / 欧拉 (openEuler)——到场少一次临时编译。
+          </p>
+          <ul class="platform-points">
+            <li v-for="group in platformGroups" :key="group.id">
+              <strong>{{ group.title }}</strong>
+              <span>{{ group.summary }}</span>
+            </li>
+          </ul>
+          <div class="cta-row">
+            <RouterLink class="btn btn-outline" to="/download">查看全部安装包</RouterLink>
+          </div>
+        </SectionReveal>
+        <SectionReveal class="reveal-delay-2">
+          <div class="media-frame">
+            <img src="/images/platform-coverage.jpg" alt="多操作系统安装包覆盖" />
+          </div>
+        </SectionReveal>
+      </div>
+    </section>
+
+    <section class="section rtc-section">
+      <div class="container grid-2">
+        <SectionReveal>
+          <p class="eyebrow">RTC 模块</p>
+          <h2 class="display section-title">没有 RTSP，也能进平台</h2>
+          <p class="lead">
+            家庭、门店里已在用的 Tapo、涂鸦、Ring、Nest、小米、Wyze、DoorBird、GoPro、Roborock
+            等设备，走厂商私有 P2P 协议、原生不提供标准 RTSP。EasyAIoT RTC 模块
+            一次打通九大品牌取流与对讲，与国标/ONVIF 摄像头同屏共管、同挂 AI 任务。
+          </p>
+          <ul class="rtc-points">
+            <li>Web 一键接入，按品牌动态表单填参</li>
+            <li>P2P 取流 → RTSP → SRS → 播放与 AI 分析</li>
+            <li>Tapo / Tuya / Ring / Wyze / DoorBird / Roborock 支持双向对讲</li>
+          </ul>
+          <div class="cta-row">
+            <RouterLink class="btn btn-outline" to="/features">查看 RTC 能力详情</RouterLink>
+          </div>
+        </SectionReveal>
+        <SectionReveal class="reveal-delay-2">
+          <div class="media-frame">
+            <img src="/images/feature-rtc.jpg" alt="消费级摄像头 P2P 桥接统一纳管" />
+          </div>
+        </SectionReveal>
+      </div>
+    </section>
+
+    <section class="section runtime-section">
+      <div class="container grid-2">
+        <SectionReveal class="reveal-delay-2">
+          <div class="media-frame">
+            <img src="/images/feature-runtime.jpg" alt="RUNTIME 实时视觉分析加速" />
+          </div>
+        </SectionReveal>
+        <SectionReveal>
+          <p class="eyebrow">RUNTIME 模块</p>
+          <h2 class="display section-title">画面不停，分析跟得上</h2>
+          <p class="lead">
+            预览、告警与任务编排还是原来那一套；现场路数多、要更跟手时，打开
+            RUNTIME 加速，让实时看、定时抓、多路巡都更快跟上画面，不必改使用习惯。
+          </p>
+          <ul class="runtime-points">
+            <li>实时监控更顺滑，高峰也不容易拖成积压</li>
+            <li>定时抓拍、多路轮巡同一套加速能力</li>
+            <li>按任务启用即可，平台侧预览与告警不变</li>
+          </ul>
+          <div class="cta-row">
+            <RouterLink class="btn btn-outline" to="/features#runtime">查看 RUNTIME 能力详情</RouterLink>
+          </div>
+        </SectionReveal>
+      </div>
+    </section>
+
     <section class="section loop-section">
       <div class="container grid-2">
         <SectionReveal>
@@ -81,7 +162,7 @@ import { TAGLINE } from '../data/site'
       <div class="container close-inner">
         <SectionReveal>
           <h2 class="display">开始你的云边端智能落地</h2>
-          <p>安装包已就绪。选好系统与部署档位，当天即可装机验收。</p>
+          <p>多系统安装包已就绪。选好操作系统与部署档位，当天即可装机验收。</p>
           <RouterLink class="btn btn-primary" to="/download">前往下载</RouterLink>
         </SectionReveal>
       </div>
@@ -264,8 +345,75 @@ import { TAGLINE } from '../data/site'
   margin-top: 24px;
 }
 
+.platform-section {
+  background: linear-gradient(180deg, rgba(47, 111, 237, 0.035), transparent);
+}
+
+.platform-points {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.platform-points li {
+  display: grid;
+  gap: 2px;
+}
+
+.platform-points strong {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.platform-points span {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 .loop-section {
   background: linear-gradient(180deg, transparent, rgba(47, 111, 237, 0.04) 50%, transparent);
+}
+
+.rtc-section {
+  background: linear-gradient(180deg, rgba(47, 111, 237, 0.03), transparent);
+}
+
+.rtc-points,
+.runtime-points {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.rtc-points li,
+.runtime-points li {
+  position: relative;
+  padding-left: 16px;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.rtc-points li::before,
+.runtime-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 7px;
+  height: 1.5px;
+  background: var(--brand);
+}
+
+.runtime-section {
+  background: linear-gradient(180deg, transparent, rgba(47, 111, 237, 0.035) 50%, transparent);
 }
 
 .close-section {

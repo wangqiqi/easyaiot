@@ -51,12 +51,12 @@ DOCKER_MIRROR="${DOCKER_MIRROR:-https://docker.m.daocloud.io/}"
 
 # 对外常用端口（firewalld 放行；UDP 含媒体相关）
 FIREWALL_TCP_PORTS=(
-    8888 48080 5000 6000 9010 8002 48096 9200
+    8888 48080 5000 6000 6100 1984 8554 8555 9010 8002 48096 9200
     8848 9000 9001 5432 6379 1880 1881 1883
     8080 1985 1935 9100
 )
 FIREWALL_UDP_PORTS=(
-    30000-30500 10000-20000
+    8555 30000-30500 10000-20000
 )
 
 print_info()    { echo -e "${BLUE}[INFO]${NC} $1"; }
@@ -217,7 +217,8 @@ check_centos_family() {
             ;;
         aarch64|arm64)
             print_warning "当前为 ARM 架构 ($arch)"
-            print_info "CentOS ARM 建议优先使用: install_linux_arm.sh / install_linux_kylin.sh"
+            print_info "CentOS ARM 推荐使用: sudo .scripts/docker/install_linux_centos_arm.sh"
+            print_info "（自动装 Docker CE 后转交 install_linux_arm.sh；麒麟可用 install_linux_kylin.sh）"
             print_info "本脚本仍可继续（将转交 install_linux.sh）"
             ;;
         *)

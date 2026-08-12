@@ -12,6 +12,7 @@
 - [macOS / Windows 镜像部署](#macos--windows-镜像部署)
 - [部署规格](#部署规格)
 - [脚本命令参考](#脚本命令参考)
+- [RUNTIME 原子模式（计算节点）](#runtime-原子模式计算节点)
 - [服务访问与端口](#服务访问与端口)
 - [常见问题](#常见问题)
 - [环境要求](#环境要求)
@@ -20,14 +21,15 @@
 
 ## 概述
 
-EasyAIoT 采用 **Docker 容器化 + 统一安装脚本** 部署，平台由基础中间件与 DEVICE / AI / VIDEO / WEB / APP 等业务模块组成。
+EasyAIoT 采用 **Docker 容器化 + 统一安装脚本** 部署，平台由基础中间件与 DEVICE / AI / VIDEO / WEB / APP / RUNTIME 等业务模块组成。
 
 | 模块 | 目录 | 说明 |
 |------|------|------|
 | 基础服务 | `.scripts/docker` | Nacos、PostgreSQL、Redis、Kafka、MinIO 等 |
 | DEVICE | `DEVICE/` | 设备管理与 API 网关（Java / Spring Cloud） |
 | AI | `AI/` | 模型训练、推理（Python） |
-| VIDEO | `VIDEO/` | 视频流处理、告警、录像（Python） |
+| VIDEO | `VIDEO/` | 视频流处理、告警、录像（Python）；算法任务默认可拉起 RUNTIME |
+| RUNTIME | `RUNTIME/` | C++ 高速帧执行器；中心机随 VIDEO 挂载，计算节点可 **原子模式只装执行器** |
 | WEB | `WEB/` | 管理控制台（Vue 3） |
 | APP | `APP/` | 移动端 H5（仅 **full** 规格） |
 
@@ -36,9 +38,11 @@ EasyAIoT 采用 **Docker 容器化 + 统一安装脚本** 部署，平台由基�
 | 系统 | 脚本 |
 |------|------|
 | Linux x86 | `.scripts/docker/install_linux.sh` |
-| CentOS / RHEL 系 | `.scripts/docker/install_linux_centos.sh` |
-| Linux ARM | `.scripts/docker/install_linux_arm.sh` |
-| 银河麒麟 | `.scripts/docker/install_linux_kylin.sh` |
+| CentOS / RHEL 系（x86） | `.scripts/docker/install_linux_centos.sh` |
+| **CentOS / RHEL 系 · ARM** | `.scripts/docker/install_linux_centos_arm.sh` |
+| **麒麟(Kylin)** | `.scripts/docker/install_linux_kylin.sh` |
+| **欧拉(openEuler)** | `.scripts/docker/install_linux_openeuler.sh` |
+| Linux ARM（通用） | `.scripts/docker/install_linux_arm.sh` |
 | macOS | `.scripts/docker/install_mac.sh` |
 | Windows | `.scripts/docker/install_windows.ps1` / `install_windows.sh` |
 
@@ -118,8 +122,9 @@ sudo .scripts/docker/install_linux.sh install
 
 ### 环境前提
 
-- 操作系统：**Ubuntu 24.04+**（建议 26.04）；亦支持 **CentOS/RHEL 系**、ARM、银河麒麟
-- Docker + Docker Compose **v2.35+**（CentOS 可用 `install_linux_centos.sh` 自动安装/升级 Docker CE）
+- 操作系统：**Ubuntu 24.04+**（建议 26.04）；亦支持 **CentOS/RHEL 系 7～9**（含 Stream / Rocky / Alma，以及 **CentOS ARM**）、ARM、**麒麟(Kylin) / 欧拉(openEuler)**
+- Docker + Docker Compose **v2.35+**（CentOS / CentOS ARM / **欧拉(openEuler)** 可用对应入口脚本自动安装/升级 Docker CE）
+- PANEL 安装包：CentOS/RHEL 按 **el7 / el8 / el9**（x86 + aarch64）分别产出，详见 [COMPILE/README.md](../../COMPILE/README.md)
 - 磁盘可用空间 **≥ 300 GB**
 
 ```bash
@@ -135,8 +140,14 @@ cd easyaiot
 # Ubuntu / 通用 Linux x86
 sudo .scripts/docker/install_linux.sh
 
-# CentOS / RHEL / Rocky / Alma（推荐；自动升级 Docker CE、配置镜像源与 firewalld）
+# CentOS / RHEL / Rocky / Alma x86（推荐；自动升级 Docker CE、配置镜像源与 firewalld）
 # sudo .scripts/docker/install_linux_centos.sh
+
+# CentOS / RHEL 系 ARM（推荐；环境准备后转交 install_linux_arm.sh）
+# sudo .scripts/docker/install_linux_centos_arm.sh
+
+# openEuler（推荐；卸载自带 docker-engine、修复仓库 releasever、装 Docker CE）
+# sudo .scripts/docker/install_linux_openeuler.sh
 
 # 1 部署 → 1 首次安装 → 7 健康验证
 ```
@@ -151,18 +162,24 @@ cd easyaiot
 
 # 可选：拉取预构建镜像，缩短 install 耗时
 sudo .scripts/docker/install_linux.sh pull
-# CentOS：sudo .scripts/docker/install_linux_centos.sh pull
+# CentOS x86：sudo .scripts/docker/install_linux_centos.sh pull
+# CentOS ARM：sudo .scripts/docker/install_linux_centos_arm.sh pull
+# openEuler：sudo .scripts/docker/install_linux_openeuler.sh pull
 
 sudo .scripts/docker/install_linux.sh install
-# CentOS：sudo .scripts/docker/install_linux_centos.sh install
+# CentOS x86：sudo .scripts/docker/install_linux_centos.sh install
+# CentOS ARM：sudo .scripts/docker/install_linux_centos_arm.sh install
+# openEuler：sudo .scripts/docker/install_linux_openeuler.sh install
 
 .scripts/docker/install_linux.sh verify
-# CentOS：.scripts/docker/install_linux_centos.sh verify
+# CentOS x86：.scripts/docker/install_linux_centos.sh verify
+# CentOS ARM：.scripts/docker/install_linux_centos_arm.sh verify
+# openEuler：.scripts/docker/install_linux_openeuler.sh verify
 ```
 
 ### CentOS / RHEL 系说明
 
-适用：CentOS 7/8/Stream、Rocky Linux、AlmaLinux、RHEL 等。入口脚本会先完成环境准备，再转交 `install_linux.sh`：
+适用：**CentOS / RHEL 7、8、9**（含 Stream）、Rocky Linux、AlmaLinux 等 x86。入口脚本会先完成环境准备，再转交 `install_linux.sh`。PANEL RPM 亦按 **el7 / el8 / el9** 分包（`COMPILE/dist/centos-el{7,8,9}/`）。
 
 | 能力 | 说明 |
 |------|------|
@@ -182,6 +199,51 @@ sudo .scripts/docker/install_linux_centos.sh --no-upgrade-docker install
 ```
 
 单独中间件（CentOS 7.9）：`.scripts/docker/start_postgresql_centos7.sh`、`start_minio_centos7.sh`、`start_nodered_centos7.sh`、`start_fuxa_centos7.sh`。
+
+### CentOS / RHEL 系 · ARM 说明
+
+适用：aarch64/arm64 上的 **CentOS / RHEL 7、8、9**（含 Stream）、Rocky、Alma 等。入口脚本会先完成与 x86 CentOS 相同的环境准备，再转交 `install_linux_arm.sh`（ARM 镜像与 Dockerfile）。PANEL RPM 按 **el7 / el8 / el9** 分包（`COMPILE/dist/centos-arm-el{7,8,9}/`）：
+
+| 能力 | 说明 |
+|------|------|
+| 架构检查 | 仅允许 aarch64/arm64（x86 请改用 `install_linux_centos.sh`） |
+| Docker CE | 自动卸载旧版 docker，安装 docker-ce 20+（含 aarch64 仓库） |
+| 镜像源 | 写入 `/etc/docker/daemon.json`（DaoCloud） |
+| firewalld | 自动放行常用业务端口（可用 `--no-firewall` 跳过） |
+| 业务部署 | 委托 `install_linux_arm.sh`，默认 `DOCKER_PLATFORM=linux/arm64` |
+
+```bash
+# 仅准备 Docker CE（不部署业务）
+sudo .scripts/docker/install_linux_centos_arm.sh --upgrade-docker-only
+
+# 首次安装 / 跳过防火墙
+sudo .scripts/docker/install_linux_centos_arm.sh install
+sudo .scripts/docker/install_linux_centos_arm.sh --no-firewall install
+```
+
+### **欧拉(openEuler)** 说明
+
+适用：**欧拉(openEuler)** 24.03 LTS 等 24.x 版本（x86_64 / aarch64）。入口脚本 `install_linux_openeuler.sh` 会先完成环境准备，再转交 `install_linux.sh`：
+
+| 能力 | 说明 |
+|------|------|
+| Docker CE | 卸载自带 `docker-engine`（常见 18.09，与 CE 冲突），安装 docker-ce 20+ |
+| 仓库修复 | 将 `docker-ce.repo` 的 `$releasever` 固定为 el9（可用 `--el-release 7` 回退） |
+| 镜像源 / DNS | 写入 DaoCloud 镜像与公网 DNS（避免 loopback resolv 导致拉镜像失败） |
+| firewalld | 自动放行常用业务端口（可用 `--no-firewall` 跳过） |
+| SELinux | Enforcing 时给出挂载目录提示 |
+
+```bash
+# 仅准备 Docker CE（不部署业务）
+sudo .scripts/docker/install_linux_openeuler.sh --upgrade-docker-only
+
+# el9 仓库不可用时回退 el7
+sudo .scripts/docker/install_linux_openeuler.sh --el-release 7 install
+
+# 跳过防火墙放行 / 跳过 Docker 升级（高级）
+sudo .scripts/docker/install_linux_openeuler.sh --no-firewall install
+sudo .scripts/docker/install_linux_openeuler.sh --no-upgrade-docker install
+```
 
 ### 安装耗时
 
@@ -214,7 +276,7 @@ PANEL 安装包编译：[COMPILE/README.md](../../COMPILE/README.md)。
 - macOS：Homebrew bash 4+（系统自带 bash 3.2 无法运行镜像拉取脚本）
 - Windows：Git for Windows（提供 bash 4+）或 WSL；推荐启用 Docker Desktop 的 WSL2 后端
 - **国内镜像加速**：桌面脚本可自动写入用户级 `~/.docker/daemon.json`（与 Linux 同源 `DOCKER_MIRROR`）；**FUXA** 走专用 `pull_fuxa.sh`（1ms 优先）
-- **引擎内存**：按形态自动调配 — mini **4GB** / standard **16GB** / full **24GB**（主机建议分别 ≥8 / ≥24 / ≥32GB）
+- **引擎内存**：按形态自动调配 — mini **8GB** / standard **16GB** / full **24GB**（主机建议分别 ≥8 / ≥24 / ≥32GB）
 
 `install` / `pull` / `update` / `start` 等会在部署前**自动做前置检测**：汇总缺少的组件并打印安装指引，然后**中止**。也可：
 
@@ -316,7 +378,7 @@ EASYAIOT_DEPLOY_PROFILE=standard bash .scripts/docker/install_windows.sh install
 
 | 选项 | 名称 | Linux 主机建议 | 桌面 Docker 引擎目标 | 适用场景 |
 |:----:|------|----------------|----------------------|----------|
-| 1 | **mini** | ≥ 4 GB | 4 GB | 边缘节点、PoC 验证 |
+| 1 | **mini** | ≥ 8 GB | 8 GB | 边缘节点、PoC 验证 |
 | 2 | **standard** | ≥ 16 GB | 16 GB | 常规生产 / 演示 |
 | 3 | **full**（默认） | ≥ 20 GB | 24 GB（主机建议 ≥32 GB） | 完整功能，含 APP H5 / FUXA |
 
@@ -326,6 +388,10 @@ export EASYAIOT_DEPLOY_PROFILE=full && sudo .../install_linux.sh install  # 非�
 ```
 
 各规格服务差异见 [部署最佳实践 - 部署规格选型](./部署最佳实践.md#部署规格选型)。
+
+### NFS 共享媒体存储
+
+告警图、SRS 录像等写入 **NFS 媒体根**（`EASYAIOT_MEDIA_ROOT`，默认 `/mnt/easyaiot-media`；无 sudo 时 `$HOME/easyaiot/media`）。安装脚本会自动准备 NFS 栈并同步到各模块 `.env`；容器内统一挂载 `/mnt/easyaiot-media`。详见 [部署最佳实践 - NFS 共享媒体存储](./部署最佳实践.md#nfs-共享媒体存储)。
 
 ---
 
@@ -347,6 +413,7 @@ export EASYAIOT_DEPLOY_PROFILE=full && sudo .../install_linux.sh install  # 非�
 | `pull` | 拉取预构建镜像 | ✓ | ✓ |
 | `build` | 本地重新构建镜像 | ✓ | ✗ |
 | `build-runtime` | 构建并推送运行时镜像 | ✓ | ✗ |
+| `runtime` / `runtime-atomic` | **RUNTIME 原子模式**（只装计算节点执行器，需 `VIDEO_BASE_URL`） | ✓ | ✗ |
 | `profile` | 查看部署规格 | ✓ | ✓ |
 | `analyze-logs` | 多模块日志合并 | ✓ | ✓ |
 | `analyze-disk` | 磁盘占用分析 | ✓ | ✓ |
@@ -387,6 +454,38 @@ cd AI && ./install_linux.sh install                           # 单模块
 
 ---
 
+## RUNTIME 原子模式（计算节点）
+
+适用于**边缘算力盒 / 集群计算节点**：本机**只安装** C++ 执行器，不部署 VIDEO / WEB / DEVICE。告警与心跳汇聚到中心 VIDEO；正式 `realtime` 任务仍默认把带框检测流推到中心/集群 SRS 的 `ai/` 应用。
+
+> **原子 ≠ 永不推流**：原子只表示本机无业务面。详细步骤、验收与配置见 [`RUNTIME/README.md`](../../RUNTIME/README.md)。
+
+```bash
+# 顶层入口（推荐）
+VIDEO_BASE_URL=http://<中心VIDEO>:6000 \
+  bash .scripts/docker/install_linux.sh runtime
+
+# 模块入口
+VIDEO_BASE_URL=http://192.168.1.10:6000 ./RUNTIME/install_linux.sh atomic
+
+# 可选：安装时写入手工调试用的检测流基址
+# SRS_RTMP_BASE=rtmp://192.168.1.10:1935 VIDEO_BASE_URL=... bash .scripts/docker/install_linux.sh runtime
+```
+
+| 项 | 说明 |
+|----|------|
+| 必填 | `VIDEO_BASE_URL`（或参数传入），如 `http://192.168.1.10:6000` |
+| 安装目录 | 默认 `/opt/easyaiot/RUNTIME`（`EASYAIOT_RUNTIME_INSTALL_DIR` 可改） |
+| 产出 | `bin/RUNTIME`、`node.env`、`env.sh`、`config/atomic.example.ini` |
+| 正式任务 | 中心 WEB 创建「高性能」算法任务，调度选本机 / 自动 / 指定节点；点启动后由 VIDEO + Agent 下发 ini 并拉起 |
+| 手工冒烟 | `source /opt/easyaiot/RUNTIME/env.sh && $RUNTIME_BIN …/atomic.example.ini` |
+| 批量分发 | WEB「业务运行时分发」→ RUNTIME(C++)；或见 `RUNTIME/README.md` 集群分发节 |
+| 无原子节点 | 调度选「本机」即可：中心 VIDEO 安装已挂载本机 RUNTIME，不依赖远程分发 |
+
+中心机完整栈仍用 `install`；本机 VIDEO 安装会经 `ensure_runtime_cpp.sh` 自动编译并挂载 RUNTIME，与原子模式互不替代。
+
+---
+
 ## 服务访问与端口
 
 `verify` 通过后主要访问地址：
@@ -423,6 +522,7 @@ cd AI && ./install_linux.sh install                           # 单模块
 | Compose 版本过低 | `sudo apt install -y docker-compose-plugin` |
 | 端口被占用 | `ss -tlnp \| grep <端口>` |
 | 安装失败 | `tail .scripts/docker/logs/install_linux_*.log`（桌面端对应 `install_mac_*.log` / `install_windows_*.log`） |
+| 计算节点只需算法执行器 | 使用 `runtime` 原子模式，勿在算力盒上再跑完整 `install`；见 [RUNTIME 原子模式](#runtime-原子模式计算节点) |
 | 服务正常但无法访问 | `verify` + 检查防火墙 |
 | 磁盘不足 | `df -h /`，建议预留 ≥ 300 GB |
 | macOS 提示需要 bash 4+ | `brew install bash` 后用 `/opt/homebrew/bin/bash`，或先 `install_mac.sh bootstrap` |
@@ -452,7 +552,7 @@ cd .scripts/docker && ./analyze_merge_logs.sh --non-interactive --modules all --
 
 | 项目 | 要求 |
 |------|------|
-| 操作系统 | Ubuntu 24.04+（建议 26.04）；亦支持 macOS、Windows、CentOS/RHEL、ARM、银河麒麟 |
+| 操作系统 | Ubuntu 24.04+（建议 26.04）；亦支持 macOS、Windows、CentOS/RHEL **7～9**（含 **CentOS ARM**）、ARM、**麒麟(Kylin) / 欧拉(openEuler)** |
 | CPU | 最低 4 核，推荐 8 核+ |
 | 内存 | 取决于部署规格（Linux full ≥ 20 GB；桌面 full 引擎目标 24 GB，主机建议 ≥ 32 GB） |
 | 磁盘 | 最低 300 GB 可用，推荐 500 GB+ SSD |
@@ -475,6 +575,6 @@ sudo usermod -aG docker $USER && newgrp docker
 
 ---
 
-**文档版本**：3.3  
-**最后更新**：2026-08-01  
-**脚本入口**：Linux `.scripts/docker/install_linux.sh`；macOS `install_mac.sh`；Windows `install_windows.ps1` / `install_windows.sh`（无参数 = 交互引导；`<命令>` = 直接执行）。桌面另支持 `bootstrap` / `mirrors` / `resources`。PANEL 编译见 `COMPILE/README.md`。
+**文档版本**：3.4  
+**最后更新**：2026-08-05  
+**脚本入口**：Linux `.scripts/docker/install_linux.sh`；CentOS x86 `install_linux_centos.sh`；CentOS ARM `install_linux_centos_arm.sh`；openEuler `install_linux_openeuler.sh`；ARM `install_linux_arm.sh`；macOS `install_mac.sh`；Windows `install_windows.ps1` / `install_windows.sh`（无参数 = 交互引导；`<命令>` = 直接执行）。桌面另支持 `bootstrap` / `mirrors` / `resources`。PANEL 编译见 `COMPILE/README.md`。
