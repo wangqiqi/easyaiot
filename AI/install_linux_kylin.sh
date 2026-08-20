@@ -36,6 +36,8 @@ cd "$SCRIPT_DIR"
 EASYAIOT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # shellcheck source=../.scripts/docker/init-build-cache-dirs.sh
 source "${EASYAIOT_ROOT}/.scripts/docker/init-build-cache-dirs.sh"
+# shellcheck source=../.scripts/docker/module_update_helpers.sh
+source "${EASYAIOT_ROOT}/.scripts/docker/module_update_helpers.sh"
 
 # ARM架构基础镜像（针对麒麟系统）
 # 使用 ARM 版本的 PyTorch 镜像
@@ -467,7 +469,7 @@ check_gpu() {
         if docker info --format '{{.Runtimes}}' 2>/dev/null | grep -q "nvidia"; then
             print_success "检测到 Docker 支持 NVIDIA runtime"
             # 再测试实际运行（使用 ARM 架构的 CUDA 镜像）
-            if docker run --rm --gpus all --platform linux/arm64 nvidia/cuda:11.7.0-base-ubuntu22.04 nvidia-smi >/dev/null 2>&1; then
+            if docker run --rm --gpus all --platform linux/arm64 nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi >/dev/null 2>&1; then
                 print_success "NVIDIA Container Toolkit 已正确配置"
                 GPU_AVAILABLE=true
             else
@@ -902,11 +904,19 @@ update_service() {
     configure_architecture
     configure_kylin_dockerfile
     check_network
+
+    if easyaiot_update_should_recreate_only ai-service:latest; then
+        $COMPOSE_CMD up -d --force-recreate --remove-orphans --no-deps --quiet-pull ai-service 2>&1 | grep -v "^Creating\|^Starting\|^Pulling\|^Waiting\|^Container" || true
+        print_success "服务更新完成"
+        check_status
+        return 0
+    fi
+
     prepare_cached_resources
-    
+
     print_info "拉取最新代码..."
-    git pull || print_warning "Git pull 失败，继续使用当前代码"
-    
+    easyaiot_git_pull_ff_only
+
     print_info "重新构建镜像..."
     print_info "架构: $ARCH, 平台: $DOCKER_PLATFORM, 基础镜像: $ARM_BASE_IMAGE"
     print_warning "构建可能需要较长时间（20-40分钟），请耐心等待..."

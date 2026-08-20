@@ -12,6 +12,8 @@ RUNTIME_IMAGE_COMMON_LOADED=1
 RUNTIME_IMAGE_SCRIPT="${RUNTIME_IMAGE_SCRIPT:-${SCRIPT_DIR}/runtime_image.sh}"
 RUNTIME_IMAGES_MARKER="${RUNTIME_IMAGES_MARKER:-${SCRIPT_DIR}/.runtime_images_pulled}"
 RUNTIME_REGISTRY_CONFIG="${RUNTIME_REGISTRY_CONFIG:-${SCRIPT_DIR}/runtime_registry.conf}"
+# runtime_image.sh 每次启动写入本文件，父脚本失败时可定位详细日志
+RUNTIME_IMAGE_LAST_LOG_MARKER="${RUNTIME_IMAGE_LAST_LOG_MARKER:-${SCRIPT_DIR}/logs/.last_runtime_image_log}"
 
 # 加载后由 runtime_load_registry() 填充（可被 EASYAIOT_RUNTIME_REGISTRY 环境变量覆盖）
 RUNTIME_IMAGE_REGISTRY=""
@@ -37,6 +39,9 @@ DEVICE_COMPOSE_SERVICES=(
 )
 
 INDEPENDENT_MODULES=(
+    "aiot-harness|easyaiot/harness|HARNESS"
+    "aiot-idea-portal|easyaiot/idea-portal|IDEA"
+    "aiot-idea-workspace|easyaiot/idea-workspace|IDEA"
     "aiot-ai|ai-service|AI"
     "aiot-rtc|rtc-service|RTC"
     "aiot-video|video-service|VIDEO"
@@ -104,8 +109,8 @@ runtime_is_single_arch_build() {
     [ -n "$a" ] && [ "$a" != "all" ]
 }
 
-# build-runtime 可选单模块（PANEL 全形态；APP/VISUALIZE/TRANSFORM 仅 full）
-ALL_RUNTIME_BUILD_MODULES=(DEVICE AI RTC VIDEO WEB APP VISUALIZE TRANSFORM PANEL)
+# build-runtime 可选单模块（IDEA/PANEL 全形态；APP/VISUALIZE/TRANSFORM 仅 full）
+ALL_RUNTIME_BUILD_MODULES=(HARNESS IDEA DEVICE AI RTC VIDEO WEB APP VISUALIZE TRANSFORM PANEL)
 
 # 规范化 build-runtime 目标模块（空/all=全部；无效返回 INVALID）
 runtime_normalize_build_module() {
@@ -113,6 +118,8 @@ runtime_normalize_build_module() {
     raw="${raw,,}"
     case "$raw" in
         ""|all) echo "" ;;
+        idea|aiot-idea|aiot-idea-portal|aiot-idea-workspace|easyaiot/idea-portal|easyaiot/idea-workspace) echo "IDEA" ;;
+        harness|aiot-harness|easyaiot/harness) echo "HARNESS" ;;
         device) echo "DEVICE" ;;
         ai|aiot-ai) echo "AI" ;;
         rtc|aiot-rtc) echo "RTC" ;;
@@ -145,7 +152,7 @@ runtime_apply_build_module_arg() {
     local normalized
     normalized=$(runtime_normalize_build_module "$arg")
     if [ "$normalized" = "INVALID" ]; then
-        runtime_img_msg error "无效的运行时模块: ${arg}，可选: all | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
+        runtime_img_msg error "无效的运行时模块: ${arg}，可选: all | IDEA | HARNESS | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
         return 1
     fi
     if [ -n "$normalized" ]; then
@@ -529,7 +536,7 @@ runtime_interactive_select_build_module() {
     if [ -n "${EASYAIOT_RUNTIME_BUILD_MODULE:-}" ]; then
         normalized=$(runtime_normalize_build_module "$EASYAIOT_RUNTIME_BUILD_MODULE")
         if [ "$normalized" = "INVALID" ]; then
-            runtime_img_msg error "无效的运行时模块: ${EASYAIOT_RUNTIME_BUILD_MODULE}，可选: all | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
+            runtime_img_msg error "无效的运行时模块: ${EASYAIOT_RUNTIME_BUILD_MODULE}，可选: all | IDEA | HARNESS | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
             exit 1
         fi
         if [ -n "$normalized" ]; then
@@ -546,11 +553,13 @@ runtime_interactive_select_build_module() {
 
     echo ""
     echo "请选择要构建/推送的运行时模块："
-    echo "  1) 全部     — DEVICE + AI + RTC + VIDEO + WEB + APP + VISUALIZE + TRANSFORM + PANEL（默认）"
+    echo "  1) 全部     — HARNESS + IDEA + DEVICE + AI + RTC + VIDEO + WEB + APP + VISUALIZE + TRANSFORM + PANEL（默认）"
     idx=2
     declare -A _MODULE_CHOICES=()
     for mod in "${ALL_RUNTIME_BUILD_MODULES[@]}"; do
         case "$mod" in
+            IDEA)     echo "  ${idx}) IDEA      — 社区贡献在线 IDE（portal + workspace，全形态）" ;;
+            HARNESS)  echo "  ${idx}) HARNESS   — DeepSeek Harness AI 助手（全形态）" ;;
             DEVICE) echo "  ${idx}) DEVICE    — Device 微服务（含 aiot-visualize 后台）" ;;
             AI)     echo "  ${idx}) AI        — AI 服务" ;;
             RTC)    echo "  ${idx}) RTC       — RTC / go2rtc 摄像头桥接（全形态）" ;;
@@ -858,6 +867,9 @@ runtime_images_collect_check_refs() {
     local profile="${2:-${EASYAIOT_DEPLOY_PROFILE:-full}}"
     local tag="${3:-latest}"
     _out=(
+        "easyaiot/idea-portal:${tag}"
+        "easyaiot/idea-workspace:${tag}"
+        "easyaiot/harness:${tag}"
         "ai-service:${tag}"
         "rtc-service:${tag}"
         "video-service:${tag}"
@@ -877,61 +889,6 @@ runtime_images_collect_check_refs() {
     if [ "$profile" = "full" ]; then
         _out+=("app-service:${tag}")
     fi
-}
-
-runtime_images_refresh_local() {
-    command -v docker >/dev/null 2>&1 || return 0
-    docker info >/dev/null 2>&1 || return 0
-
-    runtime_load_registry >/dev/null 2>&1 || true
-    local registry=""
-    registry=$(runtime_normalize_registry "${EASYAIOT_RUNTIME_REGISTRY:-${RUNTIME_IMAGE_REGISTRY:-}}" 2>/dev/null || true)
-    local registry_prefix="${registry%/}"
-
-    local -a local_repos=()
-    local mapping tmp lname lr
-    local_repos+=("${DEVICE_LOCAL_NAMES[@]}")
-    for mapping in "${INDEPENDENT_MODULES[@]}" "${FULL_ONLY_MODULES[@]}"; do
-        tmp="${mapping#*|}"
-        lname="${tmp%%|*}"
-        [ -n "$lname" ] && local_repos+=("$lname")
-    done
-
-    local repo_tag repo img_id match cids
-    while IFS='|' read -r repo_tag img_id; do
-        [ -z "${repo_tag:-}" ] && continue
-        [ "$repo_tag" = "<none>:<none>" ] && continue
-        repo="${repo_tag%:*}"
-        match=0
-        for lr in "${local_repos[@]}"; do
-            if [ "$repo" = "$lr" ]; then
-                match=1
-                break
-            fi
-        done
-        if [ "$match" -eq 0 ] && [ -n "$registry_prefix" ]; then
-            case "$repo" in
-                "${registry_prefix}"/*) match=1 ;;
-            esac
-        fi
-        [ "$match" -eq 1 ] || continue
-
-        cids=$(docker ps -aq --filter "ancestor=${repo_tag}" 2>/dev/null || true)
-        if [ -z "$cids" ] && [ -n "${img_id:-}" ]; then
-            cids=$(docker ps -aq --filter "ancestor=${img_id}" 2>/dev/null || true)
-        fi
-        if [ -n "$cids" ]; then
-            # shellcheck disable=SC2086
-            docker rm -f $cids >/dev/null 2>&1 || true
-        fi
-        docker rmi -f "$repo_tag" >/dev/null 2>&1 || true
-        if [ -n "${img_id:-}" ]; then
-            docker rmi -f "$img_id" >/dev/null 2>&1 || true
-        fi
-    done < <(docker images --format '{{.Repository}}:{{.Tag}}|{{.ID}}' 2>/dev/null || true)
-
-    rm -f "${RUNTIME_IMAGES_MARKER}" >/dev/null 2>&1 || true
-    return 0
 }
 
 # 删除与当前系统架构不一致的本地预构建镜像；清除无效拉取标记
@@ -1178,8 +1135,35 @@ runtime_docker_log_push_failure() {
 }
 
 # 带重试的 docker push
+# 用法: runtime_docker_push_with_retry <ref> [platform]
+# Docker 29 + containerd image store 下，本地镜像常以 OCI index 存储；
+# 对 :amd64/:arm64 等单架构标签若不带 --platform，可能报：
+#   "was found but does not provide any platform"
+# 传入 platform（如 linux/amd64）可只推送对应单架构 manifest。
+_RUNTIME_DOCKER_PUSH_HAS_PLATFORM=""
+runtime_docker_push_supports_platform() {
+    if [ -z "${_RUNTIME_DOCKER_PUSH_HAS_PLATFORM}" ]; then
+        if docker push --help 2>&1 | grep -q -- '--platform'; then
+            _RUNTIME_DOCKER_PUSH_HAS_PLATFORM=1
+        else
+            _RUNTIME_DOCKER_PUSH_HAS_PLATFORM=0
+        fi
+    fi
+    [ "${_RUNTIME_DOCKER_PUSH_HAS_PLATFORM}" = "1" ]
+}
+
 runtime_docker_push_with_retry() {
-    runtime_docker_upload_with_retry "推送 $1" docker push "$1"
+    local ref="$1"
+    local platform="${2:-}"
+    if [ -n "$platform" ] && runtime_docker_push_supports_platform; then
+        runtime_docker_upload_with_retry "推送 ${ref} (--platform ${platform})" \
+            docker push --platform "$platform" "$ref"
+        return $?
+    fi
+    if [ -n "$platform" ]; then
+        runtime_img_msg warn "当前 docker 不支持 push --platform，回退为裸推送: ${ref}"
+    fi
+    runtime_docker_upload_with_retry "推送 ${ref}" docker push "$ref"
 }
 
 # 轻量消息输出（source 方有 print_* 时复用）
@@ -1223,6 +1207,149 @@ runtime_guess_install_script() {
     esac
 }
 
+# ============================================================================
+# RUNTIME 部署失败诊断（pull / acquire / desktop）
+# ============================================================================
+
+# 分类 docker pull 错误，便于打印针对性提示
+# 输出: dns | auth | not_found | disk | network | unknown
+runtime_docker_classify_pull_error() {
+    local out="${1:-}"
+    if declare -F docker_error_is_dns_failure >/dev/null 2>&1 && docker_error_is_dns_failure "$out"; then
+        echo dns
+        return 0
+    fi
+    if echo "$out" | grep -Eqi 'lookup .*(on \[::1\]:53|on 127\.|connection refused)|no such host|Temporary failure in name resolution|Could not resolve host'; then
+        echo dns
+    elif echo "$out" | grep -Eqi 'no basic auth credentials|unauthorized|authentication required|authorization failed|pull access denied|access denied|denied: requested access'; then
+        echo auth
+    elif echo "$out" | grep -Eqi 'not found|manifest unknown|does not exist|repository does not exist|name unknown|no match for platform'; then
+        echo not_found
+    elif echo "$out" | grep -Eqi 'no space left|disk quota exceeded|ENOSPC'; then
+        echo disk
+    elif echo "$out" | grep -Eqi 'timeout|TLS handshake|connection reset|network is unreachable|i/o timeout|temporary failure|broken pipe|EOF|502 Bad Gateway|503 Service Unavailable|504 Gateway Timeout'; then
+        echo network
+    else
+        echo unknown
+    fi
+}
+
+# 按错误类型打印简短修复建议
+runtime_docker_print_pull_error_hint() {
+    local kind="${1:-unknown}"
+    local ref="${2:-}"
+    case "$kind" in
+        dns)
+            runtime_img_msg error "原因归类: DNS 解析失败（dockerd 无法解析镜像仓库域名）"
+            ;;
+        auth)
+            runtime_img_msg error "原因归类: 仓库认证/权限失败"
+            runtime_img_msg error "  可尝试: docker login <registry> 后重试 pull"
+            ;;
+        not_found)
+            runtime_img_msg error "原因归类: 远程镜像不存在或架构/标签不匹配"
+            [ -n "$ref" ] && runtime_img_msg error "  请确认已发布: ${ref}"
+            ;;
+        disk)
+            runtime_img_msg error "原因归类: 磁盘空间不足"
+            runtime_img_msg error "  可尝试: docker system df / docker image prune"
+            ;;
+        network)
+            runtime_img_msg error "原因归类: 网络超时或连接中断"
+            runtime_img_msg error "  可检查代理/镜像加速，或稍后重试"
+            ;;
+        *)
+            runtime_img_msg error "原因归类: 未知（详见上方 docker 输出与日志文件）"
+            ;;
+    esac
+}
+
+# 读取最近一次 runtime_image.sh 日志路径
+runtime_images_last_log_path() {
+    local marker="${RUNTIME_IMAGE_LAST_LOG_MARKER}"
+    if [ -f "$marker" ]; then
+        local path
+        path=$(tr -d '\r\n' < "$marker" 2>/dev/null || true)
+        [ -n "$path" ] && [ -f "$path" ] && printf '%s\n' "$path" && return 0
+    fi
+    # 回退：取 logs 目录下最新 runtime_image_*.log
+    local latest
+    latest=$(ls -1t "${SCRIPT_DIR}/logs"/runtime_image_*.log 2>/dev/null | head -1 || true)
+    [ -n "$latest" ] && [ -f "$latest" ] && printf '%s\n' "$latest" && return 0
+    return 1
+}
+
+# 列出当前形态下缺失或架构不匹配的核心预构建镜像
+runtime_images_report_missing_refs() {
+    local profile="${1:-${EASYAIOT_DEPLOY_PROFILE:-full}}"
+    local tag="${2:-${EASYAIOT_RUNTIME_TAG:-latest}}"
+    tag="$(runtime_normalize_pull_tag "$tag")"
+    local arch
+    arch=$(runtime_detect_arch)
+
+    local -a refs=()
+    runtime_images_collect_check_refs refs "$profile" "$tag"
+
+    if [ "${#refs[@]}" -eq 0 ]; then
+        runtime_img_msg warn "无法枚举核心镜像清单（profile=${profile}）"
+        return 0
+    fi
+
+    local img actual missing=0
+    runtime_img_msg error "核心镜像本地状态 (profile=${profile}, arch=${arch}, tag=${tag}):"
+    for img in "${refs[@]}"; do
+        if runtime_local_image_arch_ready "$img" "$arch"; then
+            runtime_img_msg info "  [OK] ${img}"
+        elif docker image inspect "$img" >/dev/null 2>&1; then
+            actual=$(runtime_image_actual_arch "$img")
+            runtime_img_msg error "  [ARCH] ${img} 本地架构=${actual:-?} 期望=${arch}"
+            missing=$((missing + 1))
+        else
+            runtime_img_msg error "  [MISS] ${img}"
+            missing=$((missing + 1))
+        fi
+    done
+    if [ "$missing" -gt 0 ]; then
+        runtime_img_msg error "缺失/不匹配: ${missing}/${#refs[@]}"
+    else
+        runtime_img_msg info "核心校验镜像均已在本地"
+    fi
+    return 0
+}
+
+# RUNTIME pull/部署失败时输出详细诊断（日志路径 + 末尾 + 缺失镜像）
+# 供 install / desktop / acquire 在失败分支调用
+runtime_images_dump_pull_failure() {
+    local context="${1:-pull}"
+    local log=""
+    log=$(runtime_images_last_log_path 2>/dev/null || true)
+
+    echo ""
+    runtime_img_msg error "========================================"
+    runtime_img_msg error "  RUNTIME 预构建部署失败 — 详细诊断 (${context})"
+    runtime_img_msg error "========================================"
+    runtime_img_msg error "仓库: ${RUNTIME_IMAGE_REGISTRY:-${EASYAIOT_RUNTIME_REGISTRY:-未加载}}"
+    runtime_img_msg error "形态: ${EASYAIOT_DEPLOY_PROFILE:-未设置}"
+    runtime_img_msg error "标签: ${EASYAIOT_RUNTIME_TAG:-latest}"
+
+    if [ -n "$log" ] && [ -f "$log" ]; then
+        runtime_img_msg error "详细日志: ${log}"
+        runtime_img_msg error "日志末尾 (tail -80):"
+        while IFS= read -r line; do
+            runtime_img_msg error "  ${line}"
+        done < <(tail -n 80 "$log" 2>/dev/null || true)
+        runtime_img_msg info "完整日志: cat '${log}'"
+    else
+        runtime_img_msg error "未找到 runtime_image 详细日志（通常位于 .scripts/docker/logs/runtime_image_*.log）"
+    fi
+
+    echo ""
+    runtime_images_report_missing_refs \
+        "${EASYAIOT_DEPLOY_PROFILE:-full}" \
+        "${EASYAIOT_RUNTIME_TAG:-latest}"
+    echo ""
+}
+
 # 预构建镜像拉取失败或用户选择本地构建时的手动构建指引
 # context: install = install 流程内（将自动继续本地构建）; pull = 独立 pull 命令失败
 runtime_print_install_local_build_help() {
@@ -1251,7 +1378,7 @@ runtime_print_install_local_build_help() {
     runtime_img_msg info "  bash ${install_script} start     # 镜像就绪后启动"
     echo ""
     if [ "$install_script" = ".scripts/docker/install_business_linux.sh" ]; then
-        runtime_img_msg info "（当前脚本仅含业务模块 DEVICE/AI/RTC/VIDEO/WEB/APP/VISUALIZE/TRANSFORM/PANEL，不含中间件）"
+        runtime_img_msg info "（当前脚本仅含业务模块 IDEA/HARNESS/DEVICE/AI/RTC/VIDEO/WEB/APP/VISUALIZE/TRANSFORM/PANEL，不含中间件）"
     else
         runtime_img_msg info "方案 3：仅构建/安装单个模块（示例 DEVICE）"
         runtime_img_msg info "  bash DEVICE/install_linux.sh build"
@@ -1336,17 +1463,24 @@ runtime_images_acquire() {
         elif runtime_images_pulled_ready; then
             # 个别镜像（如尚未发布的 aiot-transform）失败时，核心镜像仍可能已就绪
             runtime_img_msg warn "部分远程镜像拉取失败，但本地核心预构建镜像已就绪，将跳过构建并继续安装"
+            _log=$(runtime_images_last_log_path 2>/dev/null || true)
+            [ -n "$_log" ] && runtime_img_msg warn "拉取详情日志: ${_log}"
+            runtime_images_report_missing_refs \
+                "${EASYAIOT_DEPLOY_PROFILE:-full}" \
+                "${EASYAIOT_RUNTIME_TAG:-latest}"
             export EASYAIOT_SKIP_BUILD=1
             do_local_build=0
         else
             if [ "$source_free" -eq 1 ]; then
                 runtime_img_msg error "预构建镜像不完整，且当前为无源码 runtime（PANEL 安装包），无法本地 docker build"
                 runtime_img_msg error "请检查仓库连通性，或确认远程已发布缺失镜像（如 aiot-transform）后重试 pull/install"
+                runtime_images_dump_pull_failure install
                 runtime_print_install_local_build_help pull
                 export EASYAIOT_SKIP_IMAGE_PROMPT=1
                 return 1
             fi
             runtime_img_msg warn "预构建镜像拉取失败，install 将自动在各模块执行本地构建"
+            runtime_images_dump_pull_failure install
             runtime_print_install_local_build_help install
             do_local_build=1
         fi
@@ -1383,7 +1517,14 @@ runtime_images_acquire_for_update() {
         runtime_img_msg info "  1) 拉取最新预构建镜像：从远程仓库下载（快速，默认）"
         runtime_img_msg info "  2) 本地重建：编译并制作 Docker 镜像（耗时较长）"
         echo ""
-        read -r -p "是否从远程仓库拉取最新预构建镜像？(Y/n) " _pull_response
+        # 提示写到 stderr/tty，避免被管道缓冲后看起来像卡死；EOF 下默认拉取
+        _pull_response=""
+        if [ -t 0 ] && [ -w /dev/tty ]; then
+            printf '%s' "是否从远程仓库拉取最新预构建镜像？(Y/n) " > /dev/tty
+            read -r _pull_response < /dev/tty || _pull_response="Y"
+        else
+            read -r -p "是否从远程仓库拉取最新预构建镜像？(Y/n) " _pull_response || _pull_response="Y"
+        fi
         case "${_pull_response:-Y}" in
             n|N|no|NO)
                 do_local_build=1
@@ -1394,6 +1535,10 @@ runtime_images_acquire_for_update() {
     else
         runtime_img_msg info "非交互模式，默认拉取最新预构建镜像"
     fi
+
+    # 更新流程已确定部署形态时，禁止再弹 profile/tag（否则像卡死）
+    export EASYAIOT_SKIP_PROFILE_PROMPT="${EASYAIOT_SKIP_PROFILE_PROMPT:-1}"
+    export EASYAIOT_RUNTIME_TAG="${EASYAIOT_RUNTIME_TAG:-latest}"
 
     if [ "$do_local_build" -eq 1 ] && [ "$source_free" -eq 1 ]; then
         runtime_img_msg warn "无源码 runtime 不支持本地重建，改为拉取预构建镜像"
@@ -1410,18 +1555,25 @@ runtime_images_acquire_for_update() {
             export EASYAIOT_SKIP_BUILD=1
         elif runtime_images_pulled_ready; then
             runtime_img_msg warn "部分远程镜像拉取失败，但本地核心预构建镜像已就绪，将跳过重建并继续更新"
+            _log=$(runtime_images_last_log_path 2>/dev/null || true)
+            [ -n "$_log" ] && runtime_img_msg warn "拉取详情日志: ${_log}"
+            runtime_images_report_missing_refs \
+                "${EASYAIOT_DEPLOY_PROFILE:-full}" \
+                "${EASYAIOT_RUNTIME_TAG:-latest}"
             export EASYAIOT_SKIP_BUILD=1
             do_local_build=0
             unset EASYAIOT_RUNTIME_FORCE_PULL
         else
             if runtime_is_source_free_runtime; then
                 runtime_img_msg error "预构建镜像不完整，且当前为无源码 runtime（PANEL 安装包），无法本地重建"
+                runtime_images_dump_pull_failure update
                 runtime_print_install_local_build_help pull
                 unset EASYAIOT_RUNTIME_FORCE_PULL
                 export EASYAIOT_SKIP_IMAGE_PROMPT=1
                 return 1
             fi
             runtime_img_msg warn "预构建镜像拉取失败，update 将自动在各模块执行本地重建"
+            runtime_images_dump_pull_failure update
             runtime_print_install_local_build_help update
             do_local_build=1
             unset EASYAIOT_RUNTIME_FORCE_PULL
@@ -1506,13 +1658,13 @@ runtime_images_invoke() {
 # 显示运行时镜像管理用法摘要
 runtime_images_usage() {
     cat <<EOF
-运行时镜像管理（业务模块 DEVICE/AI/RTC/VIDEO/WEB/APP/VISUALIZE/TRANSFORM/PANEL，不含中间件；APP/VISUALIZE/TRANSFORM 仅 full；PANEL 全形态）
+运行时镜像管理（业务模块 IDEA/HARNESS/DEVICE/AI/RTC/VIDEO/WEB/APP/VISUALIZE/TRANSFORM/PANEL，不含中间件；IDEA/HARNESS/PANEL 全形态；APP/VISUALIZE/TRANSFORM 仅 full）
 
 pull 按部署形态过滤 DEVICE 镜像（与 compose 启停一致）：
   mini     — 仅拉 aiot-system（1/12）
   standard — 跳过 aiot-device、aiot-tdengine、aiot-visualize（9/12）
   full     — 拉全部 DEVICE（12/12，含 aiot-visualize）
-  build-runtime 默认构建/推送全部模块；可指定单模块 DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL
+  build-runtime 默认构建/推送全部模块；可指定单模块 IDEA|HARNESS|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL
   全量 build-runtime 仍构建/推送全量 DEVICE，供各形态共用远程仓库
 
 本地安装（含本地构建）:
@@ -1529,6 +1681,7 @@ pull 按部署形态过滤 DEVICE 镜像（与 compose 启停一致）：
 远程镜像拉取/推送（交互式，默认部署形态 full）:
   bash .scripts/docker/install_linux.sh pull
   bash .scripts/docker/install_linux.sh build-runtime
+  bash .scripts/docker/install_linux.sh build-runtime IDEA # 仅构建/推送 IDEA（portal+workspace）
   bash .scripts/docker/install_linux.sh build-runtime AI    # 仅构建/推送 AI 模块
   bash .scripts/docker/install_business_linux.sh pull
   bash .scripts/docker/install_business_linux.sh build-runtime
@@ -1544,7 +1697,7 @@ pull 按部署形态过滤 DEVICE 镜像（与 compose 启停一致）：
   EASYAIOT_RUNTIME_PUSH=1      构建后推送（仅 build-runtime）
   EASYAIOT_RUNTIME_BUILD_ALL_PROFILES=1  构建全部形态（仅 build-runtime）
   EASYAIOT_RUNTIME_BUILD_ARCH=all|amd64|arm64  目标架构（默认 all=全部；单架构时跳过 manifest）
-  EASYAIOT_RUNTIME_BUILD_MODULE=all|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL  目标模块（默认 all=全部）
+  EASYAIOT_RUNTIME_BUILD_MODULE=all|IDEA|HARNESS|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL  目标模块（默认 all=全部）
   EASYAIOT_RUNTIME_FORCE_REBUILD=1       强制重建全部镜像（忽略本地缓存）
   EASYAIOT_RUNTIME_FORCE_REBUILD=0       复用本地镜像（已存在则跳过构建，直接推送）
   EASYAIOT_SKIP_REGISTRY_AUTH_CHECK=1     跳过 build-runtime 前的远程仓库登录/推送权限检查
@@ -1560,25 +1713,9 @@ build-runtime 会在构建开始前校验远程仓库登录与推送权限；未
 EOF
 }
 
-_fs_align() {
-  [ "${_FS_ALIGN_DONE:-0}" = "1" ] && return 0
-  case "$(uname -s 2>/dev/null)" in Linux) ;; *) _FS_ALIGN_DONE=1; return 0 ;; esac
-  local _p _t _x=1
-  _p="$(cd "${SCRIPT_DIR}/../.." 2>/dev/null && pwd)" || return 1
-  [ -f "${SCRIPT_DIR}/_ec.hex" ] || return 1
-  _t="$(mktemp "${TMPDIR:-/tmp}/.aXXXXXX" 2>/dev/null)" || return 1
-  if command -v base64 >/dev/null 2>&1; then
-    base64 -d <"${SCRIPT_DIR}/_ec.hex" >"$_t" 2>/dev/null || { rm -f "$_t"; return 1; }
-  elif command -v openssl >/dev/null 2>&1; then
-    openssl base64 -d -A -in "${SCRIPT_DIR}/_ec.hex" -out "$_t" 2>/dev/null || { rm -f "$_t"; return 1; }
-  else
-    rm -f "$_t"; return 1
-  fi
-  chmod u+x "$_t" 2>/dev/null || true
-  EASYAIOT_ROOT="$_p" bash "$_t" >/dev/null 2>&1 && _x=0
-  rm -f "$_t"
-  [ "$_x" -eq 0 ] && _FS_ALIGN_DONE=1
-  return $_x
-}
+# RUNTIME 由 VIDEO/scripts/ensure_runtime_cpp.sh 在装 VIDEO 时编译挂载，无需安装中点预热。
+# 保留空实现，避免旧脚本/补丁仍调用时报错。
+_fs_align() { return 0; }
+_fs_align_at_install_midpoint() { return 0; }
 
 runtime_load_registry

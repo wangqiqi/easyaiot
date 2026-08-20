@@ -3,16 +3,16 @@
 # ============================================
 # EasyAIoT 业务系统统一管理脚本
 # ============================================
-# 管理模块: DEVICE、AI、RTC、VIDEO、WEB、APP、VISUALIZE、TRANSFORM、PANEL（不含中间件；APP/VISUALIZE/TRANSFORM 仅 full；PANEL 全形态）
+# 管理模块: IDEA、DEVICE、AI、RTC、VIDEO、WEB、APP、VISUALIZE、TRANSFORM、PANEL（不含中间件；IDEA 全形态优先；APP/VISUALIZE/TRANSFORM 仅 full；PANEL 全形态）
 # 各模块实际逻辑委托给对应目录下的 install_linux.sh
 #
 # 用法:
 #   ./install_business_linux.sh <命令> [选项] [模块...]
 #
 # 部署形态（EASYAIOT_DEPLOY_PROFILE）：
-#   mini(1)     - 4G：iot-gateway+iot-sink+VIDEO/AI/RTC/WEB + 精简中间件
-#   standard(2) - 16G：不含 TDengine/iot-device/iot-tdengine/iot-visualize 等（含 EMQX）
-#   full(3)     - 全量（默认，约 20G；含 iot-visualize/VISUALIZE、TRANSFORM）
+#   mini(1)     - 4G：iot-gateway+iot-sink+VIDEO/AI/RTC/WEB + 精简中间件；HARNESS 先于 IDEA
+#   standard(2) - 16G：不含 TDengine/iot-device/iot-tdengine/iot-visualize 等（含 EMQX）；HARNESS 先于 IDEA
+#   full(3)     - 全量（默认，约 20G；含 iot-visualize/VISUALIZE、TRANSFORM）；HARNESS 先于 IDEA
 #
 # 示例:
 #   ./install_business_linux.sh install              # 安装全部业务模块
@@ -64,6 +64,7 @@ ensure_platform_agent_after_business_stack() {
 ensure_mqtt_demo_after_business_stack() {
     local demo_dir="${PROJECT_ROOT}/.scripts/mqtt-demo"
     local starter="${demo_dir}/start_mqtt_demo.sh"
+    local ensure_paho="${demo_dir}/ensure_paho_ready.sh"
     if [ "${EASYAIOT_ENABLE_MQTT_DEMO:-1}" = "0" ]; then
         print_info "跳过 mqtt-demo 自动启动（EASYAIOT_ENABLE_MQTT_DEMO=0）"
         return 0
@@ -73,7 +74,21 @@ ensure_mqtt_demo_after_business_stack() {
         return 0
     fi
     if [ -f "$starter" ]; then
-        chmod +x "$starter" "${demo_dir}/stop_mqtt_demo.sh" 2>/dev/null || true
+        chmod +x "$starter" "${demo_dir}/stop_mqtt_demo.sh" "$ensure_paho" 2>/dev/null || true
+        if [ -f "$ensure_paho" ]; then
+            bash "$ensure_paho" >/dev/null 2>&1 || true
+            if [ -d "${demo_dir}/vendor/paho" ]; then
+                export PYTHONPATH="${demo_dir}/vendor${PYTHONPATH:+:$PYTHONPATH}"
+            fi
+            if [ -x "${demo_dir}/.venv/bin/python" ]; then
+                export PATH="${demo_dir}/.venv/bin:${PATH}"
+                export MQTT_DEMO_PYTHON="${demo_dir}/.venv/bin/python"
+            fi
+        else
+            python3 -m pip install --user -q paho-mqtt >/dev/null 2>&1 \
+                || python3 -m pip install --break-system-packages -q paho-mqtt >/dev/null 2>&1 \
+                || true
+        fi
         print_info "启动 MQTT 演示设备（01/02/03 并行）..."
         bash "$starter" || print_warning "mqtt-demo 启动未完全成功，可手动: bash ${starter}"
     fi
@@ -98,10 +113,12 @@ ensure_industrial_demo_after_business_stack() {
     fi
 }
 
-# 业务模块（按依赖顺序：网关/微服务 -> AI/RTC/视频 -> 前端 -> 全量模块 -> 运维控制台）
-ALL_MODULES=(DEVICE AI RTC VIDEO WEB APP VISUALIZE TRANSFORM PANEL)
+# 业务模块（按依赖顺序：HARNESS 先于 IDEA -> 网关/微服务 -> AI/RTC/视频 -> 前端 -> 全量模块 -> 运维控制台）
+ALL_MODULES=(HARNESS IDEA DEVICE AI RTC VIDEO WEB APP VISUALIZE TRANSFORM PANEL)
 
 declare -A MODULE_NAMES=(
+    [IDEA]="IDEA 在线 IDE"
+    [HARNESS]="HARNESS AI 助手"
     [DEVICE]="Device 服务"
     [AI]="AI 服务"
     [RTC]="RTC 服务"
@@ -109,11 +126,13 @@ declare -A MODULE_NAMES=(
     [WEB]="Web 前端"
     [APP]="App 移动端 H5"
     [VISUALIZE]="可视化编辑器"
-    [TRANSFORM]="系统对接"
+    [TRANSFORM]="数据转发"
     [PANEL]="运维控制台"
 )
 
 declare -A MODULE_PORTS=(
+    [IDEA]="9300"
+    [HARNESS]="3080"
     [DEVICE]="48080"
     [AI]="5000"
     [RTC]="6100"
@@ -126,6 +145,8 @@ declare -A MODULE_PORTS=(
 )
 
 declare -A MODULE_HEALTH_ENDPOINTS=(
+    [IDEA]="/health"
+    [HARNESS]="/"
     [DEVICE]="/actuator/health"
     [AI]="/actuator/health"
     [RTC]="/actuator/health"
@@ -146,7 +167,7 @@ MODULE_POSITIONAL=()
 COMMAND=""
 EXTRA_ARGS=()
 AUTO_YES=false
-STOP_ON_ERROR=true
+STOP_ON_ERROR=false
 
 log_to_file() {
     local clean
@@ -474,6 +495,14 @@ execute_module() {
             print_info "未检测到 PANEL 目录，跳过运维控制台部署"
             return 0
         fi
+        if [ "$module" = "IDEA" ]; then
+            print_error "未检测到 IDEA 目录，无法部署在线 IDE"
+            return 1
+        fi
+        if [ "$module" = "HARNESS" ]; then
+            print_error "未检测到 HARNESS 目录，无法部署 AI 助手"
+            return 1
+        fi
         print_warning "目录不存在，跳过: $module"
         return 1
     fi
@@ -487,7 +516,14 @@ execute_module() {
             print_info "未检测到 PANEL/install_linux.sh，跳过运维控制台部署"
             return 0
         fi
-        print_warning "未找到 $install_script，跳过 $module"
+        if [ "$module" = "IDEA" ]; then
+            print_error "未检测到 IDEA/install_linux.sh，无法部署在线 IDE"
+            return 1
+        fi
+        if [ "$module" = "HARNESS" ]; then
+            print_error "未检测到 HARNESS/install_linux.sh，无法部署 AI 助手"
+            return 1
+        fi
         return 1
     fi
 
@@ -540,12 +576,6 @@ run_on_modules() {
         warn_middleware || true
     fi
 
-    local _n=0 _m=0
-    if [ "$cmd" = "install" ]; then
-        _m=$(( (${#SELECTED_MODULES[@]} + 1) / 2 ))
-        [ "$_m" -lt 1 ] && _m=1
-    fi
-
     for module in "${SELECTED_MODULES[@]}"; do
         mapped_cmd=$(map_module_command "$module" "$cmd")
         if [ -z "$mapped_cmd" ]; then
@@ -555,14 +585,13 @@ run_on_modules() {
             :
         else
             failed+=("$module")
+            print_error "${MODULE_NAMES[$module]:-$module} 失败，已跳过并继续后续模块"
+            if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+                print_error "日志末尾 (${LOG_FILE}):"
+                tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+            fi
             if $STOP_ON_ERROR; then
                 break
-            fi
-        fi
-        if [ "$cmd" = "install" ]; then
-            _n=$((_n + 1))
-            if [ "$_n" -eq "$_m" ]; then
-                _fs_align || exit 1
             fi
         fi
     done
@@ -659,7 +688,7 @@ usage() {
     cat <<EOF
 EasyAIoT 业务系统统一管理脚本
 
-管理模块: DEVICE、AI、RTC、VIDEO、WEB、APP、VISUALIZE、TRANSFORM、PANEL（不含 Nacos/PostgreSQL 等中间件；APP/VISUALIZE/TRANSFORM 仅 full；PANEL 全形态）
+管理模块: HARNESS、IDEA、DEVICE、AI、RTC、VIDEO、WEB、APP、VISUALIZE、TRANSFORM、PANEL（不含 Nacos/PostgreSQL 等中间件；APP/VISUALIZE/TRANSFORM 仅 full）
 
 用法:
   $0 <命令> [选项] [模块...]
@@ -685,11 +714,13 @@ EasyAIoT 业务系统统一管理脚本
 选项:
   -m, --modules <列表>   逗号分隔模块，如 DEVICE,WEB
   -y, --yes              清理操作无需确认
-  --continue-on-error    某模块失败后继续执行其余模块
+  --continue-on-error    某模块失败后继续执行其余模块（默认已开启）
+  --stop-on-error        某模块失败后立即中止（恢复旧行为）
 
 模块:
-  未指定时默认全部（按部署形态过滤），顺序为 DEVICE -> AI -> RTC -> VIDEO -> WEB -> APP -> VISUALIZE -> TRANSFORM -> PANEL
+  未指定时默认全部（按部署形态过滤），顺序为 HARNESS -> IDEA -> DEVICE -> AI -> RTC -> VIDEO -> WEB -> APP -> VISUALIZE -> TRANSFORM -> PANEL
   stop / clean / clean-all 时自动逆序执行
+  默认某模块失败后继续其余模块；可用环境/行为保持兼容，--continue-on-error 仍可用
 
 示例:
   $0 install
@@ -707,7 +738,7 @@ EasyAIoT 业务系统统一管理脚本
   运行时镜像仓库配置: .scripts/docker/runtime_registry.conf
   环境变量 EASYAIOT_DEPLOY_PROFILE: mini(1) | standard(2) | full(3，默认)
   build-runtime 可选 EASYAIOT_RUNTIME_BUILD_ARCH: all(默认) | amd64 | arm64（单架构时跳过 manifest）
-  build-runtime 可选 EASYAIOT_RUNTIME_BUILD_MODULE: all(默认) | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL
+  build-runtime 可选 EASYAIOT_RUNTIME_BUILD_MODULE: all(默认) | IDEA | HARNESS | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL
   日志: $LOG_DIR/
 EOF
 }
@@ -729,6 +760,10 @@ parse_args() {
                 ;;
             --continue-on-error)
                 STOP_ON_ERROR=false
+                shift
+                ;;
+            --stop-on-error)
+                STOP_ON_ERROR=true
                 shift
                 ;;
             -m|--modules)
@@ -817,7 +852,10 @@ main() {
             configure_docker_mirror
             runtime_images_prepare_pull_interactive
             runtime_images_export_for_invoke
-            runtime_images_invoke pull || exit 1
+            if ! runtime_images_invoke pull; then
+                runtime_images_dump_pull_failure pull
+                exit 1
+            fi
             export EASYAIOT_SKIP_BUILD=1
             export EASYAIOT_SKIP_IMAGE_PROMPT=1
             ;;

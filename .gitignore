@@ -77,6 +77,15 @@ hs_err_pid*
 # Node Agent 离线 pip wheel（体积大，勿提交）
 NODE/get-pip.py
 NODE/pip-wheels/
+
+# Node Agent 运行时环境变量（含 token，勿提交）
+NODE/agent.env
+
+# Sentinel Agent 离线 pip wheel（体积大，勿提交）
+SENTINEL/pip-wheels/
+
+# Sentinel Agent 运行时环境变量（含 token，勿提交）
+SENTINEL/agent.env
 # Package Files #
 .pnpm-store/
 *.pyc
@@ -97,6 +106,7 @@ RUNTIME/cmake-build-debug/
 RUNTIME/cmake-build-local/
 RUNTIME/cmake-build-orangepi/
 RUNTIME/deploy.env
+RUNTIME/VERSION
 RUNTIME/models/*
 !RUNTIME/models/coco.names
 RUNTIME/config/task_*.ini
@@ -150,6 +160,7 @@ TRANSFORM/dist/
 TRANSFORM/.env.docker
 TRANSFORM/.idea/
 venv
+**/.venv
 # VIDEO 运行日志与告警截图（任务运行时生成）
 VIDEO/logs/
 # VIDEO 运行时生成的 RUNTIME/推流转发 ini（含设备凭证，勿提交）
@@ -160,6 +171,10 @@ VIDEO/face_capture_head_yolov8.onnx
 VIDEO/face_matching_insightface_buffalo_l/
 VIDEO/face_rec.onnx
 VIDEO/ffmpeg-master-*.tar.xz
+# VIDEO 离线 ffmpeg 运行时打包产物（体积大，不随仓库分发）
+VIDEO/.bundle-ffmpeg/
+# VIDEO 离线 pip wheels 缓存（体积大，不随仓库分发）
+VIDEO/.bundle-wheels/
 # VIDEO 内置 YOLO：.pt→onnx 导出缓存与旁路 .names（保留已跟踪的 yolo*.pt；勿提交导出产物）
 VIDEO/yolo*.onnx
 VIDEO/yolov*.onnx
@@ -176,6 +191,9 @@ AI/yolo*.names.json
 AI/yolov*.names.json
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 .vscode/
+# IDEA 工作区模板的 VS Code 配置需要入库（覆盖上面的 .vscode/）
+!IDEA/workspace-template/.vscode/
+!IDEA/workspace-template/.vscode/**
 *.war
 # WEB 日志目录（与 WEB/.gitignore 中 logs/*、!logs/.gitkeep 一致）
 # WEB 预构建前端缓存（runtime_image.sh 提取，体积大，勿提交）
@@ -199,5 +217,19 @@ AI/yolov*.names.json
 
 # 安装脚本生成的本地 docker env（模板见 .env.docker）
 .scripts/docker/.env
+
+# IDEA 运行时数据、本地配置与虚拟环境（与 IDEA/.gitignore 对齐；工作区 clone / git-reference 体积大，勿提交）
+IDEA/.data/
+IDEA/.venv/
+IDEA/idea.env
+IDEA/logs/
+IDEA/workspaces/
+IDEA/__pycache__/
+
+# HARNESS 运行时数据与本地配置（与 HARNESS/.gitignore 对齐；容器挂载工作区时会在仓库根生成 AGENTS.md 软链）
+HARNESS/.data/
+HARNESS/harness.env
+/AGENTS.md
+/HARNESS-README.md
 
 # ZLMediaKit 挂载目录（与 docker-compose 中 ../zlmediakit 对应）；运行时数据

@@ -37,7 +37,8 @@ export interface ComputeNodeVO {
   sshPort?: number;
   agentPort?: number;
   status?: string;
-  nodeRole: string;
+  nodeRole?: string;
+  functions?: string[];
   region?: string;
   tags?: Record<string, string>;
   capabilities?: Record<string, boolean>;
@@ -67,12 +68,17 @@ export interface ComputeNodeVO {
   controlPlaneId?: number;
   isRemote?: boolean;
   peerId?: number;
+  sentinelAutoDeployStarted?: boolean;
   createTime?: string;
   updateTime?: string;
 }
 
-export const createNode = (data: ComputeNodeVO, options?: Pick<NodeRequestOptions, 'errorMessageMode'>) => {
-  return commonApi('post', Api.Node + '/create', { data }, options);
+export const createNode = (data: ComputeNodeVO, options?: Pick<NodeRequestOptions, 'errorMessageMode' | 'timeout'>) => {
+  return commonApi('post', Api.Node + '/create', { data }, { timeout: 120000, ...options });
+};
+
+export const preflightNode = (data: ComputeNodeVO) => {
+  return commonApi('post', Api.Node + '/preflight', { data }, { timeout: 60000, errorMessageMode: 'none' });
 };
 
 export const updateNode = (data: ComputeNodeVO) => {
@@ -85,6 +91,82 @@ export const deleteNode = (id: number) => {
 
 export const getNode = (id: number) => {
   return commonApi('get', Api.Node + '/get', { params: { id } });
+};
+
+export interface NodeSentinelRemediateLogVO {
+  id?: number;
+  nodeId?: number;
+  componentId?: string;
+  mark?: string;
+  action?: string;
+  success?: boolean;
+  exhausted?: boolean;
+  attemptCount?: number;
+  maxAttempts?: number;
+  probeState?: string;
+  message?: string;
+  logs?: Array<Record<string, unknown>>;
+  createTime?: string;
+}
+
+export interface NodeSentinelVO {
+  nodeId?: number;
+  nodeProfile?: string;
+  nodeFunctions?: string[];
+  sentinelVersion?: string;
+  probeLevel?: string;
+  components?: Array<Record<string, unknown>>;
+  schedulableCapabilities?: Record<string, Record<string, unknown>>;
+  summary?: Record<string, unknown>;
+  environmentProfile?: Record<string, unknown>;
+  declaredCapabilities?: Record<string, unknown>;
+  operationalState?: string;
+  remediation?: Record<string, unknown>;
+  lastProbeAt?: string;
+  fresh?: boolean;
+  remediateLogs?: NodeSentinelRemediateLogVO[];
+}
+
+export const getNodeSentinel = async (nodeId: number): Promise<NodeSentinelVO> => {
+  const res = await commonApi('get', Api.Node + '/sentinel/get', { params: { nodeId } });
+  if (res && typeof res === 'object') {
+    const r = res as Record<string, unknown>;
+    if (r.nodeId != null || r.components) {
+      return r as NodeSentinelVO;
+    }
+    const wrapped = r.data as NodeSentinelVO | undefined;
+    if (wrapped) return wrapped;
+  }
+  return {};
+};
+
+export const probeNodeSentinel = async (
+  nodeId: number,
+  level = 'L1',
+): Promise<NodeSentinelVO> => {
+  const res = await commonApi('post', Api.Node + '/sentinel/probe', { data: { nodeId, level } });
+  if (res && typeof res === 'object') {
+    const r = res as Record<string, unknown>;
+    if (r.nodeId != null || r.components) {
+      return r as NodeSentinelVO;
+    }
+    const wrapped = r.data as NodeSentinelVO | undefined;
+    if (wrapped) return wrapped;
+  }
+  return {};
+};
+
+export const resyncNodeSentinel = async (nodeId: number): Promise<NodeSentinelVO> => {
+  const res = await commonApi('post', Api.Node + '/sentinel/resync', { params: { nodeId } });
+  if (res && typeof res === 'object') {
+    const r = res as Record<string, unknown>;
+    if (r.nodeId != null || r.components) {
+      return r as NodeSentinelVO;
+    }
+    const wrapped = r.data as NodeSentinelVO | undefined;
+    if (wrapped) return wrapped;
+  }
+  return {};
 };
 
 export interface NodePageResult {
@@ -304,17 +386,22 @@ export interface CephTopologyNodeVO {
   name?: string;
   host?: string;
   nodeRole?: string;
+  functions?: string[];
   status?: string;
   agentPort?: number;
-  /** platform | storage_nfs | nfs_client（兼容 storage_osd / ceph_client） */
+  /** platform | nfs_primary | nfs_standby | nfs_client | nfs_candidate（兼容 storage_nfs / ceph_client） */
   kind?: string;
   isPlatform?: boolean;
+  /** primary | standby | client | candidate */
+  nfsClusterRole?: string;
   cephMountReady?: boolean;
   cephMountPath?: string;
   cephMonHost?: string;
   cephPool?: string;
   cephfsName?: string;
   nfsMountReady?: boolean;
+  /** 真 NFS Export（exportfs）是否就绪 */
+  nfsExportReady?: boolean;
   nfsMountPath?: string;
   nfsServerHost?: string;
   nfsExportPath?: string;
@@ -339,6 +426,14 @@ export interface CephTopologySummaryVO {
   totalNodes?: number;
   storageNodes?: number;
   clientNodes?: number;
+  primaryCount?: number;
+  standbyCount?: number;
+  candidateCount?: number;
+  primaryReady?: boolean;
+  primaryNodeId?: number;
+  primaryHost?: string;
+  standbyNodeId?: number;
+  standbyHost?: string;
   mountReadyCount?: number;
   mountNotReadyCount?: number;
   offlineCount?: number;
@@ -434,11 +529,19 @@ export interface PortCheckResult {
   steps?: MediaDeployStepVO[];
 }
 
-/** 解析 isTransformResponse:false 时的 { code, data } 信封 */
+/** 解析 isTransformResponse:false 时的 AxiosResponse / { code, data } 信封 */
 function unwrapNodeApiData<T>(res: unknown): T {
+  // isTransformResponse:false 时 axios 返回完整 AxiosResponse，业务在 res.data
   const body = (res as { data?: unknown })?.data ?? res;
-  if (body && typeof body === 'object' && body !== null && 'code' in body && 'data' in body) {
-    return (body as { data: T }).data;
+  if (body && typeof body === 'object' && body !== null && 'code' in body) {
+    const envelope = body as { code?: number; data?: T; msg?: string; message?: string };
+    const code = envelope.code;
+    if (code !== undefined && code !== 0 && code !== 200) {
+      throw new Error(envelope.msg || envelope.message || `请求失败(code=${code})`);
+    }
+    if ('data' in envelope) {
+      return envelope.data as T;
+    }
   }
   return body as T;
 }
@@ -593,18 +696,27 @@ export const checkStorageStackBySsh = async (nodeId: number): Promise<StorageSta
 /** NFS 共享媒体节点拓扑（原 getCephTopology，字段兼容） */
 export const getCephTopology = async (): Promise<CephTopologyResult> => {
   const res = await commonApi('get', `${Api.Node}/storage/topology`, {}, { isTransformResponse: false });
-  return unwrapNodeApiData<CephTopologyResult>(res);
+  const data = unwrapNodeApiData<CephTopologyResult | null>(res);
+  if (!data || typeof data !== 'object') {
+    return { nodes: [], links: [] };
+  }
+  return {
+    ...data,
+    nodes: Array.isArray(data.nodes) ? data.nodes : [],
+    links: Array.isArray(data.links) ? data.links : [],
+  };
 };
 
 export interface NfsClusterAssignPayload {
   serverNodeId?: number;
+  standbyNodeId?: number;
   clientNodeIds?: number[];
   mountRoot?: string;
   nfsExport?: string;
   nfsMountOpts?: string;
 }
 
-/** 分配/切换 NFS 集群（服务端 + 客户端 tags） */
+/** 分配/切换 NFS 集群（主/备 + 客户端 tags） */
 export const assignNfsCluster = async (payload: NfsClusterAssignPayload): Promise<CephTopologyResult> => {
   const res = await commonApi(
     'post',
@@ -613,6 +725,135 @@ export const assignNfsCluster = async (payload: NfsClusterAssignPayload): Promis
     { isTransformResponse: false, timeout: 2 * 60 * 1000 },
   );
   return unwrapNodeApiData<CephTopologyResult>(res);
+};
+
+/** 软 HA：升主 NFS 服务端 */
+export const promoteNfsPrimary = async (nodeId: number): Promise<CephTopologyResult> => {
+  const res = await commonApi(
+    'post',
+    `${Api.Node}/storage/promote-nfs-primary?nodeId=${nodeId}`,
+    {},
+    { isTransformResponse: false, timeout: 2 * 60 * 1000 },
+  );
+  return unwrapNodeApiData<CephTopologyResult>(res);
+};
+
+export interface NfsClusterVO {
+  id?: number;
+  name?: string;
+  laneKey?: string;
+  controlPlaneId?: number;
+  primaryNodeId?: number;
+  primaryHost?: string;
+  primaryName?: string;
+  standbyNodeId?: number;
+  standbyHost?: string;
+  standbyName?: string;
+  mountRoot?: string;
+  nfsExport?: string;
+  isActive?: boolean;
+  status?: string;
+  primaryReady?: boolean;
+  clientCount?: number;
+  clientReadyCount?: number;
+}
+
+export interface NfsBridgeVO {
+  id?: number;
+  name?: string;
+  sourceClusterId?: number;
+  sourceClusterName?: string;
+  targetClusterId?: number;
+  targetClusterName?: string;
+  sourceRelPaths?: string;
+  targetRelPath?: string;
+  scheduleCron?: string;
+  enabled?: boolean;
+  status?: string;
+  lastRunAt?: string;
+  lastSuccess?: boolean;
+  lastMessage?: string;
+  createTime?: string;
+}
+
+export interface NfsMultiClusterOverview {
+  activeClusterId?: number;
+  activeClusterName?: string;
+  clusters?: NfsClusterVO[];
+  bridges?: NfsBridgeVO[];
+}
+
+export const getNfsMultiClusterOverview = async (): Promise<NfsMultiClusterOverview> => {
+  const res = await commonApi(
+    'get',
+    `${Api.Node}/storage/multi-cluster/overview`,
+    {},
+    { isTransformResponse: false },
+  );
+  return normalizeNfsMultiClusterOverview(unwrapNodeApiData<NfsMultiClusterOverview | null>(res));
+};
+
+function normalizeNfsMultiClusterOverview(
+  raw: NfsMultiClusterOverview | null | undefined,
+): NfsMultiClusterOverview {
+  if (!raw || typeof raw !== 'object') {
+    return { clusters: [], bridges: [] };
+  }
+  return {
+    ...raw,
+    clusters: Array.isArray(raw.clusters) ? raw.clusters : [],
+    bridges: Array.isArray(raw.bridges) ? raw.bridges : [],
+  };
+}
+
+export const activateNfsCluster = async (payload: {
+  clusterId: number;
+  forceStopBridges?: boolean;
+}): Promise<NfsMultiClusterOverview> => {
+  const res = await commonApi(
+    'post',
+    `${Api.Node}/storage/multi-cluster/activate`,
+    payload,
+    { isTransformResponse: false, timeout: 2 * 60 * 1000 },
+  );
+  return normalizeNfsMultiClusterOverview(unwrapNodeApiData<NfsMultiClusterOverview | null>(res));
+};
+
+export const createNfsBridge = async (payload: {
+  name?: string;
+  sourceClusterId: number;
+  targetClusterId: number;
+  sourceRelPaths?: string;
+  targetRelPath?: string;
+  scheduleCron?: string;
+}): Promise<NfsMultiClusterOverview> => {
+  const res = await commonApi(
+    'post',
+    `${Api.Node}/storage/multi-cluster/bridge/create`,
+    payload,
+    { isTransformResponse: false, timeout: 2 * 60 * 1000 },
+  );
+  return normalizeNfsMultiClusterOverview(unwrapNodeApiData<NfsMultiClusterOverview | null>(res));
+};
+
+export const stopNfsBridge = async (bridgeId: number): Promise<NfsMultiClusterOverview> => {
+  const res = await commonApi(
+    'post',
+    `${Api.Node}/storage/multi-cluster/bridge/stop?bridgeId=${bridgeId}`,
+    {},
+    { isTransformResponse: false },
+  );
+  return normalizeNfsMultiClusterOverview(unwrapNodeApiData<NfsMultiClusterOverview | null>(res));
+};
+
+export const runNfsBridge = async (bridgeId: number): Promise<NfsMultiClusterOverview> => {
+  const res = await commonApi(
+    'post',
+    `${Api.Node}/storage/multi-cluster/bridge/run?bridgeId=${bridgeId}`,
+    {},
+    { isTransformResponse: false, timeout: 30 * 60 * 1000 },
+  );
+  return normalizeNfsMultiClusterOverview(unwrapNodeApiData<NfsMultiClusterOverview | null>(res));
 };
 
 /** 批量 SSH 刷新 NFS 现状并落库 */
@@ -887,28 +1128,46 @@ export const releaseDeviceMedia = (deviceId: string) => {
   return commonApi('post', `${Api.Node}/media/release?deviceId=${encodeURIComponent(deviceId)}`);
 };
 
-/** 可参与计算工作负载调度的节点角色 */
-const SCHEDULABLE_COMPUTE_ROLES = ['compute', 'gpu', 'hybrid'] as const;
+const SCHEDULABLE_COMPUTE_FUNCTIONS = [
+  'algorithm',
+  'forward',
+  'train',
+  'llm',
+  'label',
+  'infer',
+  'transform',
+] as const;
 
-function isSchedulableComputeNode(node?: Pick<ComputeNodeVO, 'nodeRole'> | null): boolean {
-  const role = node?.nodeRole;
-  return !!role && (SCHEDULABLE_COMPUTE_ROLES as readonly string[]).includes(role);
+function nodeFunctionIds(node?: Pick<ComputeNodeVO, 'functions' | 'nodeRole'> | null): string[] {
+  if (node?.functions?.length) {
+    return node.functions.map((id) => String(id).trim()).filter(Boolean);
+  }
+  return String(node?.nodeRole || '')
+    .split(/[,\s]+/)
+    .map((id) => id.trim())
+    .filter(Boolean);
 }
 
-/** 获取可用于调度的在线节点（compute / gpu / hybrid） */
+function isSchedulableComputeNode(node?: Pick<ComputeNodeVO, 'functions' | 'nodeRole'> | null): boolean {
+  const set = new Set(nodeFunctionIds(node));
+  return SCHEDULABLE_COMPUTE_FUNCTIONS.some((fn) => set.has(fn));
+}
+
+/** 获取可用于计算工作负载调度的在线节点 */
 export const listScheduleNodes = async () => {
   const res = await getNodePage({ pageNo: 1, pageSize: 200, status: 'online' });
   const list = res?.data?.list ?? [];
   return list.filter((node: ComputeNodeVO) => isSchedulableComputeNode(node));
 };
 
-/** 获取可用于媒体调度的在线节点（media / hybrid） */
+/** 获取可用于媒体调度的在线节点（直播接入 / 推流转发） */
 export const listMediaNodes = async () => {
   const res = await getNodePage({ pageNo: 1, pageSize: 200, status: 'online' });
   const list = res?.data?.list ?? [];
-  return list.filter(
-    (node: ComputeNodeVO) => node.nodeRole === 'media' || node.nodeRole === 'hybrid',
-  );
+  return list.filter((node: ComputeNodeVO) => {
+    const set = new Set(nodeFunctionIds(node));
+    return set.has('live') || set.has('forward');
+  });
 };
 
 // ---------- 工作负载 bundle 批量分发 ----------

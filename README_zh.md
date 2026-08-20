@@ -42,7 +42,7 @@ EasyAIoT 官方网站：[http://36.111.47.113:8090/](http://36.111.47.113:8090/)
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-平台由 <strong>WEB、APP、DEVICE、NODE、VIDEO、RTC、AI、RUNTIME、VISUALIZE、TRANSFORM、PANEL、SITE</strong> 等核心模块组成，并以 <strong>COMPILE</strong> 承接多平台打包交付（含 Ubuntu / CentOS·RHEL <strong>7～9</strong>（x86 + <strong>CentOS ARM</strong>，按 el7/el8/el9 分包） / <strong>麒麟(Kylin) / 欧拉(openEuler)</strong> / Windows / macOS / ARM）。在能力侧，平台覆盖 GB28181 / ONVIF 多协议摄像头接入、<strong>RTC 消费级摄像头 P2P 桥接</strong>（基于 go2rtc，覆盖 <strong>Tapo、Tuya、Ring、Nest、小米、Wyze、DoorBird、GoPro、Roborock</strong> 九大品牌——门店 Tapo 补盲、涂鸦白牌纳管、海外 Ring/Nest 门铃、米家存量利旧、Wyze 低成本扩点、DoorBird 门口对讲、GoPro 机动机位、石头扫地机移动视角等场景，Web 一键接入并纳入统一视频与 AI 研判闭环）、<strong>大疆机场与无人机空中视角接入</strong>、实时 / 抓拍 / 巡检算法任务、<strong>RUNTIME 原生高速执行层</strong>（编译型二进制承接拉流解码、YOLO 推理、带框推流与多路原画转发——相对解释型链路更低 CPU/内存、更稳时延；同一二进制覆盖实时 / 抓拍 / 巡检 / 转发）、YOLO 目标检测与 SAM 零样本自动标注、人脸/车牌识别、可编排业务后处理、联邦算力集群调度，以及 <strong>无限联邦边缘集群模式</strong>（普通开发板可即开即用、现场智能就地决策、告警与证据自动汇聚上云，算力随业务任意铺开），还有 MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA 物联网设备全生命周期管理，以及<strong>可视化大屏与 Web 工艺组态</strong>，让设备数据既能展成指挥态势、也能落回工艺画面；并新增 <strong>TRANSFORM 多向数据流转引擎</strong>，把平台侧业务事件按约定投递到 MES / ERP / CRM / WMS 等外部系统，多方对接可配、可追、可复用；配套 <strong>PANEL 交付与值守入口</strong>，让一体机到场当天可装可验，值守与排障不必事事等开发远程敲命令；另以 <strong>SITE 官方网站</strong>对外呈现产品价值、三档硬件选型与安装包入口，让访客先看懂再下载、先选型再落地。在体验侧，Web 管控台与移动 App / 小程序能力对齐，让指挥中心与现场巡检同一套业务逻辑、随时随地处置。
+平台由 <strong>WEB、APP、DEVICE、EDGE、NODE、VIDEO、RTC、AI、RUNTIME、VISUALIZE、TRANSFORM、PANEL、IDEA、HARNESS、SITE</strong> 等核心模块组成，并以 <strong>COMPILE</strong> 承接多平台打包交付（含 Ubuntu / CentOS·RHEL <strong>7～9</strong>（x86 + <strong>CentOS ARM</strong>，按 el7/el8/el9 分包） / <strong>麒麟(Kylin) / 欧拉(openEuler)</strong> / Windows / macOS / ARM）。在能力侧，平台覆盖 GB28181 / ONVIF 多协议摄像头接入、<strong>RTC 消费级摄像头 P2P 桥接</strong>（基于 go2rtc，覆盖 <strong>Tapo、Tuya、Ring、Nest、小米、Wyze、DoorBird、GoPro、Roborock</strong> 九大品牌——门店 Tapo 补盲、涂鸦白牌纳管、海外 Ring/Nest 门铃、米家存量利旧、Wyze 低成本扩点、DoorBird 门口对讲、GoPro 机动机位、石头扫地机移动视角等场景，Web 一键接入并纳入统一视频与 AI 研判闭环）、<strong>大疆机场与无人机空中视角接入</strong>、实时 / 抓拍 / 巡检算法任务、<strong>RUNTIME 原生高速执行层</strong>（编译型二进制承接拉流解码、YOLO 推理、带框推流与多路原画转发——相对解释型链路更低 CPU/内存、更稳时延；同一二进制覆盖实时 / 抓拍 / 巡检 / 转发）、YOLO 目标检测与 SAM 零样本自动标注、人脸/车牌识别、可编排业务后处理、联邦算力集群调度，以及 <strong>无限联邦边缘集群模式</strong>（普通开发板可即开即用、现场智能就地决策、告警与证据自动汇聚上云，算力随业务任意铺开），还有 MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA 物联网设备全生命周期管理，并由 <strong>EDGE C# 边缘采集运行时</strong>在现场以插件化采集器承接 Modbus RTU/TCP、OPC UA 等工业协议采集、本地调度与 MQTT 云边对接，以及<strong>可视化大屏与 Web 工艺组态</strong>，让设备数据既能展成指挥态势、也能落回工艺画面；并新增 <strong>TRANSFORM 多向数据流转引擎</strong>，把平台侧业务事件按约定投递到 MES / ERP / CRM / WMS 等外部系统，多方对接可配、可追、可复用；配套 <strong>PANEL 交付与值守入口</strong>，让一体机到场当天可装可验，值守与排障不必事事等开发远程敲命令；另以 <strong>SITE 官方网站</strong>对外呈现产品价值、三档硬件选型与安装包入口，让访客先看懂再下载、先选型再落地；并以 <strong>IDEA 社区贡献在线 IDE</strong> 让贡献者浏览器即可打开全仓、用 GitHub Copilot 共创、按改动发布到本机并提交 PR，把开源共建从「先配环境」变成「打开即改」。在体验侧，Web 管控台与移动 App / 小程序能力对齐，让指挥中心与现场巡检同一套业务逻辑、随时随地处置。
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -50,7 +50,7 @@ EasyAIoT 官方网站：[http://36.111.47.113:8090/](http://36.111.47.113:8090/)
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-📄 如需更完整的图文介绍，请参阅 <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">EasyAIoT项目介绍 V2.0（PPT）</a>，以及 <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">AI视频监控分析平台（PDF）</a>。
+📄 如需更完整的图文介绍，请参阅 <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">EasyAIoT项目介绍 V2.0（PPT）</a>，以及 <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">AI视频监控分析平台（PDF）</a>。部署完成后的业务操作见 <a href=".doc/操作手册/README.md" style="color: #3498db; text-decoration: none; font-weight: 600;">平台操作手册</a>。
 </p>
 
 ## 🌟 关于项目的一些思考
@@ -164,9 +164,75 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
   <li><strong>Docker 一体化部署</strong>：<code>bash RTC/install_linux.sh start</code> 即可启动 go2rtc + Python 管理服务，默认 host 网络适配 P2P 局域网直连</li>
 </ul>
 
-<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0 8px 0;">
-📖 详细接入文档见 <a href="RTC/README.md" style="color: #3498db; text-decoration: none; font-weight: 600;">RTC 模块 README</a>。
+### 🔌 EDGE：C# 边缘采集运行时，让工业现场「采得准、上得去」
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+工控与楼宇现场常见「PLC、电表、传感器挂在 RS-485 或以太网侧，云平台却要另配一套数采软件、协议各写各的、配置改一次要派人到现场」——接入链路长、运维割裂、云边对不上口径。EasyAIoT 新增独立 <strong>EDGE 模块</strong>（C#），作为<strong>可独立部署的边缘采集运行时</strong>：多协议采集器插件、本地调度、配置驱动解析、MQTT 对接 EasyAIoT 云平台，把 Modbus RTU/TCP、OPC UA 等现场测点收成统一物模型上行，云端配置下发与属性写值也能直达边缘执行。
 </p>
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0;">
+<strong>与设备管理「网关」的区别：</strong>设备管理里的网关是云上的产品/设备类型（GATEWAY + 子设备 SUBSET 拓扑），负责建档、影子、绑定与下发；EDGE 没有单独设备页面，而是现场去<strong>当这台网关</strong>的采集进程——采上来的数落在同一套设备管理里。另有一条路径是 iot-sink <strong>在云端直接轮询</strong> Modbus/OPC UA（平台须能访问现场设备）；EDGE 则在现场采完只走 MQTT 上云，适合 OT 隔离与 RS-485。当前已对齐网关属性上下行、子设备属性代报与配置下发，可作为现场工业网关使用；拓扑主动申报、子设备事件/服务透传、OTA 等完整网关协议面仍在演进。
+</p>
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0 8px 0;">
+<strong>为何选用 C# 做边缘物联网采集？</strong>
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>工业现场亲和</strong>：C# 在工控、SCADA、上位机领域生态成熟，Modbus、OPC UA、串口通信等协议库与工程实践丰富，集成商与自动化工程师上手成本低</li>
+  <li><strong>强类型 + 结构化工程</strong>：测点映射、寄存器解析、配置校验在编译期即可发现错误，长期维护多协议采集器时比脚本语言更稳、更可测</li>
+  <li><strong>异步并发不阻塞</strong>：<code>async/await</code> 天然适合多设备轮询、串口/网络 I/O 并发——同一网关可同时调度数十路子设备采集，避免 Python GIL 等解释型链路在高频轮询下的吞吐瓶颈</li>
+  <li><strong>长驻服务稳定</strong>：.NET 运行时适合边缘网关 7×24 常驻进程，内存与 GC 行为可预期，配合依赖注入与插件化架构，采集器热插拔、版本迭代不必重启整站</li>
+  <li><strong>跨平台可交付</strong>：同一套 C# 源码可发布至 Linux x86_64 / ARM64 工控机与边缘盒子，单文件/自包含部署，现场装机不必再配 Python 虚拟环境或 JVM</li>
+  <li><strong>与云平台分工清晰</strong>：边缘侧专注「采、解、发」，DEVICE 侧专注物模型与设备生命周期——C# 不承担平台重业务与 AI 推理，资源占用更轻，适合挂在 RS-485 总线侧或弱算力网关上独立运行</li>
+</ul>
+
+<table style="width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px;">
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50; width: 18%;">采集器</td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50;">协议 / 场景</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>modbus-rtu</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">Modbus RTU（RS485/串口）——电表、仪表、PLC 等总线侧设备</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>modbus-tcp</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">Modbus TCP——以太网侧工控设备、变频器、网关</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>opc-ua</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">OPC UA——现代化工控与上位系统互联</td>
+</tr>
+</table>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>插件化采集架构</strong>：实现 <code>ICollector</code> 即可扩展新协议；Host 统一注册、调度与结果上报，采集逻辑与运行时解耦</li>
+  <li><strong>配置双通道</strong>：本地 <code>device-jobs.json</code> 可离线运行；云端 MQTT <code>config/downstream/push</code> 可远程覆盖采集任务，现场改配置不必再派人</li>
+  <li><strong>MQTT 云边一体</strong>：以平台 GATEWAY 身份接入——网关属性上报、子设备属性代报、云端属性写值下行，经 EMQX 对接 DEVICE/<strong>iot-sink</strong>，子设备自动创建与影子入库，数据在「设备管理」展现</li>
+  <li><strong>独立打包交付</strong>：<code>pack_linux.sh</code> 产出 x86_64 / ARM64 Linux 部署包，可装于工控机、边缘网关，与平台主栈解耦部署</li>
+  <li><strong>E2E 联调开箱即用</strong>：<code>bash EDGE/demo/run_e2e.sh</code> 一键验证采集 → MQTT 上行 → 云端入库全链路</li>
+</ul>
+
+### 🤖 AI助手：IDEA 分屏共创，边改代码边问架构查健康
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+开源共建与现场 PoC 常卡在同一处：模块多、链路长，改代码要先配环境，查健康要登服务器，问架构要翻文档、找人。EasyAIoT 把 <strong>HARNESS 对话式助手</strong>嵌进 <strong>IDEA 在线 IDE</strong>——左侧完整 VS Code 工作区，右侧 AI 助手分屏；从资源管理器拖文件即可自动 <code>@</code> 引用进对话，边读源码边问端口、配置与服务健康，缩短「不懂—找人—再改」的闭环。
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>IDEA 分屏共创</strong>：工具栏一键打开右侧 AI 助手，编辑器与 Agent 同屏；亦可 <code>?file=路径&harness=1</code> 深链打开指定文件并分屏</li>
+  <li><strong>拖入自动 @</strong>：资源管理器文件拖到助手面板，自动关联为对话上下文，少打路径、少丢上下文</li>
+  <li><strong>问即查</strong>：Agent 调平台 Tool 探测 Gateway / 视频 / 算法等服务健康，并指向相关配置与源码——把 SSH + 翻 compose 压缩成一次对话</li>
+  <li><strong>懂本体</strong>：内置 <code>HARNESS/ontology/AGENTS.md</code> 与全仓工作区，架构、端口、API、安装约定有统一答案</li>
+  <li><strong>管控台同口径</strong>：业务页悬浮抽屉 / 全屏「AI 助手」与 IDEA 侧同一套能力；MCP + Cursor Skill 可跨环境复用</li>
+  <li><strong>双向跳转</strong>：助手可通过 <code>easyaiot_open_in_idea</code> 生成门户链接，从问答回到可改可发的完整 IDE</li>
+</ul>
+
+| | | |
+|:---:|:---:|:---:|
+| ![IDEA登录](.image/banner/banner1203.png) | ![IDEA工作区](.image/banner/banner1204.png) | ![IDEA开发](.image/banner/banner1205.png) |
+| ![AI助手对话](.image/banner/banner1210.png) | ![AI助手分析](.image/banner/banner1211.png) | ![AI助手协作](.image/banner/banner1212.png) |
 
 ### 🎯 三档硬件，一套平台
 
@@ -210,6 +276,7 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
   <li><strong>多中心节点 × 多工作节点联邦集群</strong>：面向跨区域、多机房与云边协同部署，平台采用「N 个中心节点 + N 个工作节点」联邦架构——中心节点统一编排，工作节点承载算力与媒体执行，可横向扩展。每个中心节点纳管本域工作节点，支持流媒体、音视频转码、视频分析、模型推理与训练等能力的远程分发与一键部署；多中心可互联同步，集群泳道视图直观呈现「中心—工作」拓扑与资源水位。算法任务、自动标注流水线、推流转发等工作负载按节点角色与 GPU 能力智能调度，让海量路数接入、高并发推理与分布式训练在同一集群中协同运转，真正做到「纳得进、分得清、扩得开、管得全」</li>
   <li><strong>SAM 零启动自动标注编排流水线</strong>：面向「尚无标注样本、尚无可用检测模型」的冷启动场景，平台集成 SAM 开放词汇分割能力，提供一键无人值守标注流水线。系统按策略自动串联摄像头抽帧采集、文本提示首批标注、达标后自动触发 YOLO 微调训练、量产阶段以 YOLO 高速推理为主并对漏检样本智能切换 SAM 回补、按进度周期性迭代训练及数据集自动打包导出，完整贯通「采—标—训—导」闭环。支持任务暂停恢复与本地/集群算力弹性调度，配合可视化策略配置与运行日志，帮助用户从零样本、零模型起步快速沉淀专属检测能力，让「开口定义类别、坐等模型成型」成为数据集建设的默认可用路径</li>
   <li><strong>万级弹性算力集群与横向扩容池</strong>：面向超大规模 AI 与视频业务，构建云边端一体的分布式算力底座，将算法任务、推流转发、算法服务、模型训练与推理统一纳入横向负载均衡与弹性伸缩体系。新增服务器一键纳管入网即可成为可调度算力单元，调度中枢按资源水位与业务压力自动分发任务、平衡负载，实现从百路到万路摄像头、从单机到万级节点的线性扩容——无需重复部署与手工调参，让海量路数接入、高并发推理与分布式训练在同一算力池中协同运行，真正做到「扩得动、跑得稳、管得住」</li>
+  <li><strong>分布式存储驱动（计算 + 存储双集群解耦）</strong>：突破传统「每台节点本地目录挂载、路径写死、扩容必改配置」的存储瓶颈，平台以<strong>集群事件驱动</strong>替代原始本地目录驱动——Export 就绪、客户端挂载、主从切换、多集群桥接等存储状态变更以事件自动感知与联动，抓拍、录像、告警证据与模型资产统一写入分布式 NFS 集群，业务层无需关心底层挂载细节。计算与存储<strong>双集群分离解耦</strong>：算力侧全面拥抱 <strong>C++ RUNTIME</strong> 高速执行链路，存储侧独立构建可横向无限扩容的 NFS 集群池，算力扩容与存储扩容互不绑死、各按水位独立伸缩。配套集群泳道、拓扑视图与多集群桥接同步能力，新增节点一键纳管即可加入存储域，让海量路数接入下的「算得动」与「存得下」同步成立，真正做到「算存分离、各自扩容、事件联动、管得齐、扩得开」</li>
   <li><strong>天地图空间可视化与以图研判</strong>：接入国家天地图，将摄像头、告警与人车识别能力汇聚到一张地图，让监控从「看画面」升级为「看全局」。流媒体与告警模块均提供「地图分布」视图，配合设备目录树按区域聚焦，一眼掌握卡口布局与在线状态；支持地图点选、地点搜索与批量导入坐标，国标通道、NVR 通道与直连摄像头均可快速完成布点，让每路画面都有清晰的空间归属。告警事件自动关联摄像头坐标上图展示，可按时间、事件类型、任务与业务标签筛选，选中即可查看抓拍与录像，帮助值守人员从「哪里出事」快速切入处置。结合人脸库与车牌库识别能力，可将同一目标在多个点位上的命中记录串联成空间脉络——<strong>以人寻迹</strong>，还原重点人员在布控范围内的出现路线与活动范围；<strong>以车寻迹</strong>，串联过车记录，快速定位车辆行经路径与停留区域，为寻人找车、巡防布控与事后复盘提供直观线索。移动类设备还支持轨迹回放，按时间轴重现巡逻与行进路线；矢量地图与卫星影像随心切换，自动适应视野，让管理者以地图为纲、以图为媒，更快发现异常、锁定目标、指挥调度</li>
   <li><strong>Qwen / DeepSeek 多卡部署</strong>：支持将 Qwen、DeepSeek 等大语言模型以多卡并行方式部署上线，可按集群灵活调度 GPU 算力，实现模型实例的弹性扩缩与负载均衡，满足高并发推理与长上下文场景下的稳定服务能力</li>
   <li><strong>视觉大模型智能理解</strong>：集成QwenVL3视觉大模型，支持对实时视频画面进行深度视觉推理与语义理解，能够对画面内容进行智能分析与场景理解，提供更丰富的视觉认知能力，实现从像素级感知到语义级理解的跨越</li>
@@ -271,6 +338,7 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
   <li><strong>Modbus-TCP 工业以太网接入</strong>：面向电表、PLC、变频器等以太网侧工控设备，平台内置 Modbus-TCP 主站采集能力，按产品/设备配置接入参数与测点即可上线——读数自动汇入设备影子与在线状态，写值与属性下发贯通，让工业测点与物联网物模型、规则引擎、告警联动同一套闭环，不必再外挂独立数采软件</li>
   <li><strong>Modbus-RTU 串口现场接入</strong>：大量现场仪表仍挂在 RS-485 总线，若只能走 TCP 网关转换，接入成本与故障点都会翻倍。平台支持 Modbus-RTU 串口主站采集，适配虚拟串口与真实串口场景——总线侧设备同样纳入统一纳管与上下行控制，补齐「以太网进不了、串口又管不住」的现场空白</li>
   <li><strong>OPC UA 工业互联接入</strong>：面向现代化工控与上位系统互联场景，平台支持 OPC UA 客户端接入，完成订阅/读写配置——复杂设备模型可映射为平台物模型属性，上行采集与下行写点与现有设备影子、规则链、消息推送无缝衔接，让 OPC UA 现场资产真正进入「看得见、控得住、可联动」的 AIoT 运营体系</li>
+  <li><strong>EDGE C# 边缘采集运行时</strong>：面向工控现场可独立部署的边缘采集模块——以 C# 插件化采集器承接 Modbus RTU、Modbus TCP、OPC UA 等协议，本地调度采集、配置驱动解析，经 MQTT 与 DEVICE/<strong>iot-sink</strong> 云平台对接。它对应设备管理中的 GATEWAY 角色（而非另开一套设备页）：现场汇聚、云上纳管；已覆盖网关/子设备属性上下行与配置下发，拓扑与子设备事件/服务透传等仍在演进。可打包发布至 x86_64 / ARM64 Linux 工控机与边缘网关，实现「现场采得准、云端管得住」的云边协同闭环</li>
   <li><strong>物模型属性定义</strong>：大屏、规则、告警若各写一套测点名，后期必然互相听不懂。平台先把设备能上报、能读写的测点定清楚，支持标准模板与自定义，草稿改完再发布——大屏、规则、告警从此认同一套字段，「能看哪些量」有统一语义，测点名各说各话的返工从根上被掐掉</li>
   <li><strong>物模型服务定义</strong>：远程启停、复位若每做一个动作就写一次性接口，控制面必然碎片化。平台把设备可被远程调用的服务及入参出参写成契约，草稿编辑、发布后生效——「能远程做什么」按契约填参即可，不必再为每个动作堆一次性接口，控制能力可复用、可审计</li>
   <li><strong>物模型事件定义</strong>：设备会上报哪些业务事件若不事先约定，告警口径必然前后打架。平台先约定事件类型，草稿发布后统一生效——事件日志与规则触发共用同一语义，「会发生哪些事」有统一口径，告警不会各说各话</li>
@@ -331,6 +399,36 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
   <li><strong>持续在线</strong>：登录状态自动保持，少被打断、少重复登录，让「云边端智能管控」真正触达手机与小程序</li>
 </ul>
 
+#### 💻 IDEA 在线 IDE
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>浏览器即开发</strong>：基于 code-server 提供 VS Code 风格在线 IDE，默认 clone 完整 EasyAIoT 仓库，贡献者不必先配本机环境即可改代码、跑模块级验证、提交 PR</li>
+  <li><strong>独立门户与多人在线</strong>：操作台独立运行于 <code>:9300</code>，与 WEB 管控台解耦；一人一 Docker 工作区，端口池 13338–13437 支持多人同时在线；管控台悬浮球一键跳转门户</li>
+  <li><strong>六语言工具链对齐本机</strong>：预装 <strong>JDK 21</strong>、Node 22、Python、Go、CMake/C++、.NET 8，覆盖 WEB / DEVICE / AI / NODE / RUNTIME / EDGE 的阅读、轻改与模块级验证</li>
+  <li><strong>AI 共创</strong>：预装 GitHub Copilot（用自己的 GitHub 账号登录，平台不代持密钥）；无 Copilot 订阅时可自备 OpenAI 兼容 API Key，经 Continue 辅助改代码；工具栏可分屏打开 HARNESS AI 助手，拖文件自动 <code>@</code> 引用，边改边问</li>
+  <li><strong>本机发布</strong>：按工作区改动路径建议待发模块，一键执行构建并替换本机正在跑的同名容器，刷新现网即可验收，缩短「改完—看到效果」的闭环</li>
+  <li><strong>OAuth 与闲置回收</strong>：支持 Gitee / GitHub 登录（可强制），一人一区绑定账号；闲置默认 8 小时自动停机，心跳与打开 IDE 会刷新活跃时间，避免算力空转</li>
+  <li><strong>贡献闭环</strong>：绑定个人 fork → 开分支改代码 → 推送到 fork → 向官方仓提交 PR</li>
+</ul>
+
+#### 🤖 HARNESS AI 助手
+
+<p style="font-size: 14px; line-height: 1.8; color: #555; margin: 10px 0 12px;">
+模块多、链路长，查健康、问架构、找配置常要翻文档、登服务器。HARNESS 把平台知识与实时探测收成<strong>对话式助手</strong>——业务页右下角即问即查，缩短排障与 PoC 周期，少依赖原厂与口口相传的经验。
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>问即查</strong>：Agent 调平台 Tool 探测 Gateway / 视频 / 算法等服务健康，并指向相关配置与源码——把 SSH + 翻 compose 压缩成一次对话</li>
+  <li><strong>懂本体</strong>：内置 <code>HARNESS/ontology/AGENTS.md</code> 与全仓工作区，架构、端口、API、安装约定有统一答案</li>
+  <li><strong>页内即聊</strong>：悬浮抽屉 iframe 嵌入，看告警/设备时不跳转、不丢上下文；亦可全屏「AI 助手」或新窗口</li>
+  <li><strong>IDEA 分屏共创</strong>：工具栏一键打开右侧 AI 助手，编辑器与 Agent 同屏；亦可 <code>?file=路径&harness=1</code> 深链打开指定文件并分屏</li>
+  <li><strong>拖入自动 @</strong>：从资源管理器拖文件到助手面板，自动关联为对话上下文</li>
+  <li><strong>双向跳转</strong>：Agent 可通过 <code>easyaiot_open_in_idea</code> 生成门户链接，从问答回到可改可发的完整 IDE；IDEA 改代码提 PR，HARNESS 问架构查健康</li>
+  <li><strong>MCP + Cursor Skill</strong>：同一套 <code>easyaiot_*</code> 能力经 MCP 暴露给 Cursor 等 IDE——管控台能问能查的，开发环境里同样能调，Skill 可跨项目复用</li>
+  <li><strong>全形态开箱</strong>：基于 <a href="https://github.com/deepseek-ai/deepseek-harness" style="color: #3498db; text-decoration: none; font-weight: 600;">DeepSeek Harness</a> Sidecar（<code>:3080</code>），<code>mini / standard / full</code> 默认部署即带（<code>EASYAIOT_ENABLE_HARNESS=0</code> 可关）；DeepSeek / OpenAI 兼容端点，Key 在 <code>harness.env</code> 或 UI 自备</li>
+  <li><strong>安全提示</strong>：实验模块，上游 <code>dsh</code> 处于 Developer Preview；生产请限制访问并配置写操作 / Shell 审批；API Key 勿提交 Git</li>
+</ul>
+
 ### 📦 内置 AI 模型
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -355,11 +453,11 @@ EasyAIoT是一个云边端一体化的智能物联网平台，专注于AI与IoT�
 ### 💡 技术理念
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-我们认为没有任何一个编程语言能够擅长所有事情，但通过五种编程语言的深度融合，EasyAIoT将发挥各自优势，构建强大的技术生态。
+我们认为没有任何一个编程语言能够擅长所有事情。EasyAIoT 用六种编程语言混编，按场景分工：Java 负责平台架构、Python 负责 AI 算法、C++ 负责视频执行、Go 负责协议网关、TypeScript 负责管控界面、C# 负责边缘工业数采，云管、算法、执行、协议、界面与现场采集各归其位，构成完整的云边端技术闭环。
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-Java擅长构建稳定可靠的平台架构，却不适合网络编程与AI开发；Python擅长网络编程与AI算法，却在高路数、低时延的帧级执行上容易碰到 GIL 与进程开销瓶颈；C++擅长高性能任务执行，却不宜承担平台架构与算法编排——因此平台把<strong>拉流解码、推理、带框推流与多路原画转发</strong>下沉到 <strong>RUNTIME</strong>，WEB/VIDEO 继续做编排与业务面。Go擅长高并发网络编程与协议实现，却不宜承担平台管控与AI算法；TypeScript擅长复杂前端交互与类型安全的工程化界面，却不宜承担后端高性能计算与AI推理。EasyAIoT采用五合一语言混编架构，让各语言各司其职，构建一个实现颇具挑战、使用却极其便捷的AIoT平台。
+Java擅长构建稳定可靠的平台架构，却不适合网络编程与AI开发；Python擅长网络编程与AI算法，却在高路数、低时延的帧级执行上容易碰到 GIL 与进程开销瓶颈；C++擅长高性能任务执行，却不宜承担平台架构与算法编排；Go擅长高并发网络编程与协议实现，却不宜承担平台管控与AI算法；TypeScript擅长复杂前端交互与类型安全的工程化界面，却不宜承担后端高性能计算与AI推理；C#擅长工业协议采集与边缘运行时编排，强类型保障测点映射与协议解析可靠，<code>async/await</code> 支撑多设备并发轮询，.NET 跨平台发布适配 x86/ARM 工控现场，工控/SCADA 生态成熟、集成商上手快，却不适合承担云平台核心业务与AI算法。六种语言各司其职、扬长避短，实现颇具挑战，使用却极其便捷。
 </p>
 
 ![EasyAIoT平台架构.jpg](.image/iframe2.jpg)
@@ -379,7 +477,7 @@ Java擅长构建稳定可靠的平台架构，却不适合网络编程与AI开�
 ### 🏗️ 项目架构特点
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-EasyAIoT其实不是一个项目，而是多个可独立部署的子项目（含 WEB、DEVICE、VIDEO、RTC、AI 等）。
+EasyAIoT其实不是一个项目，而是多个可独立部署的子项目（含 WEB、DEVICE、EDGE、VIDEO、RTC、AI 等）。
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -417,6 +515,7 @@ EasyAIoT积极响应本土化战略，全面支持本土化硬件和操作系统
 <h4 style="margin-top: 0; color: white; font-size: 18px;">📱 边缘端支持</h4>
 <ul style="font-size: 14px; line-height: 1.8; margin: 10px 0; padding-left: 20px;">
   <li>普通开发板也可就地承担智能值守</li>
+  <li><strong>EDGE</strong> C# 边缘采集可独立部署于工控机与 RS485 现场</li>
   <li>现场轻装上阵，无需为每处网点堆叠重存储</li>
   <li>开箱即可智能化，缩短边缘上线周期</li>
   <li>算力随点位铺开，告警与证据自动汇聚上云</li>
@@ -442,7 +541,7 @@ EasyAIoT积极响应本土化战略，全面支持本土化硬件和操作系统
 ## 🧩 项目结构
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT 由 WEB、APP、DEVICE、NODE、VIDEO、RTC、AI、RUNTIME、VISUALIZE、TRANSFORM、PANEL、SITE 等核心模块组成，并配套 COMPILE 多平台打包交付能力：
+EasyAIoT 由 WEB、APP、DEVICE、EDGE、NODE、VIDEO、RTC、AI、RUNTIME、VISUALIZE、TRANSFORM、PANEL、IDEA、HARNESS、SITE 等核心模块组成，并配套 COMPILE 多平台打包交付能力：
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
@@ -498,6 +597,20 @@ EasyAIoT 由 WEB、APP、DEVICE、NODE、VIDEO、RTC、AI、RUNTIME、VISUALIZE�
     <li><strong>数据采集</strong>：设备数据采集、存储、查询与分析</li>
     <li><strong>节点编排</strong>：计算/媒体节点纳管、连通检测、工作负载调度与媒体节点池分配</li>
     <li><strong>可视化后台</strong>：统一管理大屏/组态项目、模板、素材、数据源与服务部署，为可视化编辑器与工艺组态提供工程管理与发布能力</li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>EDGE模块</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>为何选用 C#</strong>：强类型测点映射、异步多设备并发轮询、7×24 长驻稳定、Linux x86/ARM 跨平台自包含发布，工控生态成熟、集成商上手快</li>
+    <li><strong>C# 边缘采集运行时</strong>：独立部署的边缘侧采集服务，插件化采集器 + 本地调度 + 配置驱动解析</li>
+    <li><strong>多协议采集器</strong>：内置 Modbus RTU（RS485/串口）、Modbus TCP、OPC UA 采集器，可按任务扩展 <code>ICollector</code> 插件</li>
+    <li><strong>MQTT 云边对接</strong>：以设备管理 GATEWAY 身份接入，属性上报、子设备属性代报、云端配置下发（<code>config/downstream/push</code>）与属性写值下行，对接 DEVICE/<strong>iot-sink</strong>；数据在同一套设备管理展现，与云端工业轮询（平台直连现场设备）互补——EDGE 适合 OT 隔离与 RS-485 现场</li>
+    <li><strong>配置双通道</strong>：本地 <code>device-jobs.json</code> 与云端 MQTT 配置推送均可驱动采集任务</li>
+    <li><strong>Linux 打包发布</strong>：<code>pack_linux.sh</code> 产出 x86_64 / ARM64 独立部署包，适配工控机与边缘网关</li>
+    <li><strong>联调开箱</strong>：内置 E2E Demo，一键验证采集 → MQTT 上行 → 云端入库；配套云平台对接能力</li>
   </ul>
 </td>
 </tr>
@@ -618,6 +731,26 @@ EasyAIoT 由 WEB、APP、DEVICE、NODE、VIDEO、RTC、AI、RUNTIME、VISUALIZE�
 </td>
 </tr>
 <tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>IDEA模块</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>社区贡献在线 IDE</strong>：浏览器打开 VS Code 风格工作区，默认 clone 全仓；一人一 Docker 区，支持本机发布与闲置回收，把开源共建从「先配环境」变成「打开即改」</li>
+    <li><strong>分屏 AI 助手</strong>：工具栏打开右侧 HARNESS，拖文件自动 <code>@</code> 引用；支持 <code>?file=&harness=1</code> 深链定位</li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>HARNESS模块</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>对话式助手</strong>：问健康、问架构、定位问题，缩短排障与 PoC，少依赖原厂</li>
+    <li><strong>页内悬浮抽屉</strong>：业务页不跳转即聊；<code>mini / standard / full</code> 默认自带</li>
+    <li><strong>IDEA 分屏联动</strong>：编辑器右侧嵌助手，拖入 <code>@</code>、深链定位与双向跳转</li>
+    <li><strong>MCP / Skill</strong>：管控台与 IDE 共用平台语义，Skill 可跨项目复用</li>
+  </ul>
+</td>
+</tr>
+<tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>COMPILE打包</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
@@ -689,7 +822,7 @@ EasyAIoT支持在Linux、Mac、Windows三大主流操作系统上部署，为不
 平台支持实时、抓拍与巡检等类型的算法任务：三类任务均可默认走 <strong>RUNTIME 高速执行层</strong>（<code>executor=cpp</code>）——以原生二进制完成长连接拉流、解码、YOLO 推理与结果回传，实时任务<strong>默认推带框 AI 检测流</strong>；抓拍按 Cron 采帧识别；巡检多路轮巡覆盖；推流转发亦可走同一高性能路径把多路原画省资源上墙。相对 Python 兼容后端，高性能路径更吃得住高路数与低时延。告警与心跳统一回 VIDEO。通过算法任务管理实现灵活的抽帧与排序策略，结合模型服务集群推理，确保毫秒级响应与高可用。同时提供全防 / 半防两种布防策略，按时段精准监控与告警。
 </p>
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 10px 0;">
-在物联网设备管理方面，EasyAIoT提供完整的设备生命周期管理能力，支持多种物联网与工业协议（MQTT、TCP、HTTP、Modbus-TCP、Modbus-RTU、OPC UA），实现设备的快速接入、安全认证、实时监控和智能控制。通过规则引擎实现设备数据的智能流转与处理，结合AI能力对设备数据进行深度分析，实现从设备接入、数据采集、智能分析到决策执行的全流程自动化，真正实现万物互联、万物智控。
+在物联网设备管理方面，EasyAIoT提供完整的设备生命周期管理能力，支持多种物联网与工业协议（MQTT、TCP、HTTP、Modbus-TCP、Modbus-RTU、OPC UA）。设备管理中的网关是云上的 GATEWAY / 子设备拓扑；<strong>EDGE</strong> C# 边缘采集运行时在现场扮演该网关，承接工业协议采集与 MQTT 云边对接，数据回落到同一套设备管理，实现设备的快速接入、安全认证、实时监控和智能控制。通过规则引擎实现设备数据的智能流转与处理，结合AI能力对设备数据进行深度分析，实现从设备接入、数据采集、智能分析到决策执行的全流程自动化，真正实现万物互联、万物智控。
 </p>
 </div>
 
@@ -705,6 +838,20 @@ EasyAIoT是一个开源学习项目，与商业行为无关。用户在使用该
 - [macOS 镜像部署](.doc/部署文档/平台macOS部署文档_zh.md) — Docker Desktop 一键拉取预构建镜像
 - [Windows 镜像部署](.doc/部署文档/平台Windows部署文档_zh.md) — `install_windows.ps1` 推荐入口（第 0 章）
 - [部署最佳实践](.doc/部署文档/部署最佳实践.md) — 规格选型、环境要求、一键部署（含 CentOS **7～9** / **CentOS ARM** / **麒麟(Kylin) / 欧拉(openEuler)**）、预构建镜像、运维排障与生产环境建议
+
+## 📘 操作手册
+
+面向交付、值守与业务操作：按**操作链**组织（目标 → 前置 → 步骤 → 验收），默认平台已部署可用。
+
+- [平台操作手册（目录）](.doc/操作手册/README.md) — 怎么读、最短闭环与文档索引
+- [操作链总览](.doc/操作手册/00-操作链总览.md) — 全局地图、菜单速查、PoC 当天验收清单
+- [登录与基础准备](.doc/操作手册/01-登录与基础准备.md) — 账号、组织、权限、通知渠道底座
+- [视频设备接入](.doc/操作手册/02-视频设备接入.md) — ONVIF / NVR / 国标 / RTC / 大疆 → 预览与推流
+- [AI 算法任务闭环](.doc/操作手册/03-AI算法任务闭环.md) — 标注/模型 → 任务 → 告警
+- [物联网设备接入](.doc/操作手册/04-物联网设备接入.md) — 产品物模型 → 设备 → EDGE / 工业采集
+- [告警通知与对外联动](.doc/操作手册/05-告警通知与对外联动.md) — 告警处置、通知、TRANSFORM
+- [可视化大屏](.doc/操作手册/06-可视化大屏.md) — 大屏/组态编辑、发布与投放
+- [APP 移动值守](.doc/操作手册/07-APP移动值守.md) — 移动端与 WEB 能力对照
 
 ## 🎮 演示环境
 
@@ -757,15 +904,24 @@ EasyAIoT是一个开源学习项目，与商业行为无关。用户在使用该
 | ![预览](.image/banner/banner1104.png) | ![接入](.image/banner/banner1105.png) | ![NVR](.image/banner/banner1106.png) |
 | ![实况](.image/banner/banner1183.jpg) | ![地图](.image/banner/banner1184.jpg) |  |
 
+#### 🤖 AI助手
+
+| | | |
+|:---:|:---:|:---:|
+| ![IDEA登录](.image/banner/banner1203.png) | ![IDEA工作区](.image/banner/banner1204.png) | ![IDEA开发](.image/banner/banner1205.png) |
+| ![AI助手对话](.image/banner/banner1210.png) | ![AI助手分析](.image/banner/banner1211.png) | ![AI助手协作](.image/banner/banner1212.png) |
+
 #### 🧠 AI模型
 
 | | | |
 |:---:|:---:|:---:|
+| ![多集群同步](.image/banner/banner1200.png) | ![NFS集群拓扑](.image/banner/banner1198.png) | ![NFS集群管理](.image/banner/banner1197.png) |
+| ![节点管理](.image/banner/banner1199.png) | ![NFS文件目录](.image/banner/banner1201.png) | ![NFS目录浏览](.image/banner/banner1202.png) |
 | ![Qwen](.image/banner/banner1093.jpg) | ![视觉模型](.image/banner/banner1094.jpg) | ![列表](.image/banner/banner1099.png) |
 | ![配置](.image/banner/banner1100.png) | ![详情](.image/banner/banner1101.png) | ![调用](.image/banner/banner1102.png) |
 | ![训练](.image/banner/banner1019.jpg) | ![任务](.image/banner/banner1020.jpg) | ![列表](.image/banner/banner1023.jpg) |
 | ![进度](.image/banner/banner1024.jpg) | ![参数](.image/banner/banner1017.jpg) | ![评估](.image/banner/banner1018.jpg) |
-| ![详情](.image/banner/banner1021.jpg) | ![日志](.image/banner/banner1022.jpg) | ![管理](.image/banner/banner1097.png) |
+| ![详情](.image/banner/banner1021.png) | ![日志](.image/banner/banner1022.jpg) | ![管理](.image/banner/banner1097.png) |
 | ![仓库](.image/banner/banner1098.png) | ![版本](.image/banner/banner1039.jpg) | ![资产](.image/banner/banner1061.jpg) |
 | ![推理](.image/banner/banner1040.jpg) | ![配置](.image/banner/banner1042.jpg) | ![结果](.image/banner/banner1043.jpg) |
 | ![在线](.image/banner/banner1044.jpg) | ![批量](.image/banner/banner1047.jpg) | ![监控](.image/banner/banner1048.jpg) |
@@ -803,7 +959,8 @@ EasyAIoT是一个开源学习项目，与商业行为无关。用户在使用该
 | ![统计](.image/banner/banner1176.jpg) | ![总览](.image/banner/banner1177.jpg) | ![看板](.image/banner/banner1178.jpg) |
 | ![产品](.image/banner/banner1006.jpg) | ![设备](.image/banner/banner1009.jpg) | ![OTA](.image/banner/banner1179.jpg) |
 | ![固件](.image/banner/banner1180.jpg) | ![任务](.image/banner/banner1181.jpg) | ![进度](.image/banner/banner1182.jpg) |
-| ![规则](.image/banner/banner1013.jpg) | ![编排](.image/banner/banner1014.png) |  |
+| ![规则](.image/banner/banner1013.jpg) | ![编排](.image/banner/banner1014.png) | ![转发](.image/banner/banner1206.png) |
+| ![运行](.image/banner/banner1209.png) | ![目的](.image/banner/banner1207.png) | ![投递](.image/banner/banner1208.png) |
 
 #### 🖥️ 集群
 

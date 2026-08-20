@@ -42,7 +42,7 @@ De nombreux projets IoT intelligents se heurtent au même obstacle lors du dépl
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-La plateforme comprend notamment les modules <strong>WEB, APP, DEVICE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL et SITE</strong>, avec <strong>COMPILE</strong> pour le packaging et la livraison multiplateformes (dont Ubuntu / CentOS·RHEL <strong>7–9</strong> (x86 + <strong>CentOS ARM</strong>, paquets el7/el8/el9) / <strong>Kylin (麒麟) / openEuler (欧拉)</strong> / Windows / macOS / ARM). Côté capacités : accès caméra multi-protocoles GB28181 / ONVIF, <strong>pont P2P RTC pour caméras grand public</strong> (basé sur go2rtc, couvrant <strong>Tapo, Tuya, Ring, Nest, Xiaomi, Wyze, DoorBird, GoPro et Roborock</strong> — complément Tapo en magasin, onboarding Tuya white-label, sonnettes Ring/Nest à l'étranger, réutilisation Xiaomi, scale-out Wyze, interphone DoorBird, vues mobiles GoPro, caméras Roborock — onboarding Web en un clic vers vidéo unifiée et jugement IA), <strong>accès vue aérienne dock/drone DJI</strong>, tâches algorithmiques temps réel / capture / patrouille, <strong>couche d’exécution native haute vitesse RUNTIME</strong> (binaire compilé pour pull/décodage, inférence YOLO, push à cadres et relais multi-canal brut — moins de CPU/mémoire et latence plus stable qu’une chaîne interprétée ; un seul binaire couvre temps réel / capture / patrouille / relais), détection d'objets YOLO et annotation automatique SAM zero-shot, reconnaissance faciale/plaques, post-traitement métier orchestrable, planification de clusters de calcul fédérés, et <strong>mode cluster edge fédéré illimité</strong> (cartes de développement ordinaires prêtes à l'emploi, décision intelligente sur site, alertes et preuves agrégées automatiquement vers le cloud, puissance de calcul déployable selon les besoins), ainsi que la gestion du cycle de vie des appareils IoT MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA, et <strong>grands écrans de visualisation et synoptiques de processus Web</strong>, pour que les données alimentent la situation de commandement et les synoptiques de processus ; plus le nouvel <strong>engine TRANSFORM de flux de données multidirectionnel</strong>, qui livre les événements métier de la plateforme vers MES / ERP / CRM / WMS selon contrat — intégration multipartite configurable, traçable et réutilisable ; et l'<strong>entrée de livraison et de permanence PANEL</strong> pour installer et réceptionner l'appliance dès l'arrivée, sans attendre à chaque fois que les développeurs tapent des commandes à distance ; ainsi que le <strong>site officiel SITE</strong> pour présenter la valeur produit, trois niveaux matériels et l'entrée téléchargement — comprendre d'abord, puis télécharger et déployer. Côté expérience : console Web et App mobile / mini-programme alignées — centres de commande et inspections terrain partagent la même logique métier, partout et à tout moment.
+La plateforme comprend notamment les modules <strong>WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL, IDEA, HARNESS et SITE</strong>, avec <strong>COMPILE</strong> pour le packaging et la livraison multiplateformes (dont Ubuntu / CentOS·RHEL <strong>7–9</strong> (x86 + <strong>CentOS ARM</strong>, paquets el7/el8/el9) / <strong>Kylin (麒麟) / openEuler (欧拉)</strong> / Windows / macOS / ARM). Côté capacités : accès caméra multi-protocoles GB28181 / ONVIF, <strong>pont P2P RTC pour caméras grand public</strong> (basé sur go2rtc, couvrant <strong>Tapo, Tuya, Ring, Nest, Xiaomi, Wyze, DoorBird, GoPro et Roborock</strong> — complément Tapo en magasin, onboarding Tuya white-label, sonnettes Ring/Nest à l'étranger, réutilisation Xiaomi, scale-out Wyze, interphone DoorBird, vues mobiles GoPro, caméras Roborock — onboarding Web en un clic vers vidéo unifiée et jugement IA), <strong>accès vue aérienne dock/drone DJI</strong>, tâches algorithmiques temps réel / capture / patrouille, <strong>couche d’exécution native haute vitesse RUNTIME</strong> (binaire compilé pour pull/décodage, inférence YOLO, push à cadres et relais multi-canal brut — moins de CPU/mémoire et latence plus stable qu’une chaîne interprétée ; un seul binaire couvre temps réel / capture / patrouille / relais), détection d'objets YOLO et annotation automatique SAM zero-shot, reconnaissance faciale/plaques, post-traitement métier orchestrable, planification de clusters de calcul fédérés, et <strong>mode cluster edge fédéré illimité</strong> (cartes de développement ordinaires prêtes à l'emploi, décision intelligente sur site, alertes et preuves agrégées automatiquement vers le cloud, puissance de calcul déployable selon les besoins), ainsi que la gestion du cycle de vie des appareils IoT MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA, avec le <strong>runtime de collecte edge EDGE C#</strong> qui prend en charge sur site les protocoles industriels Modbus RTU/TCP, OPC UA et autres via des collecteurs pluginnés, une planification locale et l'intégration MQTT cloud-edge, et <strong>grands écrans de visualisation et synoptiques de processus Web</strong>, pour que les données alimentent la situation de commandement et les synoptiques de processus ; plus le nouvel <strong>engine TRANSFORM de flux de données multidirectionnel</strong>, qui livre les événements métier de la plateforme vers MES / ERP / CRM / WMS selon contrat — intégration multipartite configurable, traçable et réutilisable ; et l'<strong>entrée de livraison et de permanence PANEL</strong> pour installer et réceptionner l'appliance dès l'arrivée, sans attendre à chaque fois que les développeurs tapent des commandes à distance ; ainsi que le <strong>site officiel SITE</strong> pour présenter la valeur produit, trois niveaux matériels et l'entrée téléchargement — comprendre d'abord, puis télécharger et déployer ; et l'<strong>IDEA IDE communautaire en ligne</strong> pour que les contributeurs ouvrent le dépôt complet dans le navigateur, co-créent avec GitHub Copilot, publient les changements en local et soumettent des PR — la contribution open source passe de « d'abord configurer l'environnement » à « ouvrir et modifier ». Côté expérience : console Web et App mobile / mini-programme alignées — centres de commande et inspections terrain partagent la même logique métier, partout et à tout moment.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -50,7 +50,7 @@ La plateforme comprend notamment les modules <strong>WEB, APP, DEVICE, NODE, VID
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-📄 Pour une présentation illustrée plus complète, consultez <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">Présentation du projet EasyAIoT V2.0 (PPT)</a>, ainsi que <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">Plateforme d'analyse de vidéosurveillance IA (PDF)</a>.
+📄 Pour une présentation illustrée plus complète, consultez <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">Présentation du projet EasyAIoT V2.0 (PPT)</a>, ainsi que <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">Plateforme d'analyse de vidéosurveillance IA (PDF)</a>. Pour les opérations métier après déploiement, voir le <a href=".doc/操作手册/README.md" style="color: #3498db; text-decoration: none; font-weight: 600;">manuel d'exploitation de la plateforme</a>.
 </p>
 
 ## 🌟 Réflexions sur le projet
@@ -110,9 +110,75 @@ Les projets IoT intelligents butent le plus souvent sur le « dernier kilomètre
   <li><strong>Docker tout-en-un</strong> : <code>bash RTC/install_linux.sh start</code> lance go2rtc + API de gestion ; host network pour P2P LAN</li>
 </ul>
 
-<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0 8px 0;">
-📖 Voir <a href="RTC/README.md" style="color: #3498db; text-decoration: none; font-weight: 600;">README du module RTC</a>.
+### 🔌 EDGE : Runtime de collecte edge C# — « collecter avec précision, remonter efficacement » sur le terrain industriel
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+Sur les sites industriels et de bâtiment, PLC, compteurs et capteurs sont souvent branchés sur RS-485 ou Ethernet, tandis que la plateforme cloud exige encore une stack d'acquisition séparée — protocoles écrits au cas par cas, chaque changement de configuration nécessitant une visite sur site. Chaînes d'accès longues, exploitation fragmentée, écarts cloud-edge sur les métriques. EasyAIoT ajoute un <strong>module EDGE</strong> dédié (C#) comme <strong>runtime de collecte edge déployable indépendamment</strong> : collecteurs multi-protocoles pluginnables, planification locale, analyse pilotée par configuration et intégration MQTT avec la plateforme cloud EasyAIoT — remontant les points Modbus RTU/TCP, OPC UA et autres vers un modèle d'objet unifié, avec push de configuration cloud et écriture de propriétés exécutés sur site.
 </p>
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0;">
+<strong>Différence avec la « passerelle » de la gestion des appareils :</strong> Dans la gestion des appareils, la passerelle est un type produit/appareil cloud (topologie GATEWAY + sous-appareils SUBSET) pour l'enregistrement, le shadow, la liaison et le downlink. EDGE n'a pas de page appareil dédiée — c'est le processus sur site qui <strong>joue le rôle de cette passerelle</strong> ; les données remontées s'affichent dans la même gestion des appareils. Une autre voie est le <strong>polling cloud-side iot-sink</strong> Modbus/OPC UA (la plateforme doit atteindre les équipements sur site) ; EDGE collecte sur site et ne remonte que via MQTT — adapté à l'isolation OT et au RS-485. Remontée/descente propriétés passerelle, proxy propriétés sous-appareils et push config sont déjà alignés pour servir de passerelle industrielle sur site ; déclaration proactive de topologie, passthrough événements/services sous-appareils, OTA et la surface protocolaire complète de la passerelle sont encore en évolution.
+</p>
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0 8px 0;">
+<strong>Pourquoi C# pour l'acquisition IoT edge ?</strong>
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Affinité terrain industriel</strong> : C# dispose d'un écosystème mature en automatisation, SCADA et supervision — bibliothèques de protocoles et pratiques d'ingénierie riches pour Modbus, OPC UA, communication série, etc. ; faible coût d'adoption pour intégrateurs et ingénieurs automation</li>
+  <li><strong>Typage fort + ingénierie structurée</strong> : mapping de points, analyse de registres et validation de configuration détectés à la compilation — plus stable et testable que les langages script pour maintenir des collecteurs multi-protocoles sur le long terme</li>
+  <li><strong>Concurrence asynchrone sans blocage</strong> : <code>async/await</code> convient au polling multi-appareils et à l'I/O série/réseau concurrent — une passerelle peut planifier des dizaines de sous-appareils sans les goulots d'étranglement de chemins interprétés comme le GIL Python en polling haute fréquence</li>
+  <li><strong>Stabilité de service longue durée</strong> : le runtime .NET convient aux processus 7×24 sur passerelles edge, avec mémoire et GC prévisibles ; injection de dépendances et architecture plugin permettent le hot-swap des collecteurs sans redémarrer tout le site</li>
+  <li><strong>Livrabilité multiplateforme</strong> : le même code C# se publie sur PC industriels Linux x86_64 / ARM64 et boîtiers edge — déploiement monofichier/autonome sans virtualenv Python ni JVM sur site</li>
+  <li><strong>Division claire avec la plateforme cloud</strong> : le edge se concentre sur collecter—analyser—publier ; DEVICE gère modèles d'objet et cycle de vie des appareils — C# ne porte pas la logique métier lourde ni l'inférence IA, reste léger et tourne indépendamment côté bus RS-485 ou sur passerelles peu puissantes</li>
+</ul>
+
+<table style="width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px;">
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50; width: 18%;">Collecteur</td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50;">Protocole / scénario</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>modbus-rtu</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">Modbus RTU (RS485/série) — compteurs, instruments, PLC côté bus</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>modbus-tcp</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">Modbus TCP — équipements industriels Ethernet, variateurs, passerelles</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>opc-ua</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">OPC UA — interconnexion contrôle industriel moderne et systèmes de supervision</td>
+</tr>
+</table>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Architecture de collecte pluginnée</strong> : implémenter <code>ICollector</code> pour étendre de nouveaux protocoles ; le Host gère enregistrement, planification et remontée — logique de collecte découplée du runtime</li>
+  <li><strong>Double canal de configuration</strong> : <code>device-jobs.json</code> local pour fonctionnement hors ligne ; MQTT cloud <code>config/downstream/push</code> peut écraser les tâches de collecte à distance — plus besoin d'envoyer quelqu'un sur site pour changer la config</li>
+  <li><strong>MQTT cloud-edge intégré</strong> : rejoint en tant que GATEWAY plateforme — remontée propriétés passerelle, proxy propriétés sous-appareils, écriture propriétés descendante via EMQX vers DEVICE/<strong>iot-sink</strong> ; création auto des sous-appareils et persistance shadow ; données affichées dans la gestion des appareils</li>
+  <li><strong>Packaging autonome</strong> : <code>pack_linux.sh</code> produit des paquets Linux x86_64 / ARM64 pour PC industriels et passerelles edge — découplé de la stack principale</li>
+  <li><strong>Intégration E2E prête à l'emploi</strong> : <code>bash EDGE/demo/run_e2e.sh</code> valide la chaîne complète — collecte → uplink MQTT → persistance cloud</li>
+</ul>
+
+### 🤖 Assistant IA : co-création en écran partagé IDEA — modifier le code tout en interrogeant architecture et santé
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+La contribution open source et les PoC terrain butent souvent au même endroit : beaucoup de modules, des chaînes longues — éditer exige un environnement local, vérifier la santé demande du SSH, l'architecture signifie fouiller la doc et demander autour. EasyAIoT intègre l'<strong>assistant conversationnel HARNESS</strong> dans l'<strong>IDE cloud IDEA</strong> — espace VS Code complet à gauche, assistant IA en écran partagé à droite ; glissez des fichiers depuis l'explorateur pour les <code>@</code>-mentionner automatiquement, lisez le code tout en posant des questions sur ports, config et santé des services, et raccourcissez la boucle « je ne sais pas → demander → modifier ».
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Co-création IDEA en écran partagé</strong> : la barre d'outils ouvre l'assistant à droite — éditeur et Agent côte à côte ; ou deep-link <code>?file=chemin&harness=1</code> pour ouvrir un fichier et partager l'écran</li>
+  <li><strong>Glisser pour @ auto</strong> : déposez des fichiers de l'explorateur sur le panneau assistant pour les attacher au contexte — moins de chemins à taper, moins de contexte perdu</li>
+  <li><strong>Demander et vérifier</strong> : l'Agent appelle les Tools plateforme pour sonder Gateway / vidéo / IA et pointe config et sources — SSH + compose en une conversation</li>
+  <li><strong>Connaît l'ontologie</strong> : <code>HARNESS/ontology/AGENTS.md</code> intégré et workspace dépôt complet — architecture, ports, API et conventions d'install au même endroit</li>
+  <li><strong>Même sémantique console</strong> : tiroir flottant / « Assistant IA » plein écran partagent les capacités IDEA ; MCP + Cursor Skill réutilisables entre environnements</li>
+  <li><strong>Saut bidirectionnel</strong> : l'assistant peut générer des liens portail via <code>easyaiot_open_in_idea</code> — du Q&amp;R vers un IDE complet où l'on édite et publie</li>
+</ul>
+
+| | | |
+|:---:|:---:|:---:|
+| ![Connexion IDEA](.image/banner/banner1203.png) | ![Espace IDEA](.image/banner/banner1204.png) | ![Développement IDEA](.image/banner/banner1205.png) |
+| ![Dialogue Assistant IA](.image/banner/banner1210.png) | ![Analyse Assistant IA](.image/banner/banner1211.png) | ![Collaboration Assistant IA](.image/banner/banner1212.png) |
 
 ### 🎯 Trois profils matériels, une plateforme
 
@@ -156,6 +222,7 @@ Beaucoup de projets IoT intelligents butent au déploiement : <strong>les foncti
   <li><strong>Cluster fédéré multi-nœuds centraux × multi-nœuds de travail</strong> : Conçu pour les déploiements inter-régionaux, multi-salles et cloud-bord, la plateforme adopte une architecture fédérée « N nœuds centraux + N nœuds de travail » — les nœuds centraux assurent l'orchestration unifiée, les nœuds de travail portent l'exécution calcul et média, avec extension horizontale. Chaque nœud central gère les nœuds de travail de son domaine, avec distribution à distance et déploiement en un clic des capacités de streaming, transcodage audio-vidéo, analyse vidéo, inférence et entraînement de modèles ; plusieurs nœuds centraux peuvent s'interconnecter et se synchroniser. La vue en couloirs du cluster présente intuitivement la topologie « central — travail » et les niveaux de ressources. Tâches algorithmiques, pipelines d'annotation automatique et relais de flux sont planifiés intelligemment selon le rôle des nœuds et les capacités GPU — ingestion massive de flux, inférence à haute concurrence et entraînement distribué coexistent dans un même cluster : « intégration fluide, planification claire, extension ouverte, gouvernance complète »</li>
   <li><strong>Pipeline d'orchestration d'annotation automatique SAM à démarrage zéro</strong> : Conçu pour les scénarios de démarrage à froid sans échantillons annotés ni modèle de détection utilisable, la plateforme intègre la segmentation SAM à vocabulaire ouvert et fournit un pipeline d'annotation sans surveillance en un clic. Selon la stratégie configurée, le système enchaîne automatiquement l'extraction d'images depuis les caméras, l'annotation initiale par invites textuelles, le fine-tuning YOLO déclenché une fois les seuils atteints, l'inférence YOLO à haute vitesse en phase de production avec bascule intelligente vers SAM pour les détections manquées, l'entraînement itératif périodique et l'export automatique des jeux de données — bouclant la chaîne complète « capture — annotation — entraînement — export ». Prend en charge la pause/reprise et la planification élastique sur files locales ou cluster, avec configuration visuelle des stratégies et journaux d'exécution, pour faire émerger une capacité de détection sur mesure à partir de zéro échantillon et zéro modèle — « définir les catégories en mots, laisser le modèle se construire » devient le chemin par défaut pour constituer des jeux de données</li>
   <li><strong>Cluster de calcul élastique à dizaines de milliers de nœuds et pool d'extension horizontale</strong> : Conçu pour les charges de travail IA et vidéo à très grande échelle, la plateforme constitue une base de calcul distribuée cloud-bord-périphérique qui regroupe tâches algorithmiques, relais de flux, services algorithmiques, entraînement et inférence de modèles dans un même cadre d'équilibrage de charge horizontal et d'élasticité. Chaque nouveau serveur intégré en un clic rejoint immédiatement le pool de calcul programmable ; le planificateur répartit automatiquement les tâches selon les niveaux de ressources et la pression métier, permettant une montée en charge linéaire — de quelques centaines à des dizaines de milliers de caméras, d'une machine unique à un cluster de dizaines de milliers de nœuds — sans redéploiement ni réglage manuel. Ingestion massive de flux, inférence à haute concurrence et entraînement distribué coexistent dans un même pool : « extension à la demande, exécution stable, gouvernance maîtrisée »</li>
+  <li><strong>Pilote de stockage distribué (découplage double cluster calcul + stockage)</strong> : Au-delà de l'ancien modèle de montage de répertoires locaux par nœud, de chemins figés et de reconfiguration à chaque montée en charge, la plateforme remplace les pilotes de répertoires locaux par une approche <strong>pilotée par événements de cluster</strong> — disponibilité Export, montage client, bascule maître/esclave et ponts multi-clusters sont perçus et propagés sous forme d'événements ; captures, enregistrements, preuves d'alerte et actifs modèles convergent vers un cluster NFS distribué sans que les couches métier ne gèrent les chemins de montage. Calcul et stockage forment <strong>deux domaines indépendamment extensibles</strong> : le calcul s'appuie pleinement sur la chaîne d'exécution haute vitesse <strong>C++ RUNTIME</strong>, tandis que le stockage construit un pool de clusters NFS extensible horizontalement sans limite — calcul et stockage évoluent selon leurs propres niveaux de charge, sans couplage forcé. Couloirs de cluster, vues topologiques et synchronisation par pont multi-clusters inclus : chaque nouveau nœud rejoint le domaine stockage en un clic, faisant avancer en parallèle « calcul suffisant » et « stockage suffisant » sous ingestion massive de flux — « calcul et stockage séparés, extension indépendante, coordination par événements, gouvernance unifiée, expansion illimitée »</li>
   <li><strong>Visualisation spatiale Tianditu et analyse sur carte</strong> : Intégration avec la carte nationale chinoise Tianditu pour rassembler caméras, alertes et reconnaissance personnes/véhicules sur une seule carte, faisant passer la surveillance de « regarder les flux » à « voir l'ensemble ». Les modules média en streaming et alertes proposent une vue « Distribution cartographique » avec arborescence des appareils pour un focus régional, offrant une visibilité immédiate sur la disposition des points de contrôle et l'état en ligne. Clic sur carte, recherche de lieu et import par lot de coordonnées permettent de géolocaliser rapidement les canaux GB, NVR et caméras directes, afin que chaque flux ait un contexte spatial clair. Les alertes sont automatiquement positionnées via les coordonnées des caméras ; filtres par heure, type d'événement, tâche et étiquettes métier, avec accès aux captures et enregistrements en un clic — pour passer rapidement de « où cela s'est-il produit » à l'action. Combiné aux bibliothèques faciales et de plaques, les correspondances sur plusieurs sites forment des fils spatiaux — <strong>recherche de traces par personne</strong> pour reconstituer trajets et présence dans la zone surveillée ; <strong>recherche de traces par véhicule</strong> pour relier les passages et localiser itinéraires et zones d'arrêt, pour retrouver personnes/véhicules, déployer la patrouille et analyser après incident. Les appareils mobiles supportent aussi la relecture de trajectoires sur une frise chronologique. Basculement libre entre fond vectoriel et imagerie satellite avec ajustement automatique de la vue, pour que les responsables utilisent la carte comme levier de détection, ciblage et coordination</li>
   <li><strong>Déploiement multi-GPU Qwen / DeepSeek</strong> : Prend en charge le déploiement de grands modèles de langage tels que Qwen et DeepSeek en parallèle sur plusieurs GPU. Les ressources GPU peuvent être planifiées de manière flexible au niveau du cluster et des Workers, permettant la mise à l'échelle élastique et l'équilibrage de charge des instances de modèles pour fournir une inférence stable en cas de forte concurrence et de contextes longs</li>
   <li><strong>Compréhension intelligente des grands modèles visuels</strong> : Intégré avec le grand modèle visuel QwenVL3, prend en charge le raisonnement visuel profond et la compréhension sémantique des images vidéo en temps réel, capable d'effectuer une analyse intelligente et une compréhension de scène du contenu des images, fournissant des capacités cognitives visuelles plus riches, réalisant un saut de la perception au niveau des pixels à la compréhension au niveau sémantique</li>
@@ -217,6 +284,7 @@ Beaucoup de projets réduisent l'IoT à un « registre d'appareils + relais de m
   <li><strong>Accès Ethernet industriel Modbus-TCP</strong> : Pour compteurs, PLC, variateurs côté Ethernet, la plateforme intègre une capacité d'acquisition Modbus-TCP maître — configurer les paramètres d'accès et les points de mesure au niveau produit/appareil suffit pour la mise en service ; les lectures alimentent automatiquement l'ombre d'appareil et l'état en ligne, les écritures et le downlink de propriétés sont reliés — les points industriels rejoignent le modèle d'objet IoT, le moteur de règles et les alarmes dans la même boucle, sans outil d'acquisition séparé.</li>
   <li><strong>Accès terrain série Modbus-RTU</strong> : Beaucoup d'instruments restent sur RS-485 ; si seul le passage par passerelle TCP est possible, coûts et points de panne doublent. La plateforme prend en charge l'acquisition Modbus-RTU série maître, adaptée aux ports virtuels et réels — les appareils bus sont aussi intégrés à la gouvernance unifiée et au contrôle montée/descente, comblant le vide « Ethernet inaccessible, série non gérée ».</li>
   <li><strong>Accès interconnectivité industrielle OPC UA</strong> : Pour les scénarios d'interconnexion industrielle moderne et de systèmes de supervision, la plateforme prend en charge l'accès client OPC UA avec configuration d'abonnement/lecture/écriture — les modèles d'appareils complexes peuvent être mappés en propriétés du modèle d'objet plateforme ; acquisition montante et écriture descendante s'intègrent à l'ombre d'appareil, aux chaînes de règles et aux notifications — les actifs OPC UA entrent dans un AIoT « visible, contrôlable, interconnectable ».</li>
+  <li><strong>Runtime de collecte edge EDGE C#</strong> : Module de collecte edge déployable indépendamment pour sites industriels — collecteurs C# pluginnables pour Modbus RTU, Modbus TCP, OPC UA et plus ; acquisition planifiée locale et analyse pilotée par configuration ; intégration MQTT avec DEVICE/<strong>iot-sink</strong> sur la plateforme cloud. Il correspond au rôle GATEWAY dans la gestion des appareils (pas une page appareil séparée) : agrégation sur site, gouvernance dans le cloud ; remontée/descente propriétés passerelle/sous-appareils et push config couverts ; topologie et passthrough événements/services sous-appareils encore en évolution. Packagable pour PC industriels Linux x86_64 / ARM64 et passerelles edge — boucle cloud-edge « précis sur site, gouverné dans le cloud »</li>
   <li><strong>Définition des propriétés du modèle d'objet</strong> : Si écrans, règles et alertes inventent chacun leurs noms de points, ils finissent par ne plus se comprendre. La plateforme fixe d'abord les points reportables/lisibles-écritables, modèles standard ou personnalisés ; brouillon puis publication — écrans, règles et alertes partagent un même jeu de champs ; « ce que l'on peut observer » a une sémantique unifiée, et les retouches dues aux noms divergents disparaissent à la racine</li>
   <li><strong>Définition des services du modèle d'objet</strong> : Si chaque démarrage/arrêt ou reset produit une API ponctuelle, le plan de contrôle se fragmente. La plateforme formalise en contrat les services invocables à distance avec paramètres d'entrée/sortie ; brouillon puis publication — « ce que l'on peut faire à distance » se remplit selon le contrat, sans empiler d'API jetables ; la capacité de contrôle devient réutilisable et auditable</li>
   <li><strong>Définition des événements du modèle d'objet</strong> : Sans accord préalable sur les événements métier remontés, le vocabulaire d'alerte diverge. La plateforme convient d'abord des types d'événements ; après publication du brouillon, ils s'appliquent uniformément — journaux d'événements et déclencheurs de règles partagent la même sémantique ; « ce qui peut arriver » a un langage commun, les alertes ne se contredisent plus</li>
@@ -277,6 +345,36 @@ Beaucoup de projets réduisent l'IoT à un « registre d'appareils + relais de m
   <li><strong>Connexion continue</strong> : Session maintenue automatiquement, moins de reconnexions — le contrôle intelligent cloud-bord-périphérique atteint téléphone et mini-programme</li>
 </ul>
 
+#### 💻 IDEA IDE en ligne
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Développer dans le navigateur</strong> : IDE en ligne style VS Code sur code-server ; clone le dépôt EasyAIoT complet par défaut — les contributeurs éditent, valident au niveau module et ouvrent des PR sans d'abord configurer un environnement local</li>
+  <li><strong>Portail autonome et multi-utilisateurs</strong> : Console d'ops sur <code>:9300</code>, découplée de l'admin WEB ; un espace Docker par personne ; plage de ports 13338–13437 pour plusieurs sessions simultanées ; bille flottante de la console vers le portail</li>
+  <li><strong>Chaîne d'outils six langages alignée sur l'hôte</strong> : <strong>JDK 21</strong>, Node 22, Python, Go, CMake/C++ et .NET 8 préinstallés — lecture, retouches et validations module pour WEB / DEVICE / AI / NODE / RUNTIME / EDGE</li>
+  <li><strong>Co-création IA</strong> : GitHub Copilot préinstallé (connexion avec votre compte GitHub ; la plateforme ne détient jamais les clés) ; sans abonnement Copilot, apportez une clé API compatible OpenAI via Continue ; la barre d'outils ouvre l'assistant HARNESS en écran partagé — glissez des fichiers pour <code>@</code> auto tout en éditant</li>
+  <li><strong>Publication locale</strong> : Suggère les modules d'après le diff du workspace, build et remplacement des conteneurs locaux en un clic — rafraîchir l'instance pour valider, raccourcir le cycle « modifier → voir »</li>
+  <li><strong>OAuth et récupération d'inactivité</strong> : Connexion Gitee / GitHub (peut être obligatoire), un compte par espace ; arrêt auto après 8 h d'inactivité par défaut ; le heartbeat et l'ouverture de l'IDE rafraîchissent l'activité pour éviter le gaspillage de calcul</li>
+  <li><strong>Boucle de contribution</strong> : Lier votre fork → branche → éditer → pousser vers le fork → ouvrir une PR vers l'officiel</li>
+</ul>
+
+#### 🤖 Assistant IA HARNESS
+
+<p style="font-size: 14px; line-height: 1.8; color: #555; margin: 10px 0 12px;">
+Nombreux modules et chaînes longues — vérifier la santé, comprendre l'architecture ou trouver une config impliquent souvent documentation et SSH. HARNESS regroupe connaissance plateforme et sondes live dans un <strong>assistant conversationnel</strong> : demandez et vérifiez depuis le coin inférieur droit de toute page métier, pour raccourcir dépannage et PoC avec moins de dépendance au fournisseur et au savoir tacite.
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Demander et vérifier</strong> : l'Agent appelle les Tools plateforme pour sonder Gateway / vidéo / IA et pointe config et sources — SSH + compose en une conversation</li>
+  <li><strong>Connaît l'ontologie</strong> : <code>HARNESS/ontology/AGENTS.md</code> intégré et workspace dépôt complet — architecture, ports, API et conventions d'install au même endroit</li>
+  <li><strong>Discuter dans la page</strong> : tiroir flottant iframe — pas de changement de page ni perte de contexte sur alertes/appareils ; plein écran « Assistant IA » ou nouvelle fenêtre</li>
+  <li><strong>Co-création IDEA en écran partagé</strong> : la barre d'outils ouvre l'assistant à droite — éditeur et Agent côte à côte ; ou deep-link <code>?file=chemin&harness=1</code></li>
+  <li><strong>Glisser pour @ auto</strong> : déposez des fichiers de l'explorateur sur le panneau assistant pour les attacher au contexte</li>
+  <li><strong>Saut bidirectionnel</strong> : l'Agent peut générer des liens portail via <code>easyaiot_open_in_idea</code> — du Q&amp;R vers un IDE complet ; IDEA pour le code et les PR, HARNESS pour architecture et santé</li>
+  <li><strong>MCP + Cursor Skill</strong> : mêmes capacités <code>easyaiot_*</code> via MCP vers Cursor et autres IDE — ce que la console permet de demander/vérifier, l'environnement dev peut l'invoquer ; Skills réutilisables entre projets</li>
+  <li><strong>Prêt dans tous les profils</strong> : Sidecar <a href="https://github.com/deepseek-ai/deepseek-harness" style="color: #3498db; text-decoration: none; font-weight: 600;">DeepSeek Harness</a> (<code>:3080</code>) ; inclus par défaut en <code>mini / standard / full</code> (<code>EASYAIOT_ENABLE_HARNESS=0</code> pour désactiver) ; endpoints DeepSeek / compatibles OpenAI ; clé dans <code>harness.env</code> ou l'UI</li>
+  <li><strong>Sécurité</strong> : module expérimental ; <code>dsh</code> en Developer Preview ; restreindre l'accès en prod et configurer approbation écriture/Shell ; ne pas committer les clés API</li>
+</ul>
+
 ### 📦 Modèles IA intégrés
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -301,12 +399,11 @@ La plateforme est prête à l'emploi, avec plusieurs modèles pré-entraînés i
 ### 💡 Philosophie technique
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-Nous pensons qu'aucun langage de programmation n'excelle en toute chose, mais grâce à une intégration profonde de cinq langages de programmation, EasyAIoT exploite leurs avantages respectifs pour construire un écosystème technique puissant.
+Nous pensons qu'aucun langage de programmation n'excelle en toute chose. EasyAIoT utilise six langages de programmation en mixte par scénario : Java pour l'architecture de plateforme, Python pour les algorithmes IA, C++ pour l'exécution vidéo, Go pour la passerelle de protocoles, TypeScript pour l'interface de gestion, C# pour l'acquisition industrielle edge — gestion cloud, algorithmes, exécution, protocoles, interface et acquisition sur site chacun à sa place, formant une boucle technique cloud-edge-device complète.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-Java excelle pour construire une architecture de plateforme stable et fiable, mais convient mal à la programmation réseau et à l'IA ; Python excelle en programmation réseau et en algorithmes d'IA, mais bute sur le GIL et le coût multi-processus dès qu’il s’agit d’exécution frame haute densité / basse latence ; C++ excelle pour l'exécution haute performance, mais convient mal à l'architecture de plateforme et à l’orchestration algorithmique — la plateforme fait donc descendre <strong>pull/décodage, inférence, push à cadres et relais multi-canal brut</strong> dans <strong>RUNTIME</strong>, tandis que WEB/VIDEO gardent orchestration et surface métier. Go excelle en réseau à haute concurrence et en implémentation de protocoles, mais convient mal au plan de contrôle plateforme et aux algorithmes d'IA ; TypeScript excelle pour des interactions front-end complexes et des interfaces industrialisées à typage sûr, mais convient mal au calcul backend haute performance et à l'inférence IA. EasyAIoT adopte une architecture hybride cinq-en-un, où chaque langage occupe son terrain de jeu — une plateforme AIoT ambitieuse à réaliser, mais extrêmement simple à utiliser.
-</p>
+Java excelle pour construire une architecture de plateforme stable et fiable, mais convient mal à la programmation réseau et à l'IA ; Python excelle en programmation réseau et en algorithmes d'IA, mais bute sur le GIL et le coût multi-processus dès qu'il s'agit d'exécution frame haute densité / basse latence ; C++ excelle pour l'exécution haute performance, mais convient mal à l'architecture de plateforme et à l'orchestration algorithmique ; Go excelle en réseau à haute concurrence et en implémentation de protocoles, mais convient mal au plan de contrôle plateforme et aux algorithmes d'IA ; TypeScript excelle pour des interactions front-end complexes et des interfaces industrialisées à typage sûr, mais convient mal au calcul backend haute performance et à l'inférence IA ; C# excelle en acquisition de protocoles industriels et en orchestration de runtime edge, avec typage fort garantissant un mapping de points et un parsing de protocoles fiables, <code>async/await</code> supportant le polling concurrent multi-appareils, publication cross-platform .NET adaptée aux sites industriels x86/ARM, écosystème industriel/SCADA mature et intégrateurs qui montent vite en compétence, mais convient mal au cœur métier cloud et aux algorithmes d'IA. Six langages jouent chacun à ses forces et évitent leurs faiblesses — une réalisation ambitieuse, mais une utilisation extrêmement simple.</p>
 
 ![Architecture de la plateforme EasyAIoT.jpg](.image/iframe2.jpg)
 
@@ -325,7 +422,7 @@ En s'appuyant de manière innovante sur les grands modèles, nous construisons u
 ### 🏗️ Caractéristiques de l'architecture du projet
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-EasyAIoT n'est pas vraiment un seul projet, mais plusieurs sous-projets déployables indépendamment (WEB, DEVICE, VIDEO, RTC, AI, etc.).
+EasyAIoT n'est pas vraiment un seul projet, mais plusieurs sous-projets déployables indépendamment (WEB, DEVICE, EDGE, VIDEO, RTC, AI, etc.).
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -363,6 +460,7 @@ EasyAIoT répond activement à la stratégie de localisation, prenant pleinement
 <h4 style="margin-top: 0; color: white; font-size: 18px;">📱 Support côté edge (périphérie)</h4>
 <ul style="font-size: 14px; line-height: 1.8; margin: 10px 0; padding-left: 20px;">
   <li>Les cartes de développement ordinaires peuvent assurer la veille intelligente sur site</li>
+  <li><strong>EDGE</strong> collecte edge C# déployable indépendamment sur PC industriels et sites RS485</li>
   <li>Déploiement léger sur le terrain, sans empiler de lourds stockages à chaque site</li>
   <li>Intelligence prête à l'emploi, cycle de mise en service edge raccourci</li>
   <li>Puissance de calcul déployée point par point, alertes et preuves agrégées automatiquement vers le cloud</li>
@@ -388,7 +486,7 @@ EasyAIoT répond activement à la stratégie de localisation, prenant pleinement
 ## 🧩 Structure du projet
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT comprend notamment WEB, APP, DEVICE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL et SITE, avec COMPILE pour le packaging et la livraison multiplateformes :
+EasyAIoT comprend notamment WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL, IDEA, HARNESS et SITE, avec COMPILE pour le packaging et la livraison multiplateformes :
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
@@ -444,6 +542,20 @@ EasyAIoT comprend notamment WEB, APP, DEVICE, NODE, VIDEO, RTC, AI, RUNTIME, VIS
     <li><strong>Collecte de données</strong> : Collecte, stockage, requête et analyse des données des appareils.</li>
     <li><strong>Ordonnancement des nœuds</strong> : Gestion des nœuds de calcul/média, tests de connectivité, ordonnancement des charges de travail et allocation du pool de nœuds média.</li>
     <li><strong>Backend de visualisation</strong> : Gestion unifiée des projets grands écrans/synoptiques de processus, modèles, ressources, sources de données et déploiements de services — métadonnées de projet et capacités de publication pour l'éditeur VISUALIZE et les synoptiques de processus Web.</li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>Module EDGE</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>Pourquoi C#</strong> : Mapping de points typé fort, polling concurrent multi-appareils asynchrone, stabilité 7×24 longue durée, publication cross-platform Linux x86/ARM autonome — écosystème industriel mature, intégrateurs qui montent vite</li>
+    <li><strong>Runtime de collecte edge C#</strong> : Service de collecte edge déployable indépendamment — collecteurs pluginnables + planification locale + analyse pilotée par configuration</li>
+    <li><strong>Collecteurs multi-protocoles</strong> : Collecteurs intégrés Modbus RTU (RS485/série), Modbus TCP, OPC UA ; extension via plugins <code>ICollector</code> par tâche</li>
+    <li><strong>Intégration MQTT cloud-edge</strong> : rejoint en tant que GATEWAY de la gestion des appareils — remontée propriétés, proxy propriétés sous-appareils, push config cloud (<code>config/downstream/push</code>) et écriture propriétés descendante — intégré avec DEVICE/<strong>iot-sink</strong> ; données dans la même gestion des appareils, complémentaire au polling industriel cloud-side (plateforme accède directement aux équipements sur site) — EDGE convient à l'isolation OT et aux sites RS-485</li>
+    <li><strong>Double canal de configuration</strong> : <code>device-jobs.json</code> local et push config MQTT cloud pilotent tous deux les tâches de collecte</li>
+    <li><strong>Packaging Linux</strong> : <code>pack_linux.sh</code> produit des paquets de déploiement autonomes x86_64 / ARM64 pour PC industriels et passerelles edge</li>
+    <li><strong>Intégration prête à l'emploi</strong> : Démo E2E intégrée pour valider collecte → uplink MQTT → persistance cloud ; intégration plateforme cloud incluse</li>
   </ul>
 </td>
 </tr>
@@ -552,6 +664,26 @@ EasyAIoT comprend notamment WEB, APP, DEVICE, NODE, VIDEO, RTC, AI, RUNTIME, VIS
 </td>
 </tr>
 <tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>Module IDEA</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>IDE communautaire en ligne</strong> : Ouvrez un espace VS Code dans le navigateur, clone le dépôt complet par défaut ; un espace Docker par personne, publication locale et récupération d'inactivité — passer de « configurer d'abord l'environnement » à « ouvrir et éditer »</li>
+    <li><strong>Assistant IA en écran partagé</strong> : barre d'outils ouvre HARNESS à droite ; glisser pour <code>@</code> auto ; deep-link <code>?file=&harness=1</code></li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>Module HARNESS</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>Assistant conversationnel</strong> : santé, architecture, localisation — dépannage et PoC plus courts, moins de dépendance fournisseur</li>
+    <li><strong>Tiroir flottant in-page</strong> : discuter sans quitter les pages métier ; inclus par défaut en <code>mini / standard / full</code></li>
+    <li><strong>Liaison IDEA en écran partagé</strong> : assistant à droite de l'éditeur ; glisser-<code>@</code>, deep links et saut bidirectionnel</li>
+    <li><strong>MCP / Skill</strong> : console et IDE partagent la sémantique plateforme ; Skills réutilisables entre projets</li>
+  </ul>
+</td>
+</tr>
+<tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>Packaging COMPILE</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
@@ -623,7 +755,7 @@ Nous construisons un réseau efficace de connexion et de contrôle des appareils
 La plateforme prend en charge les tâches algorithmiques en temps réel, de capture et de patrouille : les trois peuvent utiliser par défaut la <strong>couche d’exécution haute vitesse RUNTIME</strong> (<code>executor=cpp</code>) — binaire natif pour pull longue durée, décodage, inférence YOLO et callbacks ; temps réel avec <strong>push de flux AI à cadres par défaut</strong> ; capture Cron ; patrouille multi-flux ; le relais peut aussi emprunter le même chemin haute performance pour un mur brut économe. Face au backend Python de compatibilité, RUNTIME tient mieux la densité de canaux et la basse latence. Alertes et heartbeats reviennent à VIDEO. La gestion des tâches garde extraction/tri flexibles ; l’inférence cluster des services de modèles assure réponse millisecondes et haute disponibilité. Deux stratégies de surveillance (complète / partielle) permettent des règles précises par périodes.
 </p>
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 10px 0;">
-Concernant la gestion des appareils IoT, EasyAIoT fournit des capacités complètes de gestion du cycle de vie des appareils, prenant en charge plusieurs protocoles IoT et industriels (MQTT, TCP, HTTP, Modbus-TCP, Modbus-RTU, OPC UA), permettant une connexion rapide, une authentification sécurisée, une surveillance en temps réel et un contrôle intelligent des appareils. Le moteur de règles permet un flux et un traitement intelligents des données des appareils. Combiné aux capacités d'IA pour une analyse approfondie des données des appareils, il réalise une automatisation complète du processus allant de la connexion des appareils, la collecte de données, l'analyse intelligente à l'exécution des décisions, atteignant véritablement l'interconnexion et le contrôle intelligent de toutes choses.
+Concernant la gestion des appareils IoT, EasyAIoT fournit des capacités complètes de gestion du cycle de vie des appareils, prenant en charge plusieurs protocoles IoT et industriels (MQTT, TCP, HTTP, Modbus-TCP, Modbus-RTU, OPC UA). Les passerelles dans la gestion des appareils sont une topologie GATEWAY / sous-appareils cloud-side ; le runtime de collecte edge <strong>EDGE</strong> C# joue ce rôle de passerelle sur site, prenant en charge l'acquisition de protocoles industriels et l'intégration MQTT cloud-edge, les données revenant dans la même gestion des appareils — permettant une connexion rapide, une authentification sécurisée, une surveillance en temps réel et un contrôle intelligent. Le moteur de règles permet un flux et un traitement intelligents des données des appareils. Combiné aux capacités d'IA pour une analyse approfondie des données des appareils, il réalise une automatisation complète du processus allant de la connexion des appareils, la collecte de données, l'analyse intelligente à l'exécution des décisions, atteignant véritablement l'interconnexion et le contrôle intelligent de toutes choses.
 </p>
 </div>
 
@@ -639,6 +771,20 @@ EasyAIoT est un projet d'apprentissage open source, sans lien avec des activité
 - [Déploiement image macOS](.doc/部署文档/平台macOS部署文档_fr.md) — Pull one-click d'images préconstruites (Docker Desktop)
 - [Déploiement image Windows](.doc/部署文档/平台Windows部署文档_fr.md) — Entrée recommandée `install_windows.ps1`
 - [Bonnes pratiques de déploiement](.doc/部署文档/部署最佳实践_fr.md) — Profils, prérequis, déploiement one-click (dont CentOS **7–9** / **CentOS ARM** / **Kylin (麒麟) / openEuler (欧拉)**), dépannage et production
+
+## 📘 Manuel d'exploitation
+
+Pour la livraison, la veille opérationnelle et les opérations métier : organisé par **chaînes d'opération** (objectif → prérequis → étapes → critères d'acceptation). La plateforme est supposée déjà déployée et disponible. (Contenu actuellement en chinois simplifié.)
+
+- [Manuel d'exploitation (sommaire)](.doc/操作手册/README.md) — Lecture, boucle courte et index
+- [Vue d'ensemble des chaînes](.doc/操作手册/00-操作链总览.md) — Carte globale, menus, checklist PoC
+- [Connexion et préparation](.doc/操作手册/01-登录与基础准备.md) — Comptes, organisation, droits, notifications
+- [Accès des équipements vidéo](.doc/操作手册/02-视频设备接入.md) — ONVIF / NVR / GB28181 / RTC / DJI → prévisualisation et push
+- [Boucle des tâches d'algorithme IA](.doc/操作手册/03-AI算法任务闭环.md) — Annotation/modèles → tâches → alertes
+- [Accès des équipements IoT](.doc/操作手册/04-物联网设备接入.md) — Produit / modèle → appareils → EDGE / acquisition industrielle
+- [Alertes, notifications et intégrations](.doc/操作手册/05-告警通知与对外联动.md) — Traitement des alertes, notifications, TRANSFORM
+- [Tableaux de visualisation](.doc/操作手册/06-可视化大屏.md) — Édition, publication et diffusion des écrans
+- [Veille mobile APP](.doc/操作手册/07-APP移动值守.md) — Correspondance des capacités APP / WEB
 
 ## 🎮 Environnement de démonstration
 
@@ -691,15 +837,24 @@ EasyAIoT est un projet d'apprentissage open source, sans lien avec des activité
 | ![Aperçu](.image/banner/banner1104.png) | ![Accès](.image/banner/banner1105.png) | ![NVR](.image/banner/banner1106.png) |
 | ![Vue live](.image/banner/banner1183.jpg) | ![Carte](.image/banner/banner1184.jpg) |  |
 
+#### 🤖 Assistant IA
+
+| | | |
+|:---:|:---:|:---:|
+| ![Connexion IDEA](.image/banner/banner1203.png) | ![Espace IDEA](.image/banner/banner1204.png) | ![Développement IDEA](.image/banner/banner1205.png) |
+| ![Dialogue Assistant IA](.image/banner/banner1210.png) | ![Analyse Assistant IA](.image/banner/banner1211.png) | ![Collaboration Assistant IA](.image/banner/banner1212.png) |
+
 #### 🧠 Modèles IA
 
 | | | |
 |:---:|:---:|:---:|
+| ![Sync multi-clusters](.image/banner/banner1200.png) | ![Topologie cluster NFS](.image/banner/banner1198.png) | ![Gestion cluster NFS](.image/banner/banner1197.png) |
+| ![Gestion des nœuds](.image/banner/banner1199.png) | ![Répertoire fichiers NFS](.image/banner/banner1201.png) | ![Navigation répertoire NFS](.image/banner/banner1202.png) |
 | ![Qwen](.image/banner/banner1093.jpg) | ![Modèle vision](.image/banner/banner1094.jpg) | ![Liste](.image/banner/banner1099.png) |
 | ![Configuration](.image/banner/banner1100.png) | ![Détails](.image/banner/banner1101.png) | ![Appel](.image/banner/banner1102.png) |
 | ![Entraînement](.image/banner/banner1019.jpg) | ![Tâche](.image/banner/banner1020.jpg) | ![Liste](.image/banner/banner1023.jpg) |
 | ![Progression](.image/banner/banner1024.jpg) | ![Paramètres](.image/banner/banner1017.jpg) | ![Évaluation](.image/banner/banner1018.jpg) |
-| ![Détails](.image/banner/banner1021.jpg) | ![Journaux](.image/banner/banner1022.jpg) | ![Gestion](.image/banner/banner1097.png) |
+| ![Détails](.image/banner/banner1021.png) | ![Journaux](.image/banner/banner1022.jpg) | ![Gestion](.image/banner/banner1097.png) |
 | ![Dépôt](.image/banner/banner1098.png) | ![Version](.image/banner/banner1039.jpg) | ![Actifs](.image/banner/banner1061.jpg) |
 | ![Inférence](.image/banner/banner1040.jpg) | ![Configuration](.image/banner/banner1042.jpg) | ![Résultats](.image/banner/banner1043.jpg) |
 | ![En ligne](.image/banner/banner1044.jpg) | ![Lot](.image/banner/banner1047.jpg) | ![Surveillance](.image/banner/banner1048.jpg) |
@@ -737,7 +892,8 @@ EasyAIoT est un projet d'apprentissage open source, sans lien avec des activité
 | ![Statistiques](.image/banner/banner1176.jpg) | ![Vue d'ensemble](.image/banner/banner1177.jpg) | ![Tableau de bord](.image/banner/banner1178.jpg) |
 | ![Produit](.image/banner/banner1006.jpg) | ![Appareil](.image/banner/banner1009.jpg) | ![OTA](.image/banner/banner1179.jpg) |
 | ![Firmware](.image/banner/banner1180.jpg) | ![Tâche](.image/banner/banner1181.jpg) | ![Progression](.image/banner/banner1182.jpg) |
-| ![Règles](.image/banner/banner1013.jpg) | ![Orchestration](.image/banner/banner1014.png) |  |
+| ![Règles](.image/banner/banner1013.jpg) | ![Orchestration](.image/banner/banner1014.png) | ![Transfert](.image/banner/banner1206.png) |
+| ![Exécution](.image/banner/banner1209.png) | ![Destination](.image/banner/banner1207.png) | ![Livraison](.image/banner/banner1208.png) |
 
 #### 🖥️ Cluster
 

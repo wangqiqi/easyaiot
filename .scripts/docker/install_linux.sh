@@ -15,7 +15,7 @@
 #   status     - 查看所有服务状态
 #   logs       - 查看服务日志
 #   build           - 重新构建所有镜像（各模块本地构建）
-#   build-runtime [模块] - 构建/推送运行时镜像到远程仓库（推送成功后删除本地镜像；可选 DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）
+#   build-runtime [模块] - 构建/推送运行时镜像到远程仓库（推送成功后删除本地镜像；可选 HARNESS|IDEA|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）
 #   pull            - 从远程仓库拉取预构建运行时镜像（等同 runtime_image.sh pull）
 #   clean      - 清理所有容器和镜像
 #   clean-build-runtime - 清理 build-runtime 构建产物（先停业务服务，再删运行时镜像/构建缓存；保留跨架构基础镜像；不停中间件）
@@ -23,11 +23,14 @@
 #   verify     - 验证所有服务是否启动成功
 #   verify-alert - 告警事件面验收（共享盘挂载 + MQTT→iot-sink→入库）
 #   verify-dvr   - DVR/NFS 链路验收（NFS 写盘 → sink → MinIO）
-#   ceph|verify-ceph - 节点 Ceph/共享媒体：list|status|probe|verify（告警图+录像目录）
+#   nfs|verify-nfs|ceph|verify-ceph - 节点 NFS 共享媒体：list|status|probe|verify（告警图+录像目录）
 #   check      - 检查 Docker 和 Docker Compose 安装状态
 #   profile    - 显示当前部署形态与服务范围
 #   site [子命令] - 官方网站 SITE 独立部署
-#   menu       - 打开两层交互引导（同无参数）
+#   runtime|runtime-atomic - RUNTIME 原子模式（只装计算节点执行器，需 VIDEO_BASE_URL）
+#   build-runtime-cpp [target] - RUNTIME C++ 离线包矩阵构建（容器内按 OS 编译，与 COMPILE 对齐）
+#   preflight-runtime-cpp [--node N] - RUNTIME 分发前预检（缺包时提示 export 命令）
+#   export-runtime-cpp <os_family> - 单 OS 导出（如 openeuler22 / kylin10）
 #   diagnose       - 问题分析定位（进入【分析】子菜单）
 #   analyze-logs   - 多模块日志合并分析（各模块约 500 行，带分割线）
 #   analyze-disk   - 项目关键目录磁盘占用分析
@@ -35,7 +38,7 @@
 # 部署形态（EASYAIOT_DEPLOY_PROFILE）：
 #   mini(1)     - 4G：iot-gateway+iot-sink+VIDEO/AI/RTC/WEB + 精简中间件（无 TDengine/可视化/iot-node 等）
 #   standard(2) - 16G：不含 TDengine/iot-device/iot-tdengine/NodeRED/iot-visualize（含 EMQX）
-#   full(3)     - 全量（默认，约 20G）；含 iot-visualize/VISUALIZE、TRANSFORM；启动后自动拉起工业协议演示（Modbus TCP/RTU + OPC UA）；PANEL 全形态启用
+#   full(3)     - 全量（默认，约 20G）；含 iot-visualize/VISUALIZE、TRANSFORM；启动后自动拉起工业协议演示
 # ============================================
 
 set -e
@@ -68,6 +71,11 @@ source "${SCRIPT_DIR}/diagnose_tools.sh"
 # shellcheck source=node/ensure_platform_agent_invoke.sh
 source "${PROJECT_ROOT}/.scripts/node/ensure_platform_agent_invoke.sh"
 
+# shellcheck source=module_update_helpers.sh
+source "${SCRIPT_DIR}/module_update_helpers.sh"
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/runtime_cpp_bundle_common.sh"
+
 _ensure_platform_agent_info() { print_info "$1"; }
 _ensure_platform_agent_ok() { print_success "$1"; }
 _ensure_platform_agent_warn() { print_warning "$1"; }
@@ -84,6 +92,7 @@ ensure_platform_agent_after_stack() {
 ensure_mqtt_demo_after_stack() {
     local demo_dir="${PROJECT_ROOT}/.scripts/mqtt-demo"
     local starter="${demo_dir}/start_mqtt_demo.sh"
+    local ensure_paho="${demo_dir}/ensure_paho_ready.sh"
     if [ "${EASYAIOT_ENABLE_MQTT_DEMO:-1}" = "0" ]; then
         print_info "跳过 mqtt-demo 自动启动（EASYAIOT_ENABLE_MQTT_DEMO=0）"
         return 0
@@ -93,17 +102,40 @@ ensure_mqtt_demo_after_stack() {
         return 0
     fi
     if [ ! -x "$starter" ] && [ -f "$starter" ]; then
-        chmod +x "$starter" "${demo_dir}/stop_mqtt_demo.sh" 2>/dev/null || true
+        chmod +x "$starter" "${demo_dir}/stop_mqtt_demo.sh" "$ensure_paho" 2>/dev/null || true
     fi
     if [ ! -f "$starter" ]; then
         print_warning "未找到 ${starter}，跳过 mqtt-demo"
         return 0
+    fi
+    # 兼容旧版 start 脚本：先准备 paho（vendor / venv / pip），并导出到当前环境
+    if [ -f "$ensure_paho" ]; then
+        chmod +x "$ensure_paho" 2>/dev/null || true
+        bash "$ensure_paho" >/dev/null 2>&1 || true
+        # shellcheck disable=SC1090
+        eval "$(bash "$ensure_paho" print-env 2>/dev/null)" || true
+        if [ -d "${demo_dir}/vendor/paho" ]; then
+            export PYTHONPATH="${demo_dir}/vendor${PYTHONPATH:+:$PYTHONPATH}"
+        fi
+        if [ -x "${demo_dir}/.venv/bin/python" ]; then
+            export PATH="${demo_dir}/.venv/bin:${PATH}"
+            export MQTT_DEMO_PYTHON="${demo_dir}/.venv/bin/python"
+        fi
+    elif [ -d "${demo_dir}/vendor/paho" ]; then
+        export PYTHONPATH="${demo_dir}/vendor${PYTHONPATH:+:$PYTHONPATH}"
+    else
+        # 无 vendor 的旧目录：尽量系统 pip 装上，让旧 start 脚本能 import
+        python3 -m pip install --user -q paho-mqtt >/dev/null 2>&1 \
+            || python3 -m pip install --break-system-packages -q paho-mqtt >/dev/null 2>&1 \
+            || python3 -m pip install -q paho-mqtt >/dev/null 2>&1 \
+            || true
     fi
     print_section "启动 MQTT 演示设备（01/02/03 并行）"
     if bash "$starter"; then
         print_success "mqtt-demo 已启动（日志: ${demo_dir}/run/logs/）"
     else
         print_warning "mqtt-demo 启动未完全成功，可稍后手动: bash ${starter}"
+        print_info "若报缺少 paho-mqtt，可执行: python3 -m pip install --break-system-packages paho-mqtt"
     fi
 }
 
@@ -161,8 +193,10 @@ echo "命令: $*" >> "$LOG_FILE"
 echo "=========================================" >> "$LOG_FILE"
 echo "" >> "$LOG_FILE"
 
-# 模块列表（按依赖顺序）
+# 模块列表（按依赖顺序：HARNESS 先于 IDEA；任一模块失败则跳过并继续后续模块）
 MODULES=(
+    "HARNESS"          # DeepSeek Harness AI Agent（IDEA 分屏依赖，须优先就绪）
+    "IDEA"             # 社区贡献在线 IDE
     ".scripts/docker"  # 基础服务（Nacos、PostgreSQL、Redis等）
     "DEVICE"           # Device服务（网关和微服务）
     "AI"               # AI服务
@@ -175,27 +209,39 @@ MODULES=(
     "PANEL"            # 运维控制台：源码/Docker 可装；安装包本身即为 PANEL，部署默认跳过
 )
 
+# 编排前置模块（仅控制启动顺序；失败不再中止后续模块）
+is_bootstrap_module() {
+    case "$1" in
+        HARNESS|IDEA) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
 # 模块名称映射
 declare -A MODULE_NAMES
+MODULE_NAMES["IDEA"]="IDEA在线IDE"
 MODULE_NAMES[".scripts/docker"]="基础服务"
 MODULE_NAMES["DEVICE"]="Device服务"
 MODULE_NAMES["AI"]="AI服务"
 MODULE_NAMES["RTC"]="RTC服务"
 MODULE_NAMES["VIDEO"]="Video服务"
 MODULE_NAMES["WEB"]="Web前端服务"
+MODULE_NAMES["HARNESS"]="HARNESS AI助手"
 MODULE_NAMES["APP"]="App移动端H5"
 MODULE_NAMES["VISUALIZE"]="可视化编辑器"
-MODULE_NAMES["TRANSFORM"]="系统对接"
+MODULE_NAMES["TRANSFORM"]="数据转发"
 MODULE_NAMES["PANEL"]="运维控制台"
 
 # 模块端口映射
 declare -A MODULE_PORTS
+MODULE_PORTS["IDEA"]="9300"
 MODULE_PORTS[".scripts/docker"]="8848"  # Nacos端口
 MODULE_PORTS["DEVICE"]="48080"           # Gateway端口
 MODULE_PORTS["AI"]="5000"
 MODULE_PORTS["RTC"]="6100"
 MODULE_PORTS["VIDEO"]="6000"
 MODULE_PORTS["WEB"]="8888"
+MODULE_PORTS["HARNESS"]="3080"
 MODULE_PORTS["APP"]="9010"
 MODULE_PORTS["VISUALIZE"]="8002"
 MODULE_PORTS["TRANSFORM"]="48096"
@@ -203,12 +249,14 @@ MODULE_PORTS["PANEL"]="9200"
 
 # 模块健康检查端点
 declare -A MODULE_HEALTH_ENDPOINTS
+MODULE_HEALTH_ENDPOINTS["IDEA"]="/health"
 MODULE_HEALTH_ENDPOINTS[".scripts/docker"]="/nacos/actuator/health"
 MODULE_HEALTH_ENDPOINTS["DEVICE"]="/actuator/health"  # Gateway健康检查
 MODULE_HEALTH_ENDPOINTS["AI"]="/actuator/health"
 MODULE_HEALTH_ENDPOINTS["RTC"]="/actuator/health"
 MODULE_HEALTH_ENDPOINTS["VIDEO"]="/actuator/health"
 MODULE_HEALTH_ENDPOINTS["WEB"]="/health"
+MODULE_HEALTH_ENDPOINTS["HARNESS"]="/"
 MODULE_HEALTH_ENDPOINTS["APP"]="/health"
 MODULE_HEALTH_ENDPOINTS["VISUALIZE"]="/health"
 MODULE_HEALTH_ENDPOINTS["TRANSFORM"]="/actuator/health"
@@ -530,8 +578,28 @@ source "${SCRIPT_DIR}/docker_compose_bundled.sh"
 
 # 检查 Docker 权限
 check_docker_permission() {
-    if ! docker info &> /dev/null; then
-        local error_msg=$(docker info 2>&1)
+    local _info_out=""
+    # docker info 在 daemon/NFS 异常时可能无限挂起，加超时避免 update 无输出卡死
+    if command -v timeout >/dev/null 2>&1; then
+        if ! _info_out=$(timeout 20 docker info 2>&1); then
+            local error_msg="$_info_out"
+            if echo "$error_msg" | grep -qi "permission denied\|cannot connect"; then
+                print_error "没有权限访问 Docker daemon（执行: sudo usermod -aG docker \$USER 后重新登录，或用 sudo 运行此脚本）"
+            elif echo "$error_msg" | grep -qi "Is the docker daemon running"; then
+                print_error "Docker daemon 未运行（执行: sudo systemctl start docker）"
+                if systemctl is-failed docker.service &> /dev/null 2>&1; then
+                    print_info "若启动失败，运行诊断: sudo .scripts/docker/diagnose_docker_systemd.sh diagnose"
+                fi
+            elif [ -z "$error_msg" ] || echo "$error_msg" | grep -qiE 'timeout|terminated'; then
+                print_error "Docker daemon 响应超时（20s），请检查: systemctl status docker; journalctl -u docker -n 50"
+            else
+                print_error "无法连接 Docker daemon: $error_msg"
+            fi
+            exit 1
+        fi
+    elif ! docker info &> /dev/null; then
+        local error_msg
+        error_msg=$(docker info 2>&1)
         
         if echo "$error_msg" | grep -qi "permission denied\|cannot connect"; then
             print_error "没有权限访问 Docker daemon（执行: sudo usermod -aG docker \$USER 后重新登录，或用 sudo 运行此脚本）"
@@ -820,9 +888,17 @@ execute_module_command() {
             print_info "未检测到 TRANSFORM 目录，跳过系统对接部署"
             return 0
         fi
+        if [ "$module" = "HARNESS" ]; then
+            print_error "未检测到 HARNESS 目录，无法部署 AI 助手"
+            return 1
+        fi
         if [ "$module" = "PANEL" ]; then
             print_info "跳过运维控制台（PANEL）：$(panel_skip_deploy_reason)（runtime 无 PANEL 目录）"
             return 0
+        fi
+        if [ "$module" = "IDEA" ]; then
+            print_error "未检测到 IDEA 目录，无法部署在线 IDE"
+            return 1
         fi
         print_warning "模块 $module 不存在，跳过"
         return 1
@@ -834,9 +910,17 @@ execute_module_command() {
             print_info "未检测到 TRANSFORM/install_linux.sh，跳过系统对接部署"
             return 0
         fi
+        if [ "$module" = "HARNESS" ]; then
+            print_error "未检测到 HARNESS/install_linux.sh，无法部署 AI 助手"
+            return 1
+        fi
         if [ "$module" = "PANEL" ]; then
             print_info "跳过运维控制台（PANEL）：$(panel_skip_deploy_reason)（无 install_linux.sh）"
             return 0
+        fi
+        if [ "$module" = "IDEA" ]; then
+            print_error "未检测到 IDEA/install_linux.sh，无法部署在线 IDE"
+            return 1
         fi
         print_warning "模块 $module 没有 $install_file 文件，跳过"
         return 1
@@ -978,8 +1062,6 @@ install_linux() {
     total_count=$(_count_installable_modules)
     local -a failed_modules=()
     local -a succeeded_modules=()
-    local _n=0 _m=$(( (total_count + 1) / 2 ))
-    [ "$_m" -lt 1 ] && _m=1
     
     for module in "${MODULES[@]}"; do
         if ! module_enabled_for_deploy_profile "$module"; then
@@ -1015,12 +1097,12 @@ install_linux() {
                 wait_for_device_gateway || print_warning "iot-gateway 未就绪，WEB 服务 /dev-api/ 接口可能返回 503（待 gateway 就绪后重启 WEB 即可）"
             fi
         else
-            print_error "${MODULE_NAMES[$module]} 安装失败"
+            print_error "${MODULE_NAMES[$module]} 安装失败，已跳过并继续后续模块"
+            if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+                print_error "日志末尾 (${LOG_FILE}):"
+                tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+            fi
             failed_modules+=("${MODULE_NAMES[$module]}")
-        fi
-        _n=$((_n + 1))
-        if [ "$_n" -eq "$_m" ]; then
-            _fs_align || exit 1
         fi
         echo ""
     done
@@ -1068,6 +1150,16 @@ install_linux() {
                     print_info "  - Web前端服务：检查 pnpm install/build 和 nginx 镜像构建"
                     print_info "    docker images | grep web-service"
                     print_info "    cat WEB/docker-build-logs/pnpm-build.log | tail -50"
+                    ;;
+                "IDEA在线IDE")
+                    print_info "  - IDEA：检查 idea-workspace / idea-portal 镜像构建与 docker.sock 挂载"
+                    print_info "    docker images | grep idea"
+                    print_info "    bash IDEA/install.sh status"
+                    ;;
+                "HARNESS AI助手")
+                    print_info "  - HARNESS：检查 easyaiot/harness 镜像与 :3080 端口"
+                    print_info "    docker images | grep harness"
+                    print_info "    bash HARNESS/install.sh status"
                     ;;
             esac
         done
@@ -1321,7 +1413,7 @@ wait_for_device_gateway() {
 }
 
 # 业务模块清单（MODULES 去掉基础服务，并按部署形态过滤），结果写入全局数组 BIZ_MODULES
-# PANEL 纳入启停/更新；stop_runtime_modules 单独排除（build-runtime 清理不关控制台）
+# PANEL/IDEA 纳入启停/更新；stop_runtime_modules（clean-build-runtime）一并停止以释放镜像
 collect_biz_modules() {
     ensure_deploy_profile
     BIZ_MODULES=()
@@ -1377,12 +1469,30 @@ start_all() {
     configure_docker_mirror
     prepare_runtime_environment
     create_network
+
+    local module
+    for module in HARNESS IDEA; do
+        if module_enabled_for_deploy_profile "$module"; then
+            print_section "启动 ${MODULE_NAMES[$module]}"
+            if ! execute_module_command "$module" "start"; then
+                print_error "${MODULE_NAMES[$module]} 启动失败，已跳过并继续后续模块"
+                if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+                    print_error "日志末尾 (${LOG_FILE}):"
+                    tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+                fi
+            fi
+            echo ""
+        fi
+    done
     
-    # 先启动基础服务（.scripts/docker）
+    # 再启动基础服务（.scripts/docker）
     print_section "启动基础服务"
     if ! execute_module_command ".scripts/docker" "start"; then
-        print_error "基础服务启动失败，中止后续模块启动"
-        return 1
+        print_error "基础服务启动失败，已跳过并继续后续模块"
+        if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+            print_error "日志末尾 (${LOG_FILE}):"
+            tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+        fi
     fi
     echo ""
 
@@ -1393,11 +1503,19 @@ start_all() {
     # 再启动其他服务。DEVICE/AI/RTC/VIDEO/WEB 启动期互不依赖（各自只连基础服务），
     # 默认并行启动（仅 compose up，无构建负载）；PARALLEL_MODULES=false 可回退串行。
     collect_biz_modules
+    local -a start_modules=()
+    local module
+    for module in "${BIZ_MODULES[@]}"; do
+        is_bootstrap_module "$module" && continue
+        start_modules+=("$module")
+    done
     if [ "${PARALLEL_MODULES:-true}" = "true" ]; then
-        print_info "并行启动业务模块: ${BIZ_MODULES[*]}（PARALLEL_MODULES=false 可回退串行）"
-        run_modules_parallel "start" "${BIZ_MODULES[@]}" || print_warning "部分模块启动失败，详见上方日志"
+        if [ ${#start_modules[@]} -gt 0 ]; then
+            print_info "并行启动业务模块: ${start_modules[*]}（PARALLEL_MODULES=false 可回退串行）"
+            run_modules_parallel "start" "${start_modules[@]}" || print_warning "部分模块启动失败，详见上方日志"
+        fi
     else
-        for module in "${BIZ_MODULES[@]}"; do
+        for module in "${start_modules[@]}"; do
             execute_module_command "$module" "start" || print_warning "${MODULE_NAMES[$module]} 启动失败，继续其余模块"
             # DEVICE 启动后等待 gateway 就绪，确保后续 WEB 启动时 /dev-api/ 可达
             if [ "$module" = "DEVICE" ]; then
@@ -1448,14 +1566,15 @@ stop_runtime_modules() {
     local idx module
     for ((idx=${#stop_modules[@]}-1 ; idx>=0 ; idx--)); do
         module="${stop_modules[$idx]}"
-        # build-runtime 清理业务镜像时保留运维控制台
-        [ "$module" = "PANEL" ] && continue
+        # 含 IDEA / PANEL，便于 clean-build-runtime 释放对应运行时镜像
         execute_module_command "$module" "stop" || print_warning "${MODULE_NAMES[$module]} 停止失败，继续其余模块"
         echo ""
     done
 
-    # PANEL 不在 MODULES 列表中，单独停止以便释放 easyaiot/panel 镜像
-    if [ -f "${PROJECT_ROOT}/PANEL/install.sh" ] && [ "${EASYAIOT_ENABLE_PANEL:-1}" != "0" ]; then
+    # 兜底：若形态未纳入 PANEL 但仍有独立 install.sh，尝试停止以释放 easyaiot/panel 镜像
+    if [[ " ${stop_modules[*]} " != *" PANEL "* ]] \
+        && [ -f "${PROJECT_ROOT}/PANEL/install.sh" ] \
+        && [ "${EASYAIOT_ENABLE_PANEL:-1}" != "0" ]; then
         print_info "停止 PANEL 独立运维控制台..."
         bash "${PROJECT_ROOT}/PANEL/install.sh" stop || print_warning "PANEL 停止失败，继续清理"
         echo ""
@@ -1490,7 +1609,11 @@ restart_all() {
                 wait_for_device_gateway || print_warning "iot-gateway 未就绪，WEB 服务 /dev-api/ 接口可能返回 503"
             fi
         else
-            print_warning "${MODULE_NAMES[$module]} 重启失败，继续其余模块"
+            print_warning "${MODULE_NAMES[$module]} 重启失败，已跳过并继续其余模块"
+            if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+                print_error "日志末尾 (${LOG_FILE}):"
+                tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+            fi
         fi
         echo ""
     done
@@ -1564,7 +1687,13 @@ build_all() {
         local module
         for module in "${MODULES[@]}"; do
             module_enabled_for_deploy_profile "$module" || continue
-            execute_module_command "$module" "build" || print_warning "${MODULE_NAMES[$module]} 构建失败，继续其余模块"
+            if ! execute_module_command "$module" "build"; then
+                print_warning "${MODULE_NAMES[$module]} 构建失败，已跳过并继续其余模块"
+                if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+                    print_error "日志末尾 (${LOG_FILE}):"
+                    tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+                fi
+            fi
             echo ""
         done
     fi
@@ -1577,7 +1706,10 @@ pull_runtime_images() {
     check_docker "$@"
     runtime_images_prepare_pull_interactive
     runtime_images_export_for_invoke
-    runtime_images_invoke pull || exit 1
+    if ! runtime_images_invoke pull; then
+        runtime_images_dump_pull_failure pull
+        exit 1
+    fi
     export EASYAIOT_SKIP_BUILD=1
     export EASYAIOT_SKIP_IMAGE_PROMPT=1
 }
@@ -1644,14 +1776,23 @@ clean_build_runtime() {
 # 更新所有服务
 update_all() {
     print_section "更新所有服务"
-    
+    # 立刻刷出进度，避免 ensure_deploy_profile / docker 探测阶段看起来像卡死
+    print_info "准备更新环境（部署形态 / Docker / 镜像来源）..."
+
     ensure_deploy_profile
     print_info "部署形态: $(_deploy_profile_desc) (EASYAIOT_DEPLOY_PROFILE=${EASYAIOT_DEPLOY_PROFILE})"
     check_docker "$@"
     check_docker_compose
     configure_docker_mirror
     export EASYAIOT_INSTALL_SCRIPT="${EASYAIOT_INSTALL_SCRIPT:-.scripts/docker/install_linux.sh}"
+    # 形态已由 ensure_deploy_profile 确定，拉镜像时勿再反复交互选 profile/tag
+    export EASYAIOT_SKIP_PROFILE_PROMPT=1
+    export EASYAIOT_RUNTIME_TAG="${EASYAIOT_RUNTIME_TAG:-latest}"
+    print_info "选择镜像更新方式..."
     runtime_images_acquire_for_update
+    # 拉预构建时模块内会跳过 git pull；这里单独同步宿主机脚本（mqtt-demo vendor 等）
+    easyaiot_update_sync_project_scripts "$PROJECT_ROOT"
+    print_info "准备运行时环境..."
     prepare_runtime_environment
     create_network
 
@@ -1661,7 +1802,23 @@ update_all() {
         print_info "将进行本地重建更新（各模块 docker build，耗时较长）"
     fi
     
+    local module
+    for module in HARNESS IDEA; do
+        if module_enabled_for_deploy_profile "$module"; then
+            print_section "更新 ${MODULE_NAMES[$module]}"
+            if ! execute_module_command "$module" "update"; then
+                print_error "${MODULE_NAMES[$module]} 更新失败，已跳过并继续后续模块"
+                if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+                    print_error "日志末尾 (${LOG_FILE}):"
+                    tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+                fi
+            fi
+            echo ""
+        fi
+    done
+
     # 基础服务先更新并等就绪，业务模块随后
+    print_section "更新 ${MODULE_NAMES[".scripts/docker"]}"
     if execute_module_command ".scripts/docker" "update"; then
         wait_for_base_services
     else
@@ -1669,14 +1826,21 @@ update_all() {
     fi
     echo ""
 
-    # 业务模块更新：update 可能包含重建镜像（构建内存峰值高），默认串行；
-    # 机器内存充裕时可 PARALLEL_MODULES=true 并行提速
     collect_biz_modules
+    local -a update_modules=()
+    local module
+    for module in "${BIZ_MODULES[@]}"; do
+        is_bootstrap_module "$module" && continue
+        update_modules+=("$module")
+    done
     if [ "${PARALLEL_MODULES:-false}" = "true" ]; then
-        print_info "并行更新业务模块: ${BIZ_MODULES[*]}"
-        run_modules_parallel "update" "${BIZ_MODULES[@]}" || print_warning "部分模块更新失败，详见上方日志"
+        if [ ${#update_modules[@]} -gt 0 ]; then
+            print_info "并行更新业务模块: ${update_modules[*]}"
+            run_modules_parallel "update" "${update_modules[@]}" || print_warning "部分模块更新失败，详见上方日志"
+        fi
     else
-        for module in "${BIZ_MODULES[@]}"; do
+        for module in "${update_modules[@]}"; do
+            print_section "更新 ${MODULE_NAMES[$module]}"
             execute_module_command "$module" "update" || print_warning "${MODULE_NAMES[$module]} 更新失败，继续其余模块"
             # DEVICE 更新后等待 gateway 就绪，确保后续 WEB 更新时 /dev-api/ 可达
             if [ "$module" = "DEVICE" ]; then
@@ -1725,6 +1889,10 @@ verify_all() {
         print_success "所有服务运行正常！"
         echo ""
         echo -e "${GREEN}服务访问地址:${NC}"
+        echo -e "  IDEA 在线 IDE:         http://localhost:9300"
+        if module_enabled_for_deploy_profile HARNESS; then
+            echo -e "  AI 助手 (HARNESS):      http://localhost:3080"
+        fi
         echo -e "  基础服务 (Nacos):     http://localhost:8848/nacos"
         echo -e "  基础服务 (MinIO):     http://localhost:9000 (API), http://localhost:9001 (Console)"
         echo -e "  基础服务 (Milvus):    http://localhost:9091 (Health), localhost:19530 (gRPC)"
@@ -1906,7 +2074,7 @@ show_help() {
     echo "  logs            - 查看所有服务日志"
     echo "  logs [模块]     - 查看指定模块日志"
     echo "  build           - 重新构建所有镜像（各模块本地构建）"
-    echo "  build-runtime [模块] - 构建/推送运行时镜像（推送成功后删本地镜像；可选 DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）"
+    echo "  build-runtime [模块] - 构建/推送运行时镜像（推送成功后删本地镜像；可选 HARNESS|IDEA|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）"
     echo "  pull            - 从远程仓库拉取预构建运行时镜像（交互式，默认 full）"
     echo "  clean           - 清理所有容器和镜像"
     echo "  clean-build-runtime - 清理 build-runtime 构建产物（先停业务服务，默认删运行时镜像+构建缓存；保留跨架构基础镜像）"
@@ -1914,12 +2082,15 @@ show_help() {
     echo "  verify          - 验证所有服务是否启动成功（含告警/DVR 事件面验收）"
     echo "  verify-alert    - 告警事件面验收（控制面共享盘 + MQTT→iot-sink→入库）"
     echo "  verify-dvr      - DVR/NFS 链路验收（NFS → sink Hook → MinIO → playback）"
-    echo "  ceph|verify-ceph - 节点 Ceph/共享媒体管理与验收"
-    echo "      ceph list | status [id|host|all] | probe [id|host|all] | verify [--mount-only]"
+    echo "  nfs|verify-nfs  - 节点 NFS 共享媒体管理与验收（兼容旧命令名 ceph|verify-ceph）"
+    echo "      nfs list | status [id|host|all] | probe [id|host|all] | verify [--mount-only]"
     echo "  check           - 检查 Docker 和 Docker Compose 安装状态"
     echo "  profile         - 显示当前部署形态与服务范围"
     echo "  site [子命令]   - 官方网站 SITE 独立部署（默认 install）"
     echo "  runtime|runtime-atomic - RUNTIME 原子模式（只装计算节点执行器，需 VIDEO_BASE_URL）"
+    echo "  build-runtime-cpp [target|--all|--compile-target NAME] - RUNTIME C++ 离线包矩阵构建"
+    echo "  preflight-runtime-cpp [--node N | os_family [arch]] - 分发前预检本地 tarball"
+    echo "  export-runtime-cpp <os_family> - 单 OS 容器内导出（openeuler22 / kylin10 等）"
     echo "  menu            - 打开两层交互引导（部署 / 分析 / 官网）"
     echo "  diagnose        - 进入【分析】子菜单"
     echo "  analyze-logs    - 多模块日志合并分析（各模块约 500 行，带分割线）"
@@ -1946,7 +2117,7 @@ show_help() {
     echo "  EASYAIOT_APPLY_INDUSTRIAL_SEED=0   - 启动演示时不写入/刷新工业协议演示设备种子"
     echo "  EASYAIOT_RUNTIME_REGISTRY    - 运行时镜像仓库（默认见 runtime_registry.conf）"
     echo "  EASYAIOT_RUNTIME_BUILD_ARCH  - build-runtime 目标架构: all(默认) | amd64 | arm64"
-    echo "  EASYAIOT_RUNTIME_BUILD_MODULE - build-runtime 目标模块: all(默认) | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
+    echo "  EASYAIOT_RUNTIME_BUILD_MODULE - build-runtime 目标模块: all(默认) | HARNESS | IDEA | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
     echo "  SITE_PORT                    - 官网宿主机端口（默认 8090）"
     echo "  VIDEO_BASE_URL               - runtime 原子模式：中心 VIDEO 汇聚地址（如 http://192.168.1.10:6000）"
     echo "  EASYAIOT_RUNTIME_INSTALL_DIR - runtime 原子模式安装目录（默认 /opt/easyaiot/RUNTIME）"
@@ -1973,6 +2144,29 @@ run_runtime_atomic() {
         return 1
     fi
     bash "$runtime_script" atomic "$@"
+}
+
+# RUNTIME C++ 离线包矩阵（iot-node 分发用，与 COMPILE 目标对齐）
+run_runtime_cpp_bundle_cmd() {
+    local sub="${1:-help}"
+    shift || true
+    case "$sub" in
+        build|build-runtime-cpp|matrix)
+            runtime_cpp_build_matrix "$@"
+            ;;
+        preflight|preflight-runtime-cpp|check)
+            runtime_cpp_preflight_bundle "$@"
+            ;;
+        export|export-runtime-cpp)
+            runtime_cpp_export_one "$@"
+            ;;
+        help|-h|--help)
+            runtime_cpp_bundle_usage
+            ;;
+        *)
+            runtime_cpp_build_matrix "$sub" "$@"
+            ;;
+    esac
 }
 
 # 官方网站 SITE：委托 SITE/install_linux.sh
@@ -2066,8 +2260,8 @@ main() {
         verify-dvr|verify-dvr-nfs|verify-nfs-dvr)
             verify_dvr_nfs_chain "${@:2}"
             ;;
-        ceph|verify-ceph|ceph-nodes)
-            if [ "$cmd" = "verify-ceph" ] && [ -z "${2:-}" ]; then
+        nfs|verify-nfs|ceph|verify-ceph|ceph-nodes)
+            if { [ "$cmd" = "verify-ceph" ] || [ "$cmd" = "verify-nfs" ]; } && [ -z "${2:-}" ]; then
                 run_ceph_cmd verify
             else
                 run_ceph_cmd "${2:-verify}" "${@:3}"
@@ -2085,6 +2279,15 @@ main() {
             ;;
         runtime|runtime-atomic|install-runtime|atomic-runtime)
             run_runtime_atomic "${2:-}"
+            ;;
+        build-runtime-cpp|runtime-cpp-build|runtime-cpp-matrix)
+            run_runtime_cpp_bundle_cmd build "${@:2}"
+            ;;
+        preflight-runtime-cpp|runtime-cpp-preflight)
+            run_runtime_cpp_bundle_cmd preflight "${@:2}"
+            ;;
+        export-runtime-cpp|runtime-cpp-export)
+            run_runtime_cpp_bundle_cmd export "${@:2}"
             ;;
         diagnose|diagnose-tools)
             run_analyze_interactive_menu

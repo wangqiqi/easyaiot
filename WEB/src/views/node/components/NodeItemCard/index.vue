@@ -14,19 +14,19 @@
     <div
       class="node-item-card__cover"
       :class="[
-        getNodeRoleVisual(item.nodeRole).coverClass,
+        getNodeRoleVisual(primaryNodeFunction(item)).coverClass,
         item.status ? `node-item-card__cover--${item.status}` : '',
       ]"
       @click="emit('view', item)"
     >
       <div class="node-item-card__cover-inner">
         <NodeRoleIcon
-          :role="item.nodeRole"
+          :role="primaryNodeFunction(item)"
           :size="compact ? 'md' : central ? 'lg' : 'ml'"
         />
       </div>
       <div class="node-item-card__badges" @click.stop>
-        <NodeMetaBadge type="role" :role="item.nodeRole" size="sm" />
+        <NodeMetaBadge type="role" :role="primaryNodeFunction(item)" :label="formatNodeFunctions(item)" size="sm" />
         <NodeMetaBadge type="status" :status="item.status" size="sm" />
       </div>
       <div v-if="selectable" class="node-item-card__checkbox" @click.stop>
@@ -78,14 +78,8 @@
       <p v-if="metaText" class="node-item-card__meta" :title="metaText">
         {{ metaText }}
       </p>
-      <div v-if="footerBadges.length" class="node-item-card__tags">
-        <NodeMetaBadge
-          v-for="badge in footerBadges"
-          :key="badge.key"
-          :type="badge.type"
-          :ceph-status="badge.cephStatus"
-          size="xs"
-        />
+      <div v-if="isPlatformNode(item)" class="node-item-card__tags">
+        <NodeMetaBadge type="scope" size="xs" />
       </div>
     </div>
   </div>
@@ -98,8 +92,8 @@ import { DeleteOutlined, EditOutlined, EyeOutlined, RocketOutlined } from '@ant-
 import type { ComputeNodeVO } from '@/api/device/node';
 import {
   NODE_TERM,
-  isClusterComputeRole,
-  readCephMountFromTags,
+  primaryNodeFunction,
+  formatNodeFunctions,
 } from '../../utils/constants';
 import { getNodeRoleVisual } from '../../utils/nodeAssets';
 import { isPlatformNode } from '../../utils/platformNode';
@@ -149,24 +143,6 @@ const metaText = computed(() => {
   if (props.item.host) parts.push(props.item.host);
   if (!parts.length) return props.item.id != null ? `ID: ${props.item.id}` : '';
   return parts.join('  |  ');
-});
-
-const footerBadges = computed(() => {
-  const badges: Array<{
-    key: string;
-    type: 'scope' | 'ceph';
-    cephStatus?: 'ready' | 'not_ready' | 'unknown';
-  }> = [];
-  if (isPlatformNode(props.item)) {
-    badges.push({ key: 'scope', type: 'scope' });
-  } else if (isClusterComputeRole(props.item.nodeRole)) {
-    badges.push({
-      key: 'ceph',
-      type: 'ceph',
-      cephStatus: readCephMountFromTags(props.item.tags).status,
-    });
-  }
-  return badges;
 });
 </script>
 

@@ -55,7 +55,10 @@ if [ -f "${PROJECT_ROOT}/.scripts/node/ensure_platform_agent_invoke.sh" ]; then
   source "${PROJECT_ROOT}/.scripts/node/ensure_platform_agent_invoke.sh"
 fi
 
+# 模块列表（按依赖顺序：HARNESS 先于 IDEA；任一模块失败则跳过并继续后续模块）
 MODULES=(
+  "HARNESS"
+  "IDEA"
   ".scripts/docker"
   "DEVICE"
   "AI"
@@ -67,6 +70,14 @@ MODULES=(
   "TRANSFORM"
   "PANEL"
 )
+
+# 编排前置模块（install/start/restart/update 失败时终止后续步骤）
+is_bootstrap_module() {
+  case "$1" in
+    HARNESS|IDEA) return 0 ;;
+    *) return 1 ;;
+  esac
+}
 
 # 面板分拆部署：EASYAIOT_DEPLOY_SCOPE=all|middleware|business
 apply_deploy_scope() {
@@ -96,6 +107,8 @@ apply_deploy_scope
 # bash 3.2 兼容：用函数代替关联数组
 module_name() {
   case "$1" in
+    "HARNESS") echo "HARNESS AI助手" ;;
+    "IDEA") echo "IDEA在线IDE" ;;
     ".scripts/docker") echo "基础服务" ;;
     "DEVICE") echo "Device服务" ;;
     "AI") echo "AI服务" ;;
@@ -104,7 +117,7 @@ module_name() {
     "WEB") echo "Web前端服务" ;;
     "APP") echo "App移动端H5" ;;
     "VISUALIZE") echo "可视化编辑器" ;;
-    "TRANSFORM") echo "系统对接" ;;
+    "TRANSFORM") echo "数据转发" ;;
     "PANEL") echo "运维控制台" ;;
     *) echo "$1" ;;
   esac
@@ -112,6 +125,8 @@ module_name() {
 
 module_port() {
   case "$1" in
+    "HARNESS") echo "3080" ;;
+    "IDEA") echo "9300" ;;
     ".scripts/docker") echo "8848" ;;
     "DEVICE") echo "48080" ;;
     "AI") echo "5000" ;;
@@ -128,6 +143,8 @@ module_port() {
 
 module_health() {
   case "$1" in
+    "HARNESS") echo "/" ;;
+    "IDEA") echo "/health" ;;
     ".scripts/docker") echo "/nacos/actuator/health" ;;
     "DEVICE") echo "/actuator/health" ;;
     "AI") echo "/actuator/health" ;;
@@ -1144,6 +1161,14 @@ execute_module_command() {
         print_info "未检测到 ${module} 目录，跳过"
         return 0
         ;;
+      HARNESS)
+        print_error "未检测到 HARNESS 目录，无法部署 AI 助手"
+        return 1
+        ;;
+      IDEA)
+        print_error "未检测到 IDEA 目录，无法部署在线 IDE"
+        return 1
+        ;;
     esac
     print_warning "模块 $module 不存在，跳过"
     return 1
@@ -1152,6 +1177,16 @@ execute_module_command() {
   cd "$PROJECT_ROOT/$module"
 
   if [ ! -f "$install_file" ]; then
+    case "$module" in
+      HARNESS)
+        print_error "未检测到 HARNESS/install_linux.sh，无法部署 AI 助手"
+        return 1
+        ;;
+      IDEA)
+        print_error "未检测到 IDEA/install_linux.sh，无法部署在线 IDE"
+        return 1
+        ;;
+    esac
     print_info "${name} 无安装脚本 ${install_file}，跳过"
     return 0
   fi
@@ -1299,10 +1334,22 @@ desktop_pull_runtime_images() {
   if runtime_images_pulled_ready; then
     export EASYAIOT_SKIP_BUILD=1
     print_warning "部分镜像拉取失败，但核心预构建镜像已就绪，将继续"
+    if declare -F runtime_images_last_log_path >/dev/null 2>&1; then
+      _desk_log=$(runtime_images_last_log_path 2>/dev/null || true)
+      [ -n "${_desk_log:-}" ] && print_warning "拉取详情日志: ${_desk_log}"
+    fi
+    if declare -F runtime_images_report_missing_refs >/dev/null 2>&1; then
+      runtime_images_report_missing_refs \
+        "${EASYAIOT_DEPLOY_PROFILE:-full}" \
+        "${EASYAIOT_RUNTIME_TAG:-latest}"
+    fi
     return 0
   fi
   print_error "预构建镜像拉取失败，且桌面端禁止本地构建"
   print_info "请检查网络 / Docker Desktop 镜像加速 / runtime_registry.conf 后重试: pull"
+  if declare -F runtime_images_dump_pull_failure >/dev/null 2>&1; then
+    runtime_images_dump_pull_failure desktop
+  fi
   return 1
 }
 
@@ -1337,8 +1384,6 @@ desktop_install() {
   local -a failed_modules=()
   local -a succeeded_modules=()
   local module name
-  local _n=0 _m=$(( (total_count + 1) / 2 ))
-  [ "$_m" -lt 1 ] && _m=1
 
   for module in "${MODULES[@]}"; do
     if ! module_enabled_for_deploy_profile "$module"; then
@@ -1370,11 +1415,12 @@ desktop_install() {
         wait_for_device_gateway || print_warning "iot-gateway 未就绪，WEB /dev-api 可能暂时 503"
       fi
     else
+      print_error "$(module_name "$module") 安装失败，已跳过并继续后续模块"
+      if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+        print_error "日志末尾 (${LOG_FILE}):"
+        tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+      fi
       failed_modules+=("$(module_name "$module")")
-    fi
-    _n=$((_n + 1))
-    if [ "$_n" -eq "$_m" ]; then
-      _fs_align || exit 1
     fi
     echo ""
   done
@@ -1408,20 +1454,44 @@ desktop_start() {
   sync_deploy_profile_to_modules
   prepare_desktop_environment
 
+  # HARNESS 先于 IDEA（失败跳过并继续后续模块）
+  local module
+  for module in HARNESS IDEA; do
+    if module_enabled_for_deploy_profile "$module"; then
+      print_section "启动 $(module_name "$module")"
+      if ! execute_module_command "$module" "start"; then
+        print_error "$(module_name "$module") 启动失败，已跳过并继续后续模块"
+        if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+          print_error "日志末尾 (${LOG_FILE}):"
+          tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+        fi
+      fi
+      echo ""
+    fi
+  done
+
   print_section "启动基础服务"
   if ! execute_module_command ".scripts/docker" "start"; then
-    print_error "基础服务启动失败"
-    return 1
+    print_error "基础服务启动失败，已跳过并继续后续模块"
+    if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+      print_error "日志末尾 (${LOG_FILE}):"
+      tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+    fi
   fi
   wait_for_base_services
   echo ""
 
   collect_biz_modules
+  local -a start_modules=()
   local module
-  if [ "${PARALLEL_MODULES:-true}" = "true" ] && [ ${#BIZ_MODULES[@]} -gt 0 ]; then
-    print_info "并行启动业务模块: ${BIZ_MODULES[*]}"
+  for module in "${BIZ_MODULES[@]}"; do
+    is_bootstrap_module "$module" && continue
+    start_modules+=("$module")
+  done
+  if [ "${PARALLEL_MODULES:-true}" = "true" ] && [ ${#start_modules[@]} -gt 0 ]; then
+    print_info "并行启动业务模块: ${start_modules[*]}"
     local pids=() mods=() mlog rc fail=0 i
-    for module in "${BIZ_MODULES[@]}"; do
+    for module in "${start_modules[@]}"; do
       mlog="${LOG_DIR}/start_$(echo "$module" | tr '/' '_')_$$.log"
       : > "$mlog"
       (
@@ -1448,7 +1518,7 @@ desktop_start() {
     done
     [ "$fail" -eq 0 ] || print_warning "有 ${fail} 个模块启动失败"
   else
-    for module in "${BIZ_MODULES[@]}"; do
+    for module in "${start_modules[@]}"; do
       execute_module_command "$module" "start" || print_warning "$(module_name "$module") 启动失败"
       echo ""
     done
@@ -1515,12 +1585,28 @@ desktop_update() {
     return 1
   fi
 
+  # HARNESS 先于 IDEA（失败跳过并继续后续模块）
+  local module
+  for module in HARNESS IDEA; do
+    if module_enabled_for_deploy_profile "$module"; then
+      print_section "更新 $(module_name "$module")"
+      if ! execute_module_command "$module" "update"; then
+        print_error "$(module_name "$module") 更新失败，已跳过并继续后续模块"
+        if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+          print_error "日志末尾 (${LOG_FILE}):"
+          tail -n 40 "$LOG_FILE" 2>/dev/null | while IFS= read -r _line; do print_error "  ${_line}"; done || true
+        fi
+      fi
+    fi
+  done
+
   execute_module_command ".scripts/docker" "update" || print_warning "基础服务更新失败"
   wait_for_base_services
 
   collect_biz_modules
   local module
   for module in "${BIZ_MODULES[@]}"; do
+    is_bootstrap_module "$module" && continue
     print_info "更新 $(module_name "$module")（跳过本地构建）"
     execute_module_command "$module" "update" || print_warning "$(module_name "$module") 更新失败"
   done
@@ -1582,6 +1668,10 @@ print_access_urls() {
   ensure_deploy_profile
   echo ""
   echo -e "${GREEN}访问地址：${NC}"
+  echo -e "  IDEA 在线 IDE:          http://localhost:9300"
+  if module_enabled_for_deploy_profile HARNESS; then
+    echo -e "  AI 助手 (HARNESS):       http://localhost:3080"
+  fi
   echo -e "  Web 控制台:              http://localhost:8888"
   echo -e "  API 网关:                http://localhost:48080"
   echo -e "  Nacos:                   http://localhost:8848/nacos"

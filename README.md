@@ -42,7 +42,7 @@ Many smart IoT projects hit the same wall at deployment: video systems, device p
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-The platform comprises core modules including <strong>WEB, APP, DEVICE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL, and SITE</strong>, with <strong>COMPILE</strong> handling multi-platform packaging and delivery (including Ubuntu / CentOS·RHEL <strong>7–9</strong> (x86 + <strong>CentOS ARM</strong>, packages per el7/el8/el9) / <strong>Kylin (麒麟) / openEuler (欧拉)</strong> / Windows / macOS / ARM). On the capability side, the platform covers GB28181 / ONVIF multi-protocol camera access, <strong>RTC consumer-camera P2P bridging</strong> (based on go2rtc, covering <strong>Tapo, Tuya, Ring, Nest, Xiaomi, Wyze, DoorBird, GoPro, and Roborock</strong>—store Tapo fill-in, Tuya white-label onboarding, overseas Ring/Nest doorbells, Xiaomi reuse, Wyze low-cost scale-out, DoorBird intercom, GoPro mobile views, Roborock vacuum cameras—with one-click Web onboarding into unified video and AI judgment), <strong>DJI dock and drone aerial view access</strong>, real-time / snapshot / patrol algorithm tasks, <strong>RUNTIME native high-speed execution layer</strong> (compiled binary owns pull/decode, YOLO inference, boxed push, and multi-channel raw forward—lower CPU/memory and steadier latency than interpreted paths; one binary covers realtime / snap / patrol / forward), YOLO object detection and SAM zero-shot auto-annotation, face/plate recognition, orchestrable business post-processing, federated compute cluster scheduling, and <strong>Infinite Federated Edge Cluster mode</strong> (ordinary development boards ready out of the box, on-site intelligence for local decisions, alerts and evidence automatically aggregated to the cloud, compute scaling with business as needed), plus MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA IoT device lifecycle management, and <strong>visualization dashboards and Web SCADA configuration</strong>, so device data can be displayed as command-center situational awareness and mapped back to process screens; plus the new <strong>TRANSFORM multidirectional data-flow engine</strong>, which delivers platform-side business events to external systems such as MES / ERP / CRM / WMS by contract—multi-party integration that is configurable, traceable, and reusable; and the companion <strong>PANEL delivery & watch entry</strong>, so appliances can be installed and accepted on arrival day, and watch/troubleshooting no longer wait on developers running remote commands every time; plus the <strong>SITE official website</strong> to present product value, three hardware tiers, and installer entry—so visitors understand first, then download and deploy. On the experience side, the Web console and mobile App / mini-program are capability-aligned, so command centers and field inspections share the same business logic—handle incidents anytime, anywhere.
+The platform comprises core modules including <strong>WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL, IDEA, HARNESS, and SITE</strong>, with <strong>COMPILE</strong> handling multi-platform packaging and delivery (including Ubuntu / CentOS·RHEL <strong>7–9</strong> (x86 + <strong>CentOS ARM</strong>, packages per el7/el8/el9) / <strong>Kylin (麒麟) / openEuler (欧拉)</strong> / Windows / macOS / ARM). On the capability side, the platform covers GB28181 / ONVIF multi-protocol camera access, <strong>RTC consumer-camera P2P bridging</strong> (based on go2rtc, covering <strong>Tapo, Tuya, Ring, Nest, Xiaomi, Wyze, DoorBird, GoPro, and Roborock</strong>—store Tapo fill-in, Tuya white-label onboarding, overseas Ring/Nest doorbells, Xiaomi reuse, Wyze low-cost scale-out, DoorBird intercom, GoPro mobile views, Roborock vacuum cameras—with one-click Web onboarding into unified video and AI judgment), <strong>DJI dock and drone aerial view access</strong>, real-time / snapshot / patrol algorithm tasks, <strong>RUNTIME native high-speed execution layer</strong> (compiled binary owns pull/decode, YOLO inference, boxed push, and multi-channel raw forward—lower CPU/memory and steadier latency than interpreted paths; one binary covers realtime / snap / patrol / forward), YOLO object detection and SAM zero-shot auto-annotation, face/plate recognition, orchestrable business post-processing, federated compute cluster scheduling, and <strong>Infinite Federated Edge Cluster mode</strong> (ordinary development boards ready out of the box, on-site intelligence for local decisions, alerts and evidence automatically aggregated to the cloud, compute scaling with business as needed), plus MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA IoT device lifecycle management, with the <strong>EDGE C# edge collection runtime</strong> handling Modbus RTU/TCP, OPC UA, and other on-site industrial protocols via pluggable collectors, local scheduling, and MQTT cloud-edge integration, plus <strong>visualization dashboards and Web SCADA configuration</strong>, so device data can be displayed as command-center situational awareness and mapped back to process screens; plus the new <strong>TRANSFORM multidirectional data-flow engine</strong>, which delivers platform-side business events to external systems such as MES / ERP / CRM / WMS by contract—multi-party integration that is configurable, traceable, and reusable; and the companion <strong>PANEL delivery & watch entry</strong>, so appliances can be installed and accepted on arrival day, and watch/troubleshooting no longer wait on developers running remote commands every time; plus the <strong>SITE official website</strong> to present product value, three hardware tiers, and installer entry—so visitors understand first, then download and deploy; and <strong>IDEA community cloud IDE</strong> so contributors can open the full repo in a browser, co-create with GitHub Copilot, publish local changes, and submit PRs—turning open-source collaboration from “set up the environment first” into “open and edit”. On the experience side, the Web console and mobile App / mini-program are capability-aligned, so command centers and field inspections share the same business logic—handle incidents anytime, anywhere.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -50,7 +50,7 @@ The platform comprises core modules including <strong>WEB, APP, DEVICE, NODE, VI
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-📄 For a more complete illustrated introduction, see <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">EasyAIoT Project Introduction V2.0 (PPT)</a>, and <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">AI Video Surveillance Analytics Platform (PDF)</a>.
+📄 For a more complete illustrated introduction, see <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">EasyAIoT Project Introduction V2.0 (PPT)</a>, and <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">AI Video Surveillance Analytics Platform (PDF)</a>. For day-to-day platform operations after deployment, see the <a href=".doc/操作手册/README.md" style="color: #3498db; text-decoration: none; font-weight: 600;">Platform Operations Manual</a>.
 </p>
 
 ## 🌟 Some Thoughts on the Project
@@ -119,9 +119,75 @@ In homes, retail stores, and light-security deployments, many devices already in
   <li><strong>Docker all-in-one</strong>: <code>bash RTC/install_linux.sh start</code> runs go2rtc + management API; host network for P2P LAN</li>
 </ul>
 
-<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0 8px 0;">
-📖 See <a href="RTC/README.md" style="color: #3498db; text-decoration: none; font-weight: 600;">RTC module README</a> for details.
+### 🔌 EDGE: C# Edge Collection Runtime
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+On industrial and building sites, PLCs, meters, and sensors often hang on RS-485 or Ethernet while the cloud platform still needs a separate data-acquisition stack—protocols written one-off, every config change requiring a site visit. Long access chains, fragmented ops, and cloud-edge metric drift are the norm. EasyAIoT adds a dedicated <strong>EDGE module</strong> (C#) as an <strong>independently deployable edge collection runtime</strong>: pluggable multi-protocol collectors, local scheduling, config-driven parsing, and MQTT integration with the EasyAIoT cloud platform—lifting on-site Modbus RTU/TCP, OPC UA, and other points into a unified thing model uplink, with cloud config push and property writes reaching the edge for execution.
 </p>
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0;">
+<strong>Difference from Device Management "gateway":</strong> In device management, a gateway is a cloud-side product/device type (GATEWAY + SUBSET sub-device topology) for provisioning, shadow, binding, and downlink. EDGE has no separate device page—it is the on-site process that <strong>acts as that gateway</strong>; collected data appears in the same device management UI. Another path is <strong>iot-sink cloud-side polling</strong> of Modbus/OPC UA (the platform must reach field devices); EDGE collects on site and uplinks via MQTT only—suited to OT isolation and RS-485. Gateway property uplink/downlink, sub-device property proxy reporting, and config push are already aligned for use as an on-site industrial gateway; proactive topology reporting, sub-device event/service passthrough, OTA, and the full gateway protocol surface are still evolving.
+</p>
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0 8px 0;">
+<strong>Why C# for edge IoT acquisition?</strong>
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Industrial site affinity</strong>: C# has a mature ecosystem in industrial control, SCADA, and HMI—rich protocol libraries and engineering practice for Modbus, OPC UA, serial communication, and more; low onboarding cost for integrators and automation engineers</li>
+  <li><strong>Strong typing + structured engineering</strong>: Point mapping, register parsing, and config validation surface errors at compile time—more stable and testable than script languages when maintaining multi-protocol collectors long term</li>
+  <li><strong>Async concurrency without blocking</strong>: <code>async/await</code> fits multi-device polling and concurrent serial/network I/O—a single gateway can schedule dozens of sub-device collection jobs without the throughput bottlenecks of interpreted paths like Python GIL under high-frequency polling</li>
+  <li><strong>Long-running service stability</strong>: The .NET runtime suits 7×24 edge gateway daemons with predictable memory and GC behavior; dependency injection and plugin architecture let collectors hot-swap and version without restarting the whole site</li>
+  <li><strong>Cross-platform deliverability</strong>: The same C# codebase publishes to Linux x86_64 / ARM64 industrial PCs and edge boxes—single-file/self-contained deployment without Python virtualenvs or JVM on site</li>
+  <li><strong>Clear division with the cloud platform</strong>: The edge focuses on collect—parse—publish; DEVICE focuses on thing models and device lifecycle—C# does not carry heavy platform business or AI inference, stays lightweight, and runs independently on RS-485 bus sides or low-power gateways</li>
+</ul>
+
+<table style="width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px;">
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50; width: 18%;">Collector</td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; color: #2c3e50;">Protocol / Scenario</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>modbus-rtu</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">Modbus RTU (RS485/serial)—meters, instruments, PLCs on the bus</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>modbus-tcp</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">Modbus TCP—Ethernet-side industrial devices, VFDs, gateways</td>
+</tr>
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444;"><code>opc-ua</code></td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; vertical-align: top; color: #444; line-height: 1.7;">OPC UA—modern industrial control and upper-system interconnect</td>
+</tr>
+</table>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Plugin collection architecture</strong>: Implement <code>ICollector</code> to extend new protocols; the Host handles registration, scheduling, and result reporting—collection logic decoupled from the runtime</li>
+  <li><strong>Dual config channels</strong>: Local <code>device-jobs.json</code> for offline operation; cloud MQTT <code>config/downstream/push</code> can remotely override collection jobs—no site visit to change config</li>
+  <li><strong>MQTT cloud-edge integration</strong>: Joins as platform GATEWAY—gateway property reporting, sub-device property proxy reporting, cloud property write downlink via EMQX to DEVICE/<strong>iot-sink</strong>; sub-devices auto-created with shadow persistence; data shown in Device Management</li>
+  <li><strong>Standalone packaging</strong>: <code>pack_linux.sh</code> produces x86_64 / ARM64 Linux deployment packages for industrial PCs and edge gateways—decoupled from the main platform stack</li>
+  <li><strong>E2E integration out of the box</strong>: <code>bash EDGE/demo/run_e2e.sh</code> validates the full chain—collection → MQTT uplink → cloud persistence</li>
+</ul>
+
+### 🤖 AI Assistant: IDEA split-pane co-creation—edit code while asking about architecture and health
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+Open-source contribution and on-site PoCs often stall in the same place: many modules, long chains—editing needs a local setup, health checks need SSH, architecture questions mean digging docs and asking people. EasyAIoT embeds the <strong>HARNESS conversational assistant</strong> into the <strong>IDEA cloud IDE</strong>—full VS Code workspace on the left, AI assistant split on the right; drag files from the explorer to auto <code>@</code>-mention them in chat, read source while asking about ports, config, and service health, shortening the “don’t know → ask someone → edit again” loop.
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>IDEA split-pane co-creation</strong>: Toolbar opens the AI assistant on the right—editor and Agent side by side; or deep-link with <code>?file=path&harness=1</code> to open a file and split</li>
+  <li><strong>Drag to auto @</strong>: Drop explorer files onto the assistant pane to attach them as chat context—fewer paths typed, less context lost</li>
+  <li><strong>Ask and check</strong>: The Agent calls platform Tools to probe Gateway / video / AI health and points to related config and source—compressing SSH + compose digging into one conversation</li>
+  <li><strong>Knows the ontology</strong>: Built-in <code>HARNESS/ontology/AGENTS.md</code> and full-repo workspace—architecture, ports, APIs, and install conventions in one place</li>
+  <li><strong>Same semantics in the console</strong>: In-page floating drawer / full-screen “AI Assistant” share the same capabilities as IDEA; MCP + Cursor Skill reusable across environments</li>
+  <li><strong>Two-way jump</strong>: The assistant can generate portal links via <code>easyaiot_open_in_idea</code>—from Q&amp;A back to a full IDE where you can edit and publish</li>
+</ul>
+
+| | | |
+|:---:|:---:|:---:|
+| ![IDEA Login](.image/banner/banner1203.png) | ![IDEA Workspace](.image/banner/banner1204.png) | ![IDEA Development](.image/banner/banner1205.png) |
+| ![AI Assistant Chat](.image/banner/banner1210.png) | ![AI Assistant Analysis](.image/banner/banner1211.png) | ![AI Assistant Collaboration](.image/banner/banner1212.png) |
 
 ### 🎯 Three Hardware Tiers, One Platform
 
@@ -165,6 +231,7 @@ Many intelligent IoT projects stall at deployment: <strong>full features won't f
   <li><strong>Multi-Central-Node × Multi-Worker-Node Federated Cluster</strong>: Designed for cross-region, multi-datacenter, and cloud-edge collaborative deployments, the platform adopts an "N central nodes + N worker nodes" federated architecture—central nodes provide unified orchestration while worker nodes carry compute and media execution, scaling horizontally. Each central node manages its domain worker nodes, supporting remote distribution and one-click deployment of streaming, AV transcoding, video analytics, model inference, and training capabilities; multiple central nodes can interconnect and synchronize; the cluster swimlane view intuitively presents "central—worker" topology and resource levels. Algorithm tasks, auto-labeling pipelines, and stream relay workloads are intelligently scheduled by node role and GPU capability—enabling massive stream ingestion, high-concurrency inference, and distributed training to run together in one cluster, truly delivering "onboard easily, schedule clearly, scale openly, govern completely"</li>
   <li><strong>SAM Zero-Start Auto-Labeling Orchestration Pipeline</strong>: Built for cold-start scenarios with no annotated samples and no usable detection model, the platform integrates SAM open-vocabulary segmentation to deliver a one-click, unattended labeling pipeline. Per strategy, the system automatically chains camera frame extraction, SAM text-prompt bootstrap labeling, YOLO fine-tuning once thresholds are met, production-phase YOLO high-speed inference with intelligent SAM fallback for missed detections, periodic iterative training, and automatic dataset packaging and export—closing the full "capture-annotate-train-export" loop. Supports pause/resume and elastic scheduling on local or cluster compute queues. With visual strategy configuration and run logs, users can grow a custom detection capability from zero samples and zero models, making "define categories in words, watch the model take shape" the default path for dataset building</li>
   <li><strong>Ten-Thousand-Node Elastic Compute Cluster & Horizontal Scaling Pool</strong>: Built for hyperscale AI and video workloads, the platform provides a cloud-edge-end distributed compute foundation that unifies algorithm tasks, stream relay, algorithm services, model training, and inference under one horizontal load-balancing and elastic scaling fabric. New servers join the fleet with one-click onboarding and immediately become schedulable compute units—the scheduling hub automatically dispatches tasks and balances load based on resource levels and business pressure, enabling linear scaling from hundreds to tens of thousands of camera streams and from a single machine to ten-thousand-node clusters without redeployment or manual tuning. Massive stream ingestion, high-concurrency inference, and distributed training run together in a shared compute pool—truly delivering "scale on demand, run reliably, govern with confidence"</li>
+  <li><strong>Distributed Storage Driver (Compute + Storage Dual-Cluster Decoupling)</strong>: Moving beyond the legacy pattern of per-node local directory mounts, hard-coded paths, and config rewrites on every scale-out, the platform replaces raw local-directory drivers with a <strong>cluster event-driven</strong> storage fabric—Export readiness, client mount state, primary/standby failover, and multi-cluster bridge links are sensed and propagated as events, so snapshots, recordings, alert evidence, and model assets flow into a distributed NFS cluster without business layers tracking mount paths. Compute and storage form <strong>two independently scalable domains</strong>: the compute side fully embraces the <strong>C++ RUNTIME</strong> high-speed execution pipeline, while the storage side builds an NFS cluster pool that scales out horizontally without bound—compute and storage grow on their own watermarks, not locked together. With cluster swimlanes, topology views, and multi-cluster bridge sync, new nodes join the storage domain with one-click onboarding, so "compute scales" and "storage scales" advance in parallel under massive stream ingestion—truly delivering "decoupled compute and storage, independent scale-out, event-driven coordination, unified governance, limitless expansion"</li>
   <li><strong>Tianditu Spatial Visualization & Map-Based Analysis</strong>: Integrated with China's national Tianditu map service, the platform brings cameras, alerts, and person/vehicle recognition onto a single map—upgrading surveillance from "watching feeds" to "seeing the big picture." Both the streaming media and alert modules offer a "Map Distribution" view with a device directory tree for regional focus, giving instant visibility into checkpoint layout and online status. Map click-to-pin, location search, and batch coordinate import help GB channels, NVR channels, and direct-connect cameras get mapped quickly so every feed has clear spatial context. Alerts are automatically placed on the map via linked camera coordinates; filter by time, event type, task, and business tags, then open snapshots and recordings in one click—helping operators move fast from "where did it happen" to action. Combined with face and plate libraries, hits across multiple sites can be woven into spatial trails—<strong>trace by person</strong> to reconstruct movement and presence within a monitored area; <strong>trace by vehicle</strong> to link passing records and pinpoint routes and stop zones for find-person/find-vehicle, patrol deployment, and post-incident review. Mobile devices also support track playback to replay patrol and travel paths on a timeline. Switch freely between vector and satellite basemaps with auto-fit view, so managers use the map as the anchor to spot anomalies, lock onto targets, and coordinate response faster</li>
   <li><strong>Qwen / DeepSeek Multi-GPU Deployment</strong>: Supports deploying Qwen, DeepSeek, and other large language models across multiple GPUs in parallel. GPU resources can be scheduled flexibly at the cluster level, enabling elastic scaling and load balancing of model instances to deliver stable inference under high concurrency and long-context workloads</li>
   <li><strong>Vision Large Model Intelligent Understanding</strong>: Integrated with QwenVL3 vision large model, supports deep visual reasoning and semantic understanding of real-time video frames, enabling intelligent analysis and scene comprehension of frame content, providing richer visual cognitive capabilities, achieving a leap from pixel-level perception to semantic-level understanding</li>
@@ -226,6 +293,7 @@ Many projects reduce IoT to a "device ledger + message relay"—devices connect 
   <li><strong>Modbus-TCP industrial Ethernet access</strong>: For meters, PLCs, VFDs and other Ethernet-side industrial devices, built-in Modbus-TCP master acquisition—configure access parameters and measurement points at product/device level to go live; polled reads flow into device shadow and online status; register writes and property downlink are connected, so industrial points share the same closed loop as IoT thing models, rule engine and alarms—no separate SCADA/acquisition tool required.</li>
   <li><strong>Modbus-RTU serial field access</strong>: Many field instruments remain on RS-485; TCP-gateway-only paths double cost and failure points. Platform supports Modbus-RTU serial master acquisition, works with virtual and real serial ports—bus-side devices enter unified management and uplink/downlink control, filling the gap where Ethernet cannot reach and serial was unmanaged.</li>
   <li><strong>OPC UA industrial interconnect access</strong>: For modern industrial control and upper-system interconnect, OPC UA client access—configure node address, namespace and point mapping for subscribe/read/write; complex device models map to platform thing-model properties; uplink acquisition and downlink write points seamlessly connect to device shadow, rule chains and message push—bringing OPC UA field assets into an AIoT ops system that can “see, control, and link”.</li>
+  <li><strong>EDGE C# edge collection runtime</strong>: An independently deployable edge collection module for industrial sites—C# pluggable collectors for Modbus RTU, Modbus TCP, OPC UA, and more; local scheduled acquisition and config-driven parsing; MQTT integration with DEVICE/<strong>iot-sink</strong> on the cloud platform. It maps to the GATEWAY role in device management (not a separate device UI): on-site aggregation, cloud-side governance; gateway/sub-device property uplink-downlink and config push are covered; topology and sub-device event/service passthrough are still evolving. Packagable for x86_64 / ARM64 Linux industrial PCs and edge gateways—"accurate on site, governed in the cloud" cloud-edge closed loop</li>
   <li><strong>Thing Model Property Definition</strong>: If dashboards, rules, and alerts each invent their own metric names, they will never understand each other. Define reportable/readable-writable properties first, with standard templates and custom ones; edit as draft, publish to take effect—dashboards, rules, and alerts then share one field set. “What can be observed” has unified semantics, and inconsistent metric-name rework is cut at the root</li>
   <li><strong>Thing Model Service Definition</strong>: Writing a one-off API for every remote start/stop or reset fragments the control plane. Define callable services with input/output parameters as a contract; edit as draft, publish to take effect—“what can be done remotely” is invoked by filling contract parameters, without stacking one-off control APIs. Control becomes reusable and auditable</li>
   <li><strong>Thing Model Event Definition</strong>: Without agreeing upfront on which business events devices report, alert wording will conflict over time. Define event types first; after draft publish they take effect uniformly—event logs and rule triggers share the same semantics. “What can happen” has one vocabulary, and alerts no longer speak past each other</li>
@@ -286,6 +354,36 @@ Many projects reduce IoT to a "device ledger + message relay"—devices connect 
   <li><strong>Stay Connected</strong>: Sessions stay active with less re-login—bringing cloud-edge-device intelligent control to phones and mini programs</li>
 </ul>
 
+#### 💻 IDEA Cloud IDE
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Develop in the browser</strong>: VS Code–style online IDE on code-server; clones the full EasyAIoT repo by default—contributors can edit, run module-level checks, and open PRs without setting up a local toolchain first</li>
+  <li><strong>Standalone portal and multi-user</strong>: Ops console on <code>:9300</code>, decoupled from the WEB admin; one Docker workspace per person; port pool 13338–13437 for concurrent users; console floating ball jumps to the portal</li>
+  <li><strong>Six-language toolchain aligned with the host</strong>: Preinstalled <strong>JDK 21</strong>, Node 22, Python, Go, CMake/C++, and .NET 8—covers reading, light edits, and module-level checks for WEB / DEVICE / AI / NODE / RUNTIME / EDGE</li>
+  <li><strong>AI co-creation</strong>: GitHub Copilot preinstalled (sign in with your own GitHub account; the platform never holds keys); without a Copilot subscription, bring your own OpenAI-compatible API key via Continue; toolbar opens HARNESS AI Assistant in a split pane—drag files to auto <code>@</code>-mention while you edit</li>
+  <li><strong>Local publish</strong>: Suggests modules from workspace diffs, one-click build and replace running containers on the host—refresh to verify, shortening the edit-to-see loop</li>
+  <li><strong>OAuth and idle reclaim</strong>: Gitee / GitHub login (can be required), one account per workspace; idle auto-stop after 8 hours by default; heartbeat and opening the IDE refresh activity so compute is not left spinning</li>
+  <li><strong>Contribution loop</strong>: Bind your fork → branch → edit → push to the fork → open a PR to upstream</li>
+</ul>
+
+#### 🤖 HARNESS AI Assistant
+
+<p style="font-size: 14px; line-height: 1.8; color: #555; margin: 10px 0 12px;">
+Many modules and long chains—checking health, asking about architecture, and finding configs often means digging through docs and SSH. HARNESS bundles platform knowledge and live probes into a <strong>conversational assistant</strong>: ask and check from the bottom-right corner of any business page, shortening troubleshooting and PoC cycles with less reliance on the vendor and tribal knowledge.
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>Ask and check</strong>: The Agent calls platform Tools to probe Gateway / video / AI service health and points to related config and source—compressing SSH + compose digging into one conversation</li>
+  <li><strong>Knows the ontology</strong>: Built-in <code>HARNESS/ontology/AGENTS.md</code> and full-repo workspace—architecture, ports, APIs, and install conventions in one place</li>
+  <li><strong>Chat in-page</strong>: Floating drawer iframe—no page switch or lost context while viewing alarms/devices; full-screen “AI Assistant” or new window also available</li>
+  <li><strong>IDEA split-pane co-creation</strong>: Toolbar opens the AI assistant on the right—editor and Agent side by side; or deep-link with <code>?file=path&harness=1</code> to open a file and split</li>
+  <li><strong>Drag to auto @</strong>: Drop explorer files onto the assistant pane to attach them as chat context</li>
+  <li><strong>Two-way jump</strong>: Agent can generate portal links via <code>easyaiot_open_in_idea</code>—from Q&amp;A back to a full IDE where you can edit and publish; IDEA for code and PRs, HARNESS for architecture and health</li>
+  <li><strong>MCP + Cursor Skill</strong>: Same <code>easyaiot_*</code> capabilities exposed via MCP to Cursor and other IDEs—what you can ask and check in the console, you can invoke in dev; Skills reusable across projects</li>
+  <li><strong>Ready in all profiles</strong>: Based on <a href="https://github.com/deepseek-ai/deepseek-harness" style="color: #3498db; text-decoration: none; font-weight: 600;">DeepSeek Harness</a> Sidecar (<code>:3080</code>); included by default in <code>mini / standard / full</code> (<code>EASYAIOT_ENABLE_HARNESS=0</code> to disable); DeepSeek / OpenAI-compatible endpoints; bring your own Key in <code>harness.env</code> or the UI</li>
+  <li><strong>Security note</strong>: Experimental module; upstream <code>dsh</code> is Developer Preview; restrict access in production and configure write/Shell approval; do not commit API Keys to Git</li>
+</ul>
+
 ### 📦 Built-in AI Models
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -310,11 +408,11 @@ The platform is ready to use out of the box, with multiple pre-trained models bu
 ### 💡 Technical Philosophy
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-We believe no single programming language excels at everything, but through the deep integration of five programming languages, EasyAIoT leverages the strengths of each to build a powerful technical ecosystem.
+We believe no single programming language excels at everything. EasyAIoT uses six programming languages mixed by scenario: Java for platform architecture, Python for AI algorithms, C++ for video execution, Go for protocol gateway, TypeScript for management UI, C# for edge industrial acquisition—cloud management, algorithms, execution, protocols, UI, and on-site acquisition each in its place, forming a complete cloud-edge-device technical closed loop.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-Java excels at building stable and reliable platform architectures, but is a poor fit for network programming and AI development; Python excels at network programming and AI algorithms, but hits GIL and process-overhead bottlenecks on high-channel, low-latency frame execution; C++ excels at high-performance task execution, but is ill-suited to platform architecture and algorithm orchestration—so the platform sinks <strong>pull/decode, inference, boxed push, and multi-channel raw forward</strong> into <strong>RUNTIME</strong>, while WEB/VIDEO keep orchestration and the business surface. Go excels at high-concurrency networking and protocol implementation, but is ill-suited to platform control planes and AI algorithms; TypeScript excels at complex front-end interactions and type-safe engineered UIs, but is ill-suited to high-performance backend computing and AI inference. EasyAIoT adopts a five-in-one mixed-language architecture, letting each language do what it does best—building an AIoT platform that's challenging to implement yet extremely easy to use.
+Java excels at building stable and reliable platform architectures, but is ill-suited to network programming and AI development; Python excels at network programming and AI algorithms, but hits GIL and process-overhead bottlenecks on high-channel, low-latency frame execution; C++ excels at high-performance task execution, but is ill-suited to platform architecture and algorithm orchestration; Go excels at high-concurrency networking and protocol implementation, but is ill-suited to platform control planes and AI algorithms; TypeScript excels at complex front-end interactions and type-safe engineered UIs, but is ill-suited to high-performance backend computing and AI inference; C# excels at industrial protocol acquisition and edge runtime orchestration, with strong typing ensuring reliable point mapping and protocol parsing, <code>async/await</code> supporting concurrent multi-device polling, .NET cross-platform publishing adapting to x86/ARM industrial sites, mature industrial/SCADA ecosystem with fast integrator onboarding, but is ill-suited to cloud platform core business and AI algorithms. Six languages each play to their strengths and avoid weaknesses—challenging to implement, yet extremely easy to use.
 </p>
 
 ![EasyAIoT Platform Architecture.jpg](.image/iframe2.jpg)
@@ -334,7 +432,7 @@ Innovatively leveraging large models to construct a zero-shot labeling technical
 ### 🏗️ Project Architecture Features
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
-EasyAIoT is not actually one project; it comprises multiple independently deployable sub-projects (WEB, DEVICE, VIDEO, RTC, AI, and more).
+EasyAIoT is not actually one project; it comprises multiple independently deployable sub-projects (WEB, DEVICE, EDGE, VIDEO, RTC, AI, and more).
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
@@ -372,6 +470,7 @@ EasyAIoT actively responds to localization strategies, providing comprehensive s
 <h4 style="margin-top: 0; color: white; font-size: 18px;">📱 Edge-Side Support</h4>
 <ul style="font-size: 14px; line-height: 1.8; margin: 10px 0; padding-left: 20px;">
   <li>Ordinary development boards can perform on-site intelligent watch duty</li>
+  <li><strong>EDGE</strong> C# edge collection deployable independently on industrial PCs and RS485 sites</li>
   <li>Lightweight deployment on site—no need to stack heavy storage at every site</li>
   <li>Intelligence out of the box, shortening edge go-live cycles</li>
   <li>Compute scales with deployment points; alerts and evidence automatically aggregate to the cloud</li>
@@ -397,7 +496,7 @@ EasyAIoT actively responds to localization strategies, providing comprehensive s
 ## 🧩 Project Structure
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT comprises core modules including WEB, APP, DEVICE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL, and SITE, plus COMPILE multi-platform packaging and delivery:
+EasyAIoT comprises core modules including WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL, IDEA, HARNESS, and SITE, plus COMPILE multi-platform packaging and delivery:
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
@@ -453,6 +552,20 @@ EasyAIoT comprises core modules including WEB, APP, DEVICE, NODE, VIDEO, RTC, AI
     <li><strong>Data Collection</strong>: Device data collection, storage, query, and analysis</li>
     <li><strong>Node Orchestration</strong>: Compute/media node onboarding, connectivity testing, workload scheduling, and media node pool allocation</li>
     <li><strong>Visualization Backend</strong>: Unified management of dashboard/SCADA projects, templates, assets, data sources, and service deployment, providing project management and publishing for the visualization editor and Web SCADA</li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>EDGE Module</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>Why C#</strong>: Strong-typed point mapping, async multi-device concurrent polling, 7×24 long-running stability, Linux x86/ARM cross-platform self-contained publishing—mature industrial ecosystem, fast integrator onboarding</li>
+    <li><strong>C# edge collection runtime</strong>: Independently deployable edge-side collection service—pluggable collectors + local scheduling + config-driven parsing</li>
+    <li><strong>Multi-protocol collectors</strong>: Built-in Modbus RTU (RS485/serial), Modbus TCP, OPC UA collectors; extend via <code>ICollector</code> plugins per job</li>
+    <li><strong>MQTT cloud-edge integration</strong>: Joins as device-management GATEWAY—property reporting, sub-device property proxy reporting, cloud config push (<code>config/downstream/push</code>) and property write downlink—integrated with DEVICE/<strong>iot-sink</strong>; data shown in the same device management UI, complementary to cloud-side industrial polling (platform reaches field devices directly)—EDGE suits OT isolation and RS-485 field sites</li>
+    <li><strong>Dual config channels</strong>: Local <code>device-jobs.json</code> and cloud MQTT config push both drive collection jobs</li>
+    <li><strong>Linux packaging</strong>: <code>pack_linux.sh</code> produces x86_64 / ARM64 standalone deployment packages for industrial PCs and edge gateways</li>
+    <li><strong>Out-of-box integration</strong>: Built-in E2E demo validates collection → MQTT uplink → cloud persistence; cloud platform integration included</li>
   </ul>
 </td>
 </tr>
@@ -573,6 +686,26 @@ EasyAIoT comprises core modules including WEB, APP, DEVICE, NODE, VIDEO, RTC, AI
 </td>
 </tr>
 <tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>IDEA Module</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>Community cloud IDE</strong>: Open a VS Code–style workspace in the browser, clones the full repo by default; one Docker workspace per person, with local publish and idle reclaim—turning open-source contribution from “set up an environment first” into “open and edit”</li>
+    <li><strong>Split-pane AI Assistant</strong>: Toolbar opens HARNESS on the right; drag files to auto <code>@</code>; deep-link with <code>?file=&harness=1</code></li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>HARNESS Module</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>Conversational assistant</strong>: Ask about health, architecture, and issues—shorter troubleshooting and PoC, less vendor dependency</li>
+    <li><strong>In-page floating drawer</strong>: Chat without leaving business pages; included by default in <code>mini / standard / full</code></li>
+    <li><strong>IDEA split-pane link</strong>: Assistant beside the editor; drag-to-<code>@</code>, deep links, and two-way jump</li>
+    <li><strong>MCP / Skill</strong>: Console and IDE share platform semantics; Skills reusable across projects</li>
+  </ul>
+</td>
+</tr>
+<tr>
 <td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>COMPILE Packaging</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
@@ -644,7 +777,7 @@ EasyAIoT constructs an efficient access and management network for IoT devices (
 The platform supports real-time, snapshot, and patrol algorithm tasks: all three can default to the <strong>RUNTIME high-speed execution layer</strong> (<code>executor=cpp</code>)—a native binary for long-lived pull, decode, YOLO inference, and result callbacks; realtime <strong>default-pushes boxed AI detection streams</strong>; snap uses Cron capture; patrol rotates multi-channel coverage; stream forward can use the same high-performance path for resource-efficient raw walls. Versus the Python compatibility backend, RUNTIME holds up better under high channel counts and low latency. Alerts and heartbeats return to VIDEO. Algorithm task management keeps frame extraction and sorting flexible; model-service cluster inference ensures millisecond response and high availability. Full and half defense modes support precise time-based monitoring and alerting.
 </p>
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 10px 0;">
-In terms of IoT device management, EasyAIoT provides comprehensive device lifecycle management capabilities, supporting multiple IoT and industrial protocols (MQTT, TCP, HTTP, Modbus-TCP, Modbus-RTU, OPC UA) to achieve rapid device access, secure authentication, real-time monitoring, and intelligent control. Through the rule engine, intelligent data flow and processing of device data are realized, combined with AI capabilities for in-depth analysis of device data, achieving full-process automation from device access, data collection, intelligent analysis to decision execution, truly realizing interconnected everything and intelligent control of everything.
+In terms of IoT device management, EasyAIoT provides comprehensive device lifecycle management capabilities, supporting multiple IoT and industrial protocols (MQTT, TCP, HTTP, Modbus-TCP, Modbus-RTU, OPC UA). Gateways in device management are cloud-side GATEWAY / sub-device topology; the <strong>EDGE</strong> C# edge collection runtime acts as that gateway on site, handling industrial protocol acquisition and MQTT cloud-edge integration, with data flowing back into the same device management UI—achieving rapid device access, secure authentication, real-time monitoring, and intelligent control. Through the rule engine, intelligent data flow and processing of device data are realized, combined with AI capabilities for in-depth analysis of device data, achieving full-process automation from device access, data collection, intelligent analysis to decision execution, truly realizing interconnected everything and intelligent control of everything.
 </p>
 </div>
 
@@ -663,6 +796,20 @@ compensate third parties for damages caused by usage. All EasyAIoT-related resou
 - [macOS Image Deploy](.doc/部署文档/平台macOS部署文档.md) — One-click pull of pre-built images with Docker Desktop
 - [Windows Image Deploy](.doc/部署文档/平台Windows部署文档.md) — `install_windows.ps1` recommended entry
 - [Deployment Best Practices](.doc/部署文档/部署最佳实践_en.md) — Profiles, environment requirements, one-click deploy (incl. CentOS **7–9** / **CentOS ARM** / **Kylin (麒麟) / openEuler (欧拉)**), troubleshooting, and production recommendations
+
+## 📘 Operations Manual
+
+For delivery, watchkeeping, and business operations: organized by **operation chains** (goal → prerequisites → steps → acceptance). Assumes the platform is already deployed and available. (Content is currently in Simplified Chinese.)
+
+- [Platform Operations Manual (Index)](.doc/操作手册/README.md) — How to read, shortest closed loop, and doc index
+- [Operation Chain Overview](.doc/操作手册/00-操作链总览.md) — Global map, menu quick reference, same-day PoC checklist
+- [Login & Basic Setup](.doc/操作手册/01-登录与基础准备.md) — Accounts, org, permissions, notification channels
+- [Video Device Onboarding](.doc/操作手册/02-视频设备接入.md) — ONVIF / NVR / GB28181 / RTC / DJI → preview & stream forward
+- [AI Algorithm Task Loop](.doc/操作手册/03-AI算法任务闭环.md) — Labeling/models → tasks → alerts
+- [IoT Device Onboarding](.doc/操作手册/04-物联网设备接入.md) — Product thing model → devices → EDGE / industrial acquisition
+- [Alerts, Notifications & External Integration](.doc/操作手册/05-告警通知与对外联动.md) — Alert handling, notifications, TRANSFORM
+- [Visualization Dashboards](.doc/操作手册/06-可视化大屏.md) — Dashboard/SCADA edit, publish, and display
+- [APP Mobile Watchkeeping](.doc/操作手册/07-APP移动值守.md) — Mobile vs WEB capability map
 
 ## 🎮 Demo Environment
 
@@ -715,15 +862,24 @@ compensate third parties for damages caused by usage. All EasyAIoT-related resou
 | ![Preview](.image/banner/banner1104.png) | ![Access](.image/banner/banner1105.png) | ![NVR](.image/banner/banner1106.png) |
 | ![Live View](.image/banner/banner1183.jpg) | ![Map](.image/banner/banner1184.jpg) |  |
 
+#### 🤖 AI Assistant
+
+| | | |
+|:---:|:---:|:---:|
+| ![IDEA Login](.image/banner/banner1203.png) | ![IDEA Workspace](.image/banner/banner1204.png) | ![IDEA Development](.image/banner/banner1205.png) |
+| ![AI Assistant Chat](.image/banner/banner1210.png) | ![AI Assistant Analysis](.image/banner/banner1211.png) | ![AI Assistant Collaboration](.image/banner/banner1212.png) |
+
 #### 🧠 AI Models
 
 | | | |
 |:---:|:---:|:---:|
+| ![Multi-cluster Sync](.image/banner/banner1200.png) | ![NFS Cluster Topology](.image/banner/banner1198.png) | ![NFS Cluster Management](.image/banner/banner1197.png) |
+| ![Node Management](.image/banner/banner1199.png) | ![NFS File Directory](.image/banner/banner1201.png) | ![NFS Directory Browser](.image/banner/banner1202.png) |
 | ![Qwen](.image/banner/banner1093.jpg) | ![Vision Model](.image/banner/banner1094.jpg) | ![List](.image/banner/banner1099.png) |
 | ![Configuration](.image/banner/banner1100.png) | ![Details](.image/banner/banner1101.png) | ![Invocation](.image/banner/banner1102.png) |
 | ![Training](.image/banner/banner1019.jpg) | ![Task](.image/banner/banner1020.jpg) | ![List](.image/banner/banner1023.jpg) |
 | ![Progress](.image/banner/banner1024.jpg) | ![Parameters](.image/banner/banner1017.jpg) | ![Evaluation](.image/banner/banner1018.jpg) |
-| ![Details](.image/banner/banner1021.jpg) | ![Logs](.image/banner/banner1022.jpg) | ![Management](.image/banner/banner1097.png) |
+| ![Details](.image/banner/banner1021.png) | ![Logs](.image/banner/banner1022.jpg) | ![Management](.image/banner/banner1097.png) |
 | ![Repository](.image/banner/banner1098.png) | ![Version](.image/banner/banner1039.jpg) | ![Assets](.image/banner/banner1061.jpg) |
 | ![Inference](.image/banner/banner1040.jpg) | ![Configuration](.image/banner/banner1042.jpg) | ![Results](.image/banner/banner1043.jpg) |
 | ![Online](.image/banner/banner1044.jpg) | ![Batch](.image/banner/banner1047.jpg) | ![Monitoring](.image/banner/banner1048.jpg) |
@@ -761,7 +917,8 @@ compensate third parties for damages caused by usage. All EasyAIoT-related resou
 | ![Statistics](.image/banner/banner1176.jpg) | ![Overview](.image/banner/banner1177.jpg) | ![Dashboard](.image/banner/banner1178.jpg) |
 | ![Product](.image/banner/banner1006.jpg) | ![Device](.image/banner/banner1009.jpg) | ![OTA](.image/banner/banner1179.jpg) |
 | ![Firmware](.image/banner/banner1180.jpg) | ![Task](.image/banner/banner1181.jpg) | ![Progress](.image/banner/banner1182.jpg) |
-| ![Rules](.image/banner/banner1013.jpg) | ![Orchestration](.image/banner/banner1014.png) |  |
+| ![Rules](.image/banner/banner1013.jpg) | ![Orchestration](.image/banner/banner1014.png) | ![Forwarding](.image/banner/banner1206.png) |
+| ![Running](.image/banner/banner1209.png) | ![Destination](.image/banner/banner1207.png) | ![Delivery](.image/banner/banner1208.png) |
 
 #### 🖥️ Cluster
 
