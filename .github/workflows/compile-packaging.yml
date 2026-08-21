@@ -42,6 +42,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: compile-packaging-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ubuntu-deb:
     name: Ubuntu deb
