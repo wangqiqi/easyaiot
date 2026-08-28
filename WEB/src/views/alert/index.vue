@@ -8,7 +8,7 @@
         :tabBarGutter="60"
         @tabClick="handleTabClick"
       >
-        <TabPane key="1" tab="地图分布">
+        <TabPane v-if="!edgeStandalone" key="1" tab="地图分布">
           <AlertMapView
             ref="alertMapViewRef"
             @view-image="handleCardViewImage"
@@ -79,16 +79,21 @@
             </AlertCards>
           </div>
         </TabPane>
+        <TabPane v-if="showTicketTab" key="3" tab="告警工单">
+          <AlarmTicket />
+        </TabPane>
       </Tabs>
     </div>
 
     <ImageModal @register="registerImageModal" />
+    <FaceAlertModal @register="registerFaceAlertModal" />
+    <PlateAlertModal @register="registerPlateAlertModal" />
     <DialogPlayer @register="registerVideoModal" />
     <DeviceLocationDrawer @register="registerLocationDrawer" @success="handleLocationDrawerSuccess" />
   </div>
 </template>
 <script lang="ts" setup name="noticeSetting">
-import { nextTick, reactive, ref, onMounted, onActivated } from 'vue';
+import { nextTick, reactive, ref, onMounted, onActivated, watch } from 'vue';
 import { TabPane, Tabs } from 'ant-design-vue';
 import { BasicTable, TableAction, useTable } from '@/components/Table';
 import { useMessage } from '@/hooks/web/useMessage';
@@ -100,6 +105,8 @@ import AlertCards from '@/views/alert/components/AlertCards/index.vue';
 import AlertMapView from '@/views/alert/components/AlertMapView/index.vue';
 import AlertListToolbar from '@/views/alert/components/AlertListToolbar.vue';
 import ImageModal from '@/views/alert/components/ImageModal/index.vue';
+import FaceAlertModal from '@/views/alert/components/FaceAlertModal/index.vue';
+import PlateAlertModal from '@/views/alert/components/PlateAlertModal/index.vue';
 import DialogPlayer from '@/components/VideoPlayer/DialogPlayer.vue';
 import { useModal } from '@/components/Modal';
 import {
@@ -112,10 +119,15 @@ import { canSetDeviceLocation } from '@/views/camera/utils/deviceLocation';
 import { getDeviceInfo } from '@/api/device/camera';
 import { openDeviceInDialogPlayer } from '@/views/camera/utils/devicePlay';
 import { playAlertRecordInModal } from '@/utils/alertRecordPlayback';
-import { isSnapAlertTask } from '@/views/alert/alertDisplay';
+import { hasAlertFaceMatch, hasAlertPlateMatch, isSnapAlertTask } from '@/views/alert/alertDisplay';
+import { isEdgeStandaloneDeployProfile, isFlowTicketEnabled } from '@/utils/deployProfile';
+import AlarmTicket from '@/views/alert/components/AlarmTicket/index.vue';
 
 const router = useRouter();
+const edgeStandalone = isEdgeStandaloneDeployProfile();
 const [registerImageModal, { openModal: openImageModal }] = useModal();
+const [registerFaceAlertModal, { openModal: openFaceAlertModal }] = useModal();
+const [registerPlateAlertModal, { openModal: openPlateAlertModal }] = useModal();
 const [registerVideoModal, { openModal: openVideoModal, closeModal: closeVideoModal, setModalProps: setVideoModalProps }] = useModal();
 const [registerLocationDrawer, { openModal: openLocationModal }] = useModal();
 
@@ -124,14 +136,18 @@ defineOptions({ name: 'Alarm' });
 const ALERT_TAB_KEYS = {
   MAP: '1',
   EVENTS: '2',
+  TICKET: '3',
 } as const;
 
 const ALERT_TAB_ID_SET = new Set<string>(Object.values(ALERT_TAB_KEYS));
 
 const viewMode = ref<'table' | 'card'>('card');
 
+// mini / edge 单机不部署 iot-flow 工作流服务，隐藏告警工单 Tab
+const showTicketTab = isFlowTicketEnabled();
+
 const state = reactive({
-  activeKey: ALERT_TAB_KEYS.MAP,
+  activeKey: edgeStandalone ? ALERT_TAB_KEYS.EVENTS : ALERT_TAB_KEYS.MAP,
 });
 
 const params = ref<Record<string, any>>({});
@@ -144,9 +160,10 @@ const lastTableFilterParams = ref<Record<string, any>>({});
 function normalizeAlertRouteTab(tab: unknown): string {
   if (tab === 'map') return ALERT_TAB_KEYS.MAP;
   if (tab === 'events') return ALERT_TAB_KEYS.EVENTS;
+  if (tab === 'ticket' && showTicketTab) return ALERT_TAB_KEYS.TICKET;
   const tabStr = String(tab);
-  if (ALERT_TAB_ID_SET.has(tabStr)) return tabStr;
-  return ALERT_TAB_KEYS.MAP;
+  if (ALERT_TAB_ID_SET.has(tabStr) && (tabStr !== ALERT_TAB_KEYS.TICKET || showTicketTab)) return tabStr;
+  return edgeStandalone ? ALERT_TAB_KEYS.EVENTS : ALERT_TAB_KEYS.MAP;
 }
 
 async function activateMapTab() {
@@ -163,20 +180,44 @@ async function activateMapTab() {
 
 function handleTabClick(activeKey: string) {
   state.activeKey = activeKey;
+  // 同步到 URL（query.tab）：从流程设计等子页面返回时可恢复所在的 Tab，而不是落回默认地图分布
+  void router.replace({ query: { ...router.currentRoute.value.query, tab: activeKey } });
   if (activeKey === ALERT_TAB_KEYS.MAP) {
     void activateMapTab();
   }
 }
 
+// 人脸/车牌轨迹入口跳转：URL 携带 trajectory_person / trajectory_plate 时，
+// 无论当前在哪个 tab 都强制切到地图分布（轨迹加载由 AlertMapPanel 自身的 route.query watch 完成）
+watch(
+  () => [
+    router.currentRoute.value.query.trajectory_person,
+    router.currentRoute.value.query.trajectory_plate,
+  ],
+  ([person, plate]) => {
+    if (!person && !plate) return;
+    if (state.activeKey !== ALERT_TAB_KEYS.MAP) {
+      state.activeKey = ALERT_TAB_KEYS.MAP;
+      void activateMapTab();
+    }
+  },
+);
+
 const refreshData = () => {
   const route = router.currentRoute.value;
   const rawTab = route.query.tab ?? (route.query.view === 'map' ? ALERT_TAB_KEYS.MAP : undefined);
-  const tab = rawTab ? normalizeAlertRouteTab(rawTab) : ALERT_TAB_KEYS.MAP;
+  const tab = rawTab
+    ? normalizeAlertRouteTab(rawTab)
+    : (edgeStandalone ? ALERT_TAB_KEYS.EVENTS : ALERT_TAB_KEYS.MAP);
   if (tab === ALERT_TAB_KEYS.MAP) {
     void activateMapTab();
     return;
   }
-  state.activeKey = ALERT_TAB_KEYS.EVENTS;
+  state.activeKey = tab;
+  if (tab === ALERT_TAB_KEYS.TICKET) {
+    // 告警工单 Tab：子 Tab 由 AlarmTicket 自行恢复，无需加载事件列表
+    return;
+  }
   if (route.query.task_name) {
     params.value = { task_name: route.query.task_name };
     setTimeout(() => {
@@ -293,6 +334,17 @@ const handleViewImage = (record: Record<string, any>) => {
   const minioUrl = record['image_url'];
   if (minioUrl == null || String(minioUrl).trim() === '') {
     createMessage.warn('告警图片不存在');
+    return;
+  }
+  // 关联人脸的告警走人脸专属弹框（全景图 + 人脸头像 + 姓名/行为/地点/事件），
+  // 关联车牌的告警走车牌专属弹框（全景图 + 车牌号/车主/置信度 + 轨迹入口），
+  // 其余告警保持原有图片弹框
+  if (hasAlertFaceMatch(record)) {
+    openFaceAlertModal(true, { record });
+    return;
+  }
+  if (hasAlertPlateMatch(record)) {
+    openPlateAlertModal(true, { record });
     return;
   }
   openImageModal(true, {

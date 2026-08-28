@@ -545,13 +545,14 @@ RUNTIME_IMAGE_SPECS=(
     "iot-infra/iot-infra-biz/Dockerfile|iot-module-infra-biz:latest"
     "iot-device/iot-device-biz/Dockerfile|iot-module-device-biz:latest"
     "iot-dataset/iot-dataset-biz/Dockerfile|iot-module-dataset-biz:latest"
-    "../NODE/iot-node-biz/Dockerfile|iot-module-node-biz:latest"
+    "iot-node/iot-node-biz/Dockerfile|iot-module-node-biz:latest"
     "iot-visualize/iot-visualize-biz/Dockerfile|iot-module-visualize-biz:latest"
     "iot-tdengine/iot-tdengine-biz/Dockerfile|iot-module-tdengine-biz:latest"
     "iot-file/iot-file-biz/Dockerfile|iot-module-file-biz:latest"
     "iot-message/iot-message-biz/Dockerfile|iot-module-message-biz:latest"
     "iot-sink/iot-sink-biz/Dockerfile|iot-sink-biz:latest"
     "iot-gb28181/iot-gb28181-biz/Dockerfile|iot-gb28181-biz:latest"
+    "iot-flow/iot-flow-biz/Dockerfile|iot-flow-biz:latest"
 )
 
 # 与 RUNTIME_IMAGE_SPECS 中 COPY 的 Jar 一一对应
@@ -568,6 +569,7 @@ REQUIRED_RUNTIME_JARS=(
     iot-message-biz.jar
     iot-sink-biz.jar
     iot-gb28181-biz.jar
+    iot-flow-biz.jar
 )
 
 # RUNTIME_IMAGE_SPECS 条目 → compose 服务名（dockerfile 首段目录）
@@ -784,7 +786,7 @@ _normalize_build_ownership() {
         return 0
     fi
     print_warning "Maven 产物目录不可写（常见原因：Docker userns-remap 写成 nobody 属主），正在修复..."
-    chown -R "${uid}:${gid}" "$SCRIPT_DIR"/*/target "$JARS_DIR" 2>/dev/null || true
+    chown -R "${uid}:${gid}" "$SCRIPT_DIR"/*/target "$SCRIPT_DIR"/iot-node/*/target "$JARS_DIR" 2>/dev/null || true
     if touch "$probe" 2>/dev/null; then
         rm -f "$probe"
         return 0
@@ -854,14 +856,17 @@ ensure_mvnd_image() {
 # 确保常驻 builder 容器在运行（卷挂载源码 + m2 + settings）。失败返回非 0 → 调用方回退 C1。
 ensure_mvnd_builder() {
     ensure_mvnd_image || return 1
-    # 已在运行
+    # 已在运行：若仍是旧版双挂载（/NODE+/DEVICE），重建为仅 /build
     if [ "$(docker inspect -f '{{.State.Running}}' "$MVND_CONTAINER" 2>/dev/null)" = "true" ]; then
-        return 0
+        if docker exec "$MVND_CONTAINER" test -f /build/iot-node/pom.xml 2>/dev/null \
+            && ! docker exec "$MVND_CONTAINER" test -d /NODE 2>/dev/null; then
+            return 0
+        fi
+        print_info "mvnd builder 挂载布局已过时，重建容器..."
+        docker rm -f "$MVND_CONTAINER" >/dev/null 2>&1 || true
     fi
-    # 存在但已停止 → 启动
+    # 存在但已停止 → 删除重建（避免沿用旧挂载）
     if docker inspect "$MVND_CONTAINER" >/dev/null 2>&1; then
-        docker start "$MVND_CONTAINER" >/dev/null 2>&1 && return 0
-        # 启动失败（卷/配置可能变化）→ 删除重建
         docker rm -f "$MVND_CONTAINER" >/dev/null 2>&1 || true
     fi
     print_info "启动常驻 mvnd builder 容器 $MVND_CONTAINER ..."
@@ -1304,11 +1309,22 @@ start_services() {
     ensure_platform_agent_after_device_stack
 }
 
+# stop/clean 用的 down：必须带上 compose profile。
+# iot-tdengine 声明了 profiles: [tdengine]，裸 docker compose down 不会停止/删除该容器。
+# 无论当前部署形态是否 full，down 时都启用 tdengine profile，避免从 full 切走后残留。
+device_compose_down() {
+    refresh_device_compose_profile_args
+    if [[ ! " ${DEVICE_COMPOSE_PROFILE_ARGS[*]} " =~ [[:space:]]tdengine[[:space:]] ]]; then
+        DEVICE_COMPOSE_PROFILE_ARGS+=(--profile tdengine)
+    fi
+    device_compose down "$@"
+}
+
 # 停止所有服务
 stop_services() {
     print_info "停止所有服务..."
     cd "$SCRIPT_DIR"
-    $DOCKER_COMPOSE down
+    device_compose_down
     print_success "服务已停止"
 }
 
@@ -1464,7 +1480,7 @@ clean() {
         done
     fi
     cd "$SCRIPT_DIR"
-    $DOCKER_COMPOSE down
+    device_compose_down
     print_success "容器清理完成"
 
     print_info "清理各模块 target 目录下的 .jar 包..."
@@ -1472,6 +1488,7 @@ clean() {
         "iot-dataset"
         "iot-node"
         "iot-visualize"
+        "iot-flow"
         "iot-device"
         "iot-file"
         "iot-gateway"
@@ -1529,7 +1546,7 @@ clean_all() {
         done
     fi
     cd "$SCRIPT_DIR"
-    $DOCKER_COMPOSE down --rmi all
+    device_compose_down --rmi all
     stop_mvnd_builder
     print_success "完全清理完成"
 }
@@ -1609,7 +1626,7 @@ DEVICE模块 Docker Compose 管理脚本
     help                显示此帮助信息
 
 环境变量:
-    EASYAIOT_DEPLOY_PROFILE   部署形态: mini(1,仅 iot-system) | standard(2,跳过 device/tdengine/visualize) | full(3，默认)
+    EASYAIOT_DEPLOY_PROFILE   部署形态: mini(1,精简：gateway/system/infra/sink) | standard(2,跳过 device/tdengine/visualize) | full(3，默认)
     USE_MVND=1          启用 C2 常驻 mvnd 容器编译（守护进程跨次复用，更快）；不可用时自动回退 C1。
                         默认 0 走 C1（一次性 docker run 卷挂载，无常驻进程）。
                         注意：C2 会常驻一个 mvnd 容器（约 1–2GB 内存），用 builder-stop / clean 回收。
@@ -1633,6 +1650,7 @@ DEVICE模块 Docker Compose 管理脚本
     - iot-dataset
     - iot-node
     - iot-visualize
+    - iot-flow
     - iot-tdengine
     - iot-file
     - iot-message

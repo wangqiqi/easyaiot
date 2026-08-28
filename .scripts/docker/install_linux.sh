@@ -15,10 +15,10 @@
 #   status     - 查看所有服务状态
 #   logs       - 查看服务日志
 #   build           - 重新构建所有镜像（各模块本地构建）
-#   build-runtime [模块] - 构建/推送运行时镜像到远程仓库（推送成功后删除本地镜像；可选 HARNESS|IDEA|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）
+#   build-runtime [模块] - 构建/推送运行时镜像到远程仓库（推送成功后删除本地镜像；可选 HARNESS|IDEA|DEVICE|AI|RTC|POST|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）
 #   pull            - 从远程仓库拉取预构建运行时镜像（等同 runtime_image.sh pull）
 #   clean      - 清理所有容器和镜像
-#   clean-build-runtime - 清理 build-runtime 构建产物（先停业务服务，再删运行时镜像/构建缓存；保留跨架构基础镜像；不停中间件）
+#   clean-build-runtime [模块] - 清理 build-runtime 构建产物（先停业务服务，再删运行时镜像/构建缓存；保留跨架构基础镜像；不停中间件；指定模块时仅清理该模块镜像与其构建缓存）
 #   update     - 更新镜像并重启所有服务（交互可选拉取/本地重建）
 #   verify     - 验证所有服务是否启动成功
 #   verify-alert - 告警事件面验收（共享盘挂载 + MQTT→iot-sink→入库）
@@ -27,7 +27,8 @@
 #   check      - 检查 Docker 和 Docker Compose 安装状态
 #   profile    - 显示当前部署形态与服务范围
 #   site [子命令] - 官方网站 SITE 独立部署
-#   runtime|runtime-atomic - RUNTIME 原子模式（只装计算节点执行器，需 VIDEO_BASE_URL）
+#   mobile [子命令] - 移动端 APP 三端打包（Android/iOS/HarmonyOS）：status|build|bump|artifacts|clean（委托 .scripts/docker/mobile.sh）
+#   runtime|runtime-integrated - 兼容别名：等价于 install 中选择「云边一体形态」
 #   build-runtime-cpp [target] - RUNTIME C++ 离线包矩阵构建（容器内按 OS 编译，与 COMPILE 对齐）
 #   preflight-runtime-cpp [--node N] - RUNTIME 分发前预检（缺包时提示 export 命令）
 #   export-runtime-cpp <os_family> - 单 OS 导出（如 openeuler22 / kylin10）
@@ -35,10 +36,12 @@
 #   analyze-logs   - 多模块日志合并分析（各模块约 500 行，带分割线）
 #   analyze-disk   - 项目关键目录磁盘占用分析
 #
-# 部署形态（EASYAIOT_DEPLOY_PROFILE）：
-#   mini(1)     - 4G：iot-gateway+iot-sink+VIDEO/AI/RTC/WEB + 精简中间件（无 TDengine/可视化/iot-node 等）
-#   standard(2) - 16G：不含 TDengine/iot-device/iot-tdengine/NodeRED/iot-visualize（含 EMQX）
-#   full(3)     - 全量（默认，约 20G）；含 iot-visualize/VISUALIZE、TRANSFORM；启动后自动拉起工业协议演示
+# 部署规格（install 交互选型）：
+#   0) edge / 1) mini / 2) standard / 3) full（默认）
+#   交互选 edge 后再选: 1) standalone | 2) integrated
+# 快速开始（纯边缘，一键、不再二次选型）：
+#   EASYAIOT_DEPLOY_PROFILE=edge ./install_linux.sh install
+#   ./install_linux.sh edge install   # 等价快捷入口，默认 standalone
 # ============================================
 
 set -e
@@ -168,6 +171,31 @@ ensure_industrial_demo_after_stack() {
     fi
 }
 
+# 部署完成后初始化 FLOW 工作流并重放 demo 数据（幂等可重跑）：
+# 菜单/通知模板 → ruoyi-vue-pro20；烟感会签模型 + 路由规则 → iot-flow20；
+# 再向 Kafka 发 8 条告警并驱动出 通过/拒绝/取消/退回/会签半审/抄送 全状态实例。
+# 关闭：EASYAIOT_ENABLE_FLOW_DEMO=0；手动重放：bash .scripts/flow/flow_demo_replay.sh
+ensure_flow_demo_after_stack() {
+    local flow_script="${PROJECT_ROOT}/.scripts/flow/flow_demo_replay.sh"
+    if [ "${EASYAIOT_ENABLE_FLOW_DEMO:-1}" = "0" ]; then
+        print_info "跳过 FLOW 工作流初始化与 demo 重放（EASYAIOT_ENABLE_FLOW_DEMO=0）"
+        return 0
+    fi
+    if [ ! -f "$flow_script" ]; then
+        print_warning "未找到 ${flow_script}，跳过 FLOW 初始化"
+        return 0
+    fi
+    if [ ! -x "$flow_script" ]; then
+        chmod +x "$flow_script" 2>/dev/null || true
+    fi
+    print_section "初始化 FLOW 工作流（菜单/通知模板/会签模型/路由规则 + demo 告警实例）"
+    if bash "$flow_script"; then
+        print_success "FLOW 初始化完成（APP 流程审批页 / PC 工作流菜单可查看 demo 数据）"
+    else
+        print_warning "FLOW 初始化未完全成功，可稍后手动: bash ${flow_script}"
+    fi
+}
+
 stop_industrial_demo_before_stack() {
     local stopper="${PROJECT_ROOT}/.scripts/industrial-demo/stop_industrial_demo.sh"
     [ -f "$stopper" ] || return 0
@@ -201,6 +229,7 @@ MODULES=(
     "DEVICE"           # Device服务（网关和微服务）
     "AI"               # AI服务
     "RTC"              # RTC / go2rtc 消费级摄像头桥接（全形态）
+    "POST"             # POST 服务（Infer 流水线；仅 standard/full）
     "VIDEO"            # Video服务
     "WEB"              # Web前端服务
     "APP"              # App移动端H5（仅 full 全量形态）
@@ -224,6 +253,7 @@ MODULE_NAMES[".scripts/docker"]="基础服务"
 MODULE_NAMES["DEVICE"]="Device服务"
 MODULE_NAMES["AI"]="AI服务"
 MODULE_NAMES["RTC"]="RTC服务"
+MODULE_NAMES["POST"]="POST服务"
 MODULE_NAMES["VIDEO"]="Video服务"
 MODULE_NAMES["WEB"]="Web前端服务"
 MODULE_NAMES["HARNESS"]="HARNESS AI助手"
@@ -239,6 +269,7 @@ MODULE_PORTS[".scripts/docker"]="8848"  # Nacos端口
 MODULE_PORTS["DEVICE"]="48080"           # Gateway端口
 MODULE_PORTS["AI"]="5000"
 MODULE_PORTS["RTC"]="6100"
+MODULE_PORTS["POST"]="8089"
 MODULE_PORTS["VIDEO"]="6000"
 MODULE_PORTS["WEB"]="8888"
 MODULE_PORTS["HARNESS"]="3080"
@@ -254,6 +285,7 @@ MODULE_HEALTH_ENDPOINTS[".scripts/docker"]="/nacos/actuator/health"
 MODULE_HEALTH_ENDPOINTS["DEVICE"]="/actuator/health"  # Gateway健康检查
 MODULE_HEALTH_ENDPOINTS["AI"]="/actuator/health"
 MODULE_HEALTH_ENDPOINTS["RTC"]="/actuator/health"
+MODULE_HEALTH_ENDPOINTS["POST"]="/readyz"
 MODULE_HEALTH_ENDPOINTS["VIDEO"]="/actuator/health"
 MODULE_HEALTH_ENDPOINTS["WEB"]="/health"
 MODULE_HEALTH_ENDPOINTS["HARNESS"]="/"
@@ -931,7 +963,7 @@ execute_module_command() {
 
     local defer_agent_sync=0
     case "$module" in
-        DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM) defer_agent_sync=1 ;;
+        DEVICE|AI|RTC|POST|VIDEO|WEB|APP|VISUALIZE|TRANSFORM) defer_agent_sync=1 ;;
     esac
     if [ "$defer_agent_sync" -eq 1 ]; then
         export EASYAIOT_DEFER_PLATFORM_AGENT_SYNC=1
@@ -1031,7 +1063,13 @@ verify_service_health() {
 install_linux() {
     print_section "开始安装所有服务"
 
-    select_deploy_profile_for_install
+    select_deploy_profile_for_install || return 1
+    # 规格菜单选 edge → 云边一体形态：改走算力节点部署，不跑平台全量 install
+    if [ "${EASYAIOT_EDGE_MORPHOLOGY:-}" = "integrated" ]; then
+        run_edge_integrated_install
+        return $?
+    fi
+    cleanup_profile_excluded_containers
     export EASYAIOT_INSTALL_SCRIPT="${EASYAIOT_INSTALL_SCRIPT:-.scripts/docker/install_linux.sh}"
     if ! runtime_images_acquire; then
         print_error "预构建镜像获取失败，已中止安装"
@@ -1117,11 +1155,14 @@ install_linux() {
         echo "  已失败: ${failed_modules[*]}"
     fi
     
+    cleanup_profile_excluded_containers
+
     if [ $success_count -eq $total_count ]; then
         print_success "所有模块安装成功！"
         ensure_platform_agent_after_stack
         ensure_mqtt_demo_after_stack
         ensure_industrial_demo_after_stack
+        ensure_flow_demo_after_stack
     else
         echo ""
         print_warning "部分模块安装失败，请检查日志"
@@ -1463,6 +1504,7 @@ start_all() {
     print_section "启动所有服务"
     
     ensure_deploy_profile
+    cleanup_profile_excluded_containers
     print_info "部署形态: $(_deploy_profile_desc) (EASYAIOT_DEPLOY_PROFILE=${EASYAIOT_DEPLOY_PROFILE})"
     check_docker "$@"
     check_docker_compose
@@ -1534,6 +1576,7 @@ start_all() {
     ensure_platform_agent_after_stack
     ensure_mqtt_demo_after_stack
     ensure_industrial_demo_after_stack
+    ensure_flow_demo_after_stack
 }
 
 # 停止所有服务
@@ -1555,14 +1598,23 @@ stop_all() {
 }
 
 # 仅停止业务运行时模块（不含 Nacos/PostgreSQL 等中间件），便于释放 build-runtime 镜像占用
+# 可选参数 only_module：仅停止该模块（clean-build-runtime <模块> 使用），为空则停止全部业务模块
 stop_runtime_modules() {
-    print_section "停止业务运行时服务（保留中间件）"
+    local only_module="${1:-}"
+    if [ -n "$only_module" ]; then
+        print_section "停止业务运行时服务（保留中间件，仅 ${MODULE_NAMES[$only_module]:-$only_module}）"
+    else
+        print_section "停止业务运行时服务（保留中间件）"
+    fi
 
     check_docker
     check_docker_compose
 
     collect_biz_modules
     local -a stop_modules=("${BIZ_MODULES[@]}")
+    if [ -n "$only_module" ]; then
+        stop_modules=("$only_module")
+    fi
     local idx module
     for ((idx=${#stop_modules[@]}-1 ; idx>=0 ; idx--)); do
         module="${stop_modules[$idx]}"
@@ -1572,7 +1624,8 @@ stop_runtime_modules() {
     done
 
     # 兜底：若形态未纳入 PANEL 但仍有独立 install.sh，尝试停止以释放 easyaiot/panel 镜像
-    if [[ " ${stop_modules[*]} " != *" PANEL "* ]] \
+    if { [ -z "$only_module" ] || [ "$only_module" = "PANEL" ]; } \
+        && [[ " ${stop_modules[*]} " != *" PANEL "* ]] \
         && [ -f "${PROJECT_ROOT}/PANEL/install.sh" ] \
         && [ "${EASYAIOT_ENABLE_PANEL:-1}" != "0" ]; then
         print_info "停止 PANEL 独立运维控制台..."
@@ -1580,7 +1633,11 @@ stop_runtime_modules() {
         echo ""
     fi
 
-    print_success "业务运行时服务已停止（中间件未停止）"
+    if [ -n "$only_module" ]; then
+        print_success "${MODULE_NAMES[$only_module]:-$only_module} 已停止（中间件未停止）"
+    else
+        print_success "业务运行时服务已停止（中间件未停止）"
+    fi
 }
 
 # 重启所有服务
@@ -1588,6 +1645,7 @@ restart_all() {
     print_section "重启所有服务"
     
     ensure_deploy_profile
+    cleanup_profile_excluded_containers
     print_info "部署形态: $(_deploy_profile_desc) (EASYAIOT_DEPLOY_PROFILE=${EASYAIOT_DEPLOY_PROFILE})"
     check_docker "$@"
     check_docker_compose
@@ -1622,6 +1680,7 @@ restart_all() {
     ensure_platform_agent_after_stack
     ensure_mqtt_demo_after_stack
     ensure_industrial_demo_after_stack
+    ensure_flow_demo_after_stack
 }
 
 # 查看所有服务状态
@@ -1753,23 +1812,92 @@ clean_all() {
 }
 
 # 清理 build-runtime 构建产物：先停止服务，再调用 cleanup_build_runtime.sh
+# 用法: clean-build-runtime [模块] [选项...]
+#   模块为可选的 build-runtime 模块名（HARNESS|IDEA|DEVICE|AI|RTC|POST|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL），
+#   指定后仅停止该模块服务、仅清理该模块镜像与该模块 .build-cache；其余选项原样透传给 cleanup_build_runtime.sh。
 clean_build_runtime() {
     shift
-    local -a cleanup_args=("$@")
+    local module=""
+    local -a cleanup_args=()
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --module|-m)
+                if [ $# -lt 2 ]; then
+                    print_error "参数 $1 缺少模块名"
+                    exit 2
+                fi
+                module="$2"
+                shift 2
+                ;;
+            --*|-*)
+                cleanup_args+=("$1")
+                shift
+                ;;
+            *)
+                if [ -z "$module" ]; then
+                    module="$1"
+                else
+                    cleanup_args+=("$1")
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    local -a module_args=()
+    if [ -n "$module" ]; then
+        local normalized
+        normalized=$(runtime_normalize_build_module "$module")
+        if [ "$normalized" = "INVALID" ]; then
+            print_error "无效的运行时模块: ${module}，可选: $(runtime_build_module_help)"
+            exit 2
+        fi
+        if [ -n "$normalized" ]; then
+            module="$normalized"
+            module_args=(--module "$module")
+            print_info "仅清理模块: ${module}（其余模块镜像与构建缓存不受影响）"
+        fi
+    fi
+
+    # 交互模式（无参数、TTY、非菜单调用）询问是否仅清理指定模块；非交互环境保持原默认全量清理
+    if [ -z "$module" ] && [ ${#cleanup_args[@]} -eq 0 ] \
+        && [ "${EASYAIOT_FROM_MENU:-0}" != "1" ] && [ -t 0 ]; then
+        echo ""
+        local scope_resp=""
+        printf '%s' "是否仅清理指定模块（其余模块镜像与构建缓存不受影响）？(y/N) "
+        read -r scope_resp || scope_resp=""
+        case "${scope_resp:-N}" in
+            y|Y|yes|YES)
+                runtime_interactive_pick_module
+                if [ -n "${RUNTIME_PICKED_MODULE:-}" ]; then
+                    module="${RUNTIME_PICKED_MODULE}"
+                    module_args=(--module "$module")
+                    print_info "仅清理模块: ${module}（其余模块镜像与构建缓存不受影响）"
+                else
+                    print_info "已选择全部模块，按默认方式清理"
+                fi
+                echo ""
+                ;;
+        esac
+    fi
 
     print_section "清理 build-runtime 构建产物"
     check_docker
 
     print_info "步骤 1/2: 停止业务运行时服务（保留中间件）..."
-    stop_runtime_modules
+    stop_runtime_modules "$module"
 
     print_info "步骤 2/2: 清理 build-runtime 镜像与构建缓存..."
-    if [ "${EASYAIOT_FROM_MENU:-0}" = "1" ] && [ ${#cleanup_args[@]} -eq 0 ]; then
+    if [ "${EASYAIOT_FROM_MENU:-0}" = "1" ] && [ ${#cleanup_args[@]} -eq 0 ] && [ -z "$module" ]; then
         bash "${SCRIPT_DIR}/cleanup_build_runtime.sh"
-    elif [ ${#cleanup_args[@]} -eq 0 ]; then
+    elif [ ${#cleanup_args[@]} -eq 0 ] && [ -z "$module" ]; then
         bash "${SCRIPT_DIR}/cleanup_build_runtime.sh" -y
-    else
+    elif [ -z "$module" ]; then
         bash "${SCRIPT_DIR}/cleanup_build_runtime.sh" "${cleanup_args[@]}"
+    elif [ ${#cleanup_args[@]} -eq 0 ]; then
+        bash "${SCRIPT_DIR}/cleanup_build_runtime.sh" "${module_args[@]}" -y
+    else
+        bash "${SCRIPT_DIR}/cleanup_build_runtime.sh" "${module_args[@]}" "${cleanup_args[@]}"
     fi
 }
 
@@ -1859,6 +1987,7 @@ update_all() {
     ensure_platform_agent_after_stack
     ensure_mqtt_demo_after_stack
     ensure_industrial_demo_after_stack
+    ensure_flow_demo_after_stack
 }
 
 # 验证所有服务
@@ -1899,8 +2028,9 @@ verify_all() {
         echo -e "  Device服务 (Gateway):  http://localhost:48080"
         echo -e "  AI服务:                http://localhost:5000"
         echo -e "  RTC服务:               http://localhost:6100"
+        echo -e "  POST服务:              http://localhost:8089/readyz"
         echo -e "  Video服务:             http://localhost:6000"
-        echo -e "  Web前端:               http://localhost:8888"
+        echo -e "  Web前端:               https://localhost:8888"
         if module_enabled_for_deploy_profile APP; then
             echo -e "  App移动端H5:           http://localhost:9010"
         fi
@@ -2064,6 +2194,7 @@ show_help() {
     echo "  1) 部署 — 安装/启停/更新/状态/日志等"
     echo "  2) 分析 — 日志合并/磁盘占用/健康检查等"
     echo "  3) 官网 — SITE 官方网站独立部署"
+    echo "  4) 移动端 — APP 三端打包（Android/iOS/HarmonyOS）"
     echo ""
     echo "可用命令:"
     echo "  install         - 安装并启动所有服务（首次运行）"
@@ -2074,10 +2205,10 @@ show_help() {
     echo "  logs            - 查看所有服务日志"
     echo "  logs [模块]     - 查看指定模块日志"
     echo "  build           - 重新构建所有镜像（各模块本地构建）"
-    echo "  build-runtime [模块] - 构建/推送运行时镜像（推送成功后删本地镜像；可选 HARNESS|IDEA|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL）"
+    echo "  build-runtime [模块] - 构建/推送运行时镜像（推送成功后删本地镜像；可选 $(runtime_build_module_pipe_list)）"
     echo "  pull            - 从远程仓库拉取预构建运行时镜像（交互式，默认 full）"
     echo "  clean           - 清理所有容器和镜像"
-    echo "  clean-build-runtime - 清理 build-runtime 构建产物（先停业务服务，默认删运行时镜像+构建缓存；保留跨架构基础镜像）"
+    echo "  clean-build-runtime [模块] - 清理 build-runtime 构建产物（先停业务服务，默认删运行时镜像+构建缓存；保留跨架构基础镜像；指定模块时仅停该模块服务、仅清该模块镜像与构建缓存）"
     echo "  update          - 更新镜像并重启所有服务（交互可选拉取/本地重建）"
     echo "  verify          - 验证所有服务是否启动成功（含告警/DVR 事件面验收）"
     echo "  verify-alert    - 告警事件面验收（控制面共享盘 + MQTT→iot-sink→入库）"
@@ -2087,7 +2218,7 @@ show_help() {
     echo "  check           - 检查 Docker 和 Docker Compose 安装状态"
     echo "  profile         - 显示当前部署形态与服务范围"
     echo "  site [子命令]   - 官方网站 SITE 独立部署（默认 install）"
-    echo "  runtime|runtime-atomic - RUNTIME 原子模式（只装计算节点执行器，需 VIDEO_BASE_URL）"
+    echo "  mobile [子命令] - 移动端 APP 三端打包管理（委托 .scripts/docker/mobile.sh）"
     echo "  build-runtime-cpp [target|--all|--compile-target NAME] - RUNTIME C++ 离线包矩阵构建"
     echo "  preflight-runtime-cpp [--node N | os_family [arch]] - 分发前预检本地 tarball"
     echo "  export-runtime-cpp <os_family> - 单 OS 容器内导出（openeuler22 / kylin10 等）"
@@ -2102,13 +2233,19 @@ show_help() {
     echo "  也可直接: cd SITE && ./install_linux.sh <子命令>"
     echo "  默认端口: http://localhost:8090"
     echo ""
+    echo "移动端子命令（./install_linux.sh mobile <子命令>，详见 MOBILE.md）:"
+    echo "  status | build <android|ios|harmonyos|all> [prod|test|dev] [--skip-native]"
+    echo "  bump <x.y.z> <versionCode> | artifacts | clean <android|ios|harmonyos|all>"
+    echo "  也可直接: bash .scripts/docker/mobile.sh <子命令>"
+    echo ""
     echo "模块列表:"
     for module in "${MODULES[@]}"; do
         echo "  - ${MODULE_NAMES[$module]} ($module)"
     done
     echo ""
     echo "可选环境变量:"
-    echo "  EASYAIOT_DEPLOY_PROFILE      - 部署形态: mini(1) | standard(2) | full(3，默认 full)"
+    echo "  EASYAIOT_DEPLOY_PROFILE      - 部署形态: edge | mini | standard | full（默认 full）"
+    echo "  EASYAIOT_EDGE_MORPHOLOGY     - edge 子形态: standalone | integrated"
     echo "  PARALLEL_MODULES=true|false  - 业务模块并行开关：start 默认并行；update 默认串行(可能含重建镜像)"
     echo "  PARALLEL_BUILD=true          - build 时并行构建各模块（默认串行，防小内存并行 OOM）"
     echo "  FORCE_NETWORK_RECREATE=true  - 启动时强制重建 easyaiot-network（宿主机 IP 变更后使用）"
@@ -2117,10 +2254,12 @@ show_help() {
     echo "  EASYAIOT_APPLY_INDUSTRIAL_SEED=0   - 启动演示时不写入/刷新工业协议演示设备种子"
     echo "  EASYAIOT_RUNTIME_REGISTRY    - 运行时镜像仓库（默认见 runtime_registry.conf）"
     echo "  EASYAIOT_RUNTIME_BUILD_ARCH  - build-runtime 目标架构: all(默认) | amd64 | arm64"
-    echo "  EASYAIOT_RUNTIME_BUILD_MODULE - build-runtime 目标模块: all(默认) | HARNESS | IDEA | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
+    echo "  EASYAIOT_RUNTIME_BUILD_MODULE - build-runtime 目标模块: $(runtime_build_module_help)（默认 all=全部）"
     echo "  SITE_PORT                    - 官网宿主机端口（默认 8090）"
-    echo "  VIDEO_BASE_URL               - runtime 原子模式：中心 VIDEO 汇聚地址（如 http://192.168.1.10:6000）"
-    echo "  EASYAIOT_RUNTIME_INSTALL_DIR - runtime 原子模式安装目录（默认 /opt/easyaiot/RUNTIME）"
+    echo "  VIDEO_BASE_URL               - 云边一体：中心汇聚面根地址（如 http://192.168.1.10:6000）"
+    echo "  GATEWAY_URL                  - 云边一体：中心网关地址（如 http://192.168.1.10:48080）"
+    echo "  MQTT_BROKER_URLS             - 云边一体：中心消息总线地址"
+    echo "  EASYAIOT_RUNTIME_INSTALL_DIR - 云边一体：边缘算力安装目录（默认 /opt/easyaiot/RUNTIME）"
     echo "  EASYAIOT_VERIFY_ALERT_ON_VERIFY=0 - verify 时跳过告警 MQTT/共享盘验收"
     echo "  EASYAIOT_VERIFY_ALERT_STRICT=1    - verify-alert 前置缺失时按失败退出"
     echo "  MQTT_BROKER_URLS / ALERT_IMAGES_DIR / VERIFY_DEVICE_ID - 告警验收覆盖项"
@@ -2128,23 +2267,35 @@ show_help() {
     echo ""
 }
 
-# RUNTIME 原子模式：只部署计算节点执行器（不装 VIDEO/WEB/DEVICE）
-run_runtime_atomic() {
+# ---------- 云边一体形态（由 install 规格选型触发）----------
+run_edge_integrated_install() {
     local runtime_script="${PROJECT_ROOT}/RUNTIME/install_linux.sh"
     if [ ! -f "$runtime_script" ]; then
-        print_error "未找到 RUNTIME 安装脚本: ${runtime_script}"
+        print_error "未找到边缘算力安装脚本: ${runtime_script}"
         return 1
     fi
-    print_section "RUNTIME 原子模式（只装执行器）"
-    print_info "本模式不部署 VIDEO/WEB 等业务面；告警/心跳需指向中心 VIDEO_BASE_URL"
-    if [ -z "${VIDEO_BASE_URL:-${EASYAIOT_VIDEO_BASE_URL:-}}" ] && [ -z "${1:-}" ]; then
-        print_error "请提供汇聚面地址，例如:"
-        print_info "  VIDEO_BASE_URL=http://192.168.1.10:6000 $0 runtime"
-        print_info "  $0 runtime http://192.168.1.10:6000"
+    print_section "云边一体形态部署"
+    print_info "本机仅部署边缘算力；汇聚面接入中心平台（任务编排、预览与告警汇聚）"
+    export EASYAIOT_EDGE_MORPHOLOGY=integrated
+    if ! prompt_cloud_edge_center_config "${1:-}"; then
         return 1
     fi
-    bash "$runtime_script" atomic "$@"
+    bash "$runtime_script" integrated "${VIDEO_BASE_URL}"
 }
+
+# 「edge」快捷入口：等价于 EASYAIOT_DEPLOY_PROFILE=edge 的纯边缘一键安装（不再二次选型）
+# 云边一体请用交互 install 选 edge→integrated，或 edge-integrated / runtime
+run_edge_entry() {
+    print_info "快速安装：edge / standalone（纯边缘形态，本地闭环）"
+    export EASYAIOT_DEPLOY_PROFILE=edge
+    export EASYAIOT_EDGE_MORPHOLOGY=standalone
+    unset EASYAIOT_SKIP_PROFILE_PROMPT 2>/dev/null || true
+    install_linux
+}
+
+run_edge_profile_install() { run_edge_entry "$@"; }
+run_runtime_integrated() { run_edge_integrated_install "$@"; }
+run_runtime_atomic() { run_edge_integrated_install "$@"; }
 
 # RUNTIME C++ 离线包矩阵（iot-node 分发用，与 COMPILE 目标对齐）
 run_runtime_cpp_bundle_cmd() {
@@ -2156,6 +2307,9 @@ run_runtime_cpp_bundle_cmd() {
             ;;
         preflight|preflight-runtime-cpp|check)
             runtime_cpp_preflight_bundle "$@"
+            ;;
+        verify|verify-runtime-cpp)
+            runtime_cpp_verify_matrix "$@"
             ;;
         export|export-runtime-cpp)
             runtime_cpp_export_one "$@"
@@ -2197,6 +2351,41 @@ run_site_module() {
         *)
             print_error "未知 SITE 子命令: ${site_cmd}"
             echo "可用: install | start | stop | restart | status | logs | build | clean | update"
+            return 1
+            ;;
+    esac
+}
+
+# 移动端 APP 三端打包（Android/iOS/HarmonyOS）：委托同目录 mobile.sh 统一管理
+run_mobile_module() {
+    local mobile_script="${SCRIPT_DIR}/mobile.sh"
+
+    if [ ! -f "$mobile_script" ]; then
+        print_error "未找到移动端脚本: ${mobile_script}"
+        return 1
+    fi
+    if [ ! -x "$mobile_script" ]; then
+        chmod +x "$mobile_script" || true
+    fi
+
+    local sub="${1:-}"
+    if [ -z "$sub" ]; then
+        # 缺省给只读的状态总览，安全且直观
+        print_section "移动端三端打包管理"
+        print_info "执行: .scripts/docker/mobile.sh status（完整子命令见 help）"
+        bash "$mobile_script" status
+        return 0
+    fi
+
+    case "$sub" in
+        status|build|bump|artifacts|clean|help|-h|--help)
+            print_section "移动端三端打包管理（${sub}）"
+            print_info "执行: .scripts/docker/mobile.sh $*"
+            bash "$mobile_script" "$@"
+            ;;
+        *)
+            print_error "未知移动端子命令: ${sub}"
+            echo "可用: status | build | bump | artifacts | clean | help"
             return 1
             ;;
     esac
@@ -2277,14 +2466,24 @@ main() {
         site|website|官网)
             run_site_module "${2:-install}"
             ;;
-        runtime|runtime-atomic|install-runtime|atomic-runtime)
-            run_runtime_atomic "${2:-}"
+        mobile|移动端)
+            run_mobile_module "${@:2}"
+            ;;
+        runtime|runtime-atomic|install-runtime|atomic-runtime|runtime-integrated|edge-integrated|cloud-edge)
+            # 自动化兼容：直接走云边一体形态；日常请用 install 规格菜单
+            run_edge_integrated_install "${2:-}"
+            ;;
+        edge|pure-edge|edge-standalone|runtime-standalone|runtime-edge|standalone-runtime)
+            run_edge_entry
             ;;
         build-runtime-cpp|runtime-cpp-build|runtime-cpp-matrix)
             run_runtime_cpp_bundle_cmd build "${@:2}"
             ;;
         preflight-runtime-cpp|runtime-cpp-preflight)
             run_runtime_cpp_bundle_cmd preflight "${@:2}"
+            ;;
+        verify-runtime-cpp|runtime-cpp-verify)
+            run_runtime_cpp_bundle_cmd verify "${@:2}"
             ;;
         export-runtime-cpp|runtime-cpp-export)
             run_runtime_cpp_bundle_cmd export "${@:2}"

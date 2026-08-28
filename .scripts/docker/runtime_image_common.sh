@@ -23,19 +23,19 @@ RUNTIME_IMAGE_REGISTRY=""
 # ============================================================================
 DEVICE_REMOTE_NAMES=(
     aiot-gateway aiot-system aiot-infra aiot-device aiot-dataset
-    aiot-node aiot-visualize aiot-tdengine aiot-file aiot-message aiot-sink aiot-gb28181
+    aiot-node aiot-visualize aiot-flow aiot-tdengine aiot-file aiot-message aiot-sink aiot-gb28181
 )
 
 DEVICE_LOCAL_NAMES=(
     iot-gateway iot-module-system-biz iot-module-infra-biz iot-module-device-biz
-    iot-module-dataset-biz iot-module-node-biz iot-module-visualize-biz iot-module-tdengine-biz
+    iot-module-dataset-biz iot-module-node-biz iot-module-visualize-biz iot-flow-biz iot-module-tdengine-biz
     iot-module-file-biz iot-module-message-biz iot-sink-biz iot-gb28181-biz
 )
 
 # 与 DEVICE_REMOTE_NAMES / DEVICE_LOCAL_NAMES 下标一一对应（docker-compose 服务名）
 DEVICE_COMPOSE_SERVICES=(
     iot-gateway iot-system iot-infra iot-device iot-dataset
-    iot-node iot-visualize iot-tdengine iot-file iot-message iot-sink iot-gb28181
+    iot-node iot-visualize iot-flow iot-tdengine iot-file iot-message iot-sink iot-gb28181
 )
 
 INDEPENDENT_MODULES=(
@@ -44,6 +44,7 @@ INDEPENDENT_MODULES=(
     "aiot-idea-workspace|easyaiot/idea-workspace|IDEA"
     "aiot-ai|ai-service|AI"
     "aiot-rtc|rtc-service|RTC"
+    "aiot-post|post-service|POST"
     "aiot-video|video-service|VIDEO"
     "aiot-web|web-service|WEB"
     "aiot-panel|easyaiot/panel|PANEL"
@@ -62,7 +63,7 @@ FULL_ONLY_MODULES=(
 
 PROFILE_DEPENDENT_REMOTES=(aiot-web)
 FULL_ONLY_REMOTES=(aiot-app aiot-visualize-web aiot-transform)
-ALL_DEPLOY_PROFILES=(mini standard full)
+ALL_DEPLOY_PROFILES=(edge mini standard full)
 ALL_RUNTIME_ARCHS=(amd64 arm64)
 
 # ============================================================================
@@ -109,8 +110,33 @@ runtime_is_single_arch_build() {
     [ -n "$a" ] && [ "$a" != "all" ]
 }
 
-# build-runtime 可选单模块（IDEA/PANEL 全形态；APP/VISUALIZE/TRANSFORM 仅 full）
-ALL_RUNTIME_BUILD_MODULES=(HARNESS IDEA DEVICE AI RTC VIDEO WEB APP VISUALIZE TRANSFORM PANEL)
+# build-runtime 可选单模块（IDEA/PANEL 全形态；POST 仅 standard/full 部署；APP/VISUALIZE/TRANSFORM 仅 full）
+ALL_RUNTIME_BUILD_MODULES=(HARNESS IDEA DEVICE AI RTC POST VIDEO WEB APP VISUALIZE TRANSFORM PANEL)
+
+runtime_build_module_help() {
+    local out="all" m
+    for m in "${ALL_RUNTIME_BUILD_MODULES[@]}"; do
+        out="${out} | ${m}"
+    done
+    echo "$out"
+}
+
+runtime_build_module_pipe_list() {
+    local IFS='|'
+    echo "${ALL_RUNTIME_BUILD_MODULES[*]}"
+}
+
+runtime_build_module_plus_list() {
+    local out="" m
+    for m in "${ALL_RUNTIME_BUILD_MODULES[@]}"; do
+        if [ -z "$out" ]; then
+            out="$m"
+        else
+            out="${out} + ${m}"
+        fi
+    done
+    echo "$out"
+}
 
 # 规范化 build-runtime 目标模块（空/all=全部；无效返回 INVALID）
 runtime_normalize_build_module() {
@@ -123,6 +149,7 @@ runtime_normalize_build_module() {
         device) echo "DEVICE" ;;
         ai|aiot-ai) echo "AI" ;;
         rtc|aiot-rtc) echo "RTC" ;;
+        post|aiot-post|post-service|easyaiot/post) echo "POST" ;;
         video|aiot-video) echo "VIDEO" ;;
         web|aiot-web) echo "WEB" ;;
         app|aiot-app) echo "APP" ;;
@@ -152,7 +179,7 @@ runtime_apply_build_module_arg() {
     local normalized
     normalized=$(runtime_normalize_build_module "$arg")
     if [ "$normalized" = "INVALID" ]; then
-        runtime_img_msg error "无效的运行时模块: ${arg}，可选: all | IDEA | HARNESS | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
+        runtime_img_msg error "无效的运行时模块: ${arg}，可选: $(runtime_build_module_help)"
         return 1
     fi
     if [ -n "$normalized" ]; then
@@ -412,10 +439,14 @@ runtime_interactive_select_profile() {
         return 0
     fi
     case "${EASYAIOT_DEPLOY_PROFILE:-}" in
-        mini|standard|full)
+        edge|mini|standard|full)
             if declare -F apply_deploy_profile >/dev/null 2>&1; then
-                apply_deploy_profile
-                save_deploy_profile 2>/dev/null || true
+                if [ "$purpose" = "build" ]; then
+                    save_deploy_profile 2>/dev/null || true
+                else
+                    apply_deploy_profile
+                    save_deploy_profile 2>/dev/null || true
+                fi
             fi
             runtime_img_msg info "部署形态: $(runtime_profile_label "${EASYAIOT_DEPLOY_PROFILE}") (${EASYAIOT_DEPLOY_PROFILE})（环境变量已指定）"
             return 0
@@ -424,8 +455,12 @@ runtime_interactive_select_profile() {
     if [ ! -t 0 ] || runtime_is_source_free_runtime; then
         export EASYAIOT_DEPLOY_PROFILE="${EASYAIOT_DEPLOY_PROFILE:-full}"
         if declare -F apply_deploy_profile >/dev/null 2>&1; then
-            apply_deploy_profile
-            save_deploy_profile 2>/dev/null || true
+            if [ "$purpose" = "build" ]; then
+                save_deploy_profile 2>/dev/null || true
+            else
+                apply_deploy_profile
+                save_deploy_profile 2>/dev/null || true
+            fi
         fi
         return 0
     fi
@@ -433,14 +468,16 @@ runtime_interactive_select_profile() {
     echo ""
     if [ "$purpose" = "build" ]; then
         echo "请选择要构建的部署形态："
-        echo "  1) mini     — 边缘精简版"
+        echo "  0) edge     — 边缘版"
+        echo "  1) mini     — 精简版"
         echo "  2) standard — 标准版"
         echo "  3) full     — 完整版（默认）"
-        echo "  4) 全部     — mini + standard + full"
+        echo "  4) all      — 全部形态（edge + mini + standard + full）"
         echo ""
         local choice=""
-        read -r -p "请输入选项 [1-4，默认 3]: " choice
+        read -r -p "请输入选项 [0-4，默认 3]: " choice
         case "${choice:-3}" in
+            0) export EASYAIOT_DEPLOY_PROFILE=edge; unset EASYAIOT_RUNTIME_BUILD_ALL_PROFILES ;;
             1) export EASYAIOT_DEPLOY_PROFILE=mini; unset EASYAIOT_RUNTIME_BUILD_ALL_PROFILES ;;
             2) export EASYAIOT_DEPLOY_PROFILE=standard; unset EASYAIOT_RUNTIME_BUILD_ALL_PROFILES ;;
             4) export EASYAIOT_RUNTIME_BUILD_ALL_PROFILES=1; unset EASYAIOT_DEPLOY_PROFILE ;;
@@ -448,29 +485,41 @@ runtime_interactive_select_profile() {
         esac
     else
         echo "请选择要拉取的部署形态："
-        echo "  1) mini     — 边缘精简版"
-        echo "  2) standard — 标准版"
-        echo "  3) full     — 完整版（默认）"
+        echo "  0) edge      — 边缘版"
+        echo "  1) mini      — 精简版"
+        echo "  2) standard  — 标准版"
+        echo "  3) full      — 完整版（默认）"
         echo ""
         local choice=""
-        read -r -p "请输入选项 [1-3，默认 3]: " choice
+        read -r -p "请输入选项 [0-3，默认 3]: " choice
         case "${choice:-3}" in
+            0) export EASYAIOT_DEPLOY_PROFILE=edge ;;
             1) export EASYAIOT_DEPLOY_PROFILE=mini ;;
             2) export EASYAIOT_DEPLOY_PROFILE=standard ;;
             *) export EASYAIOT_DEPLOY_PROFILE=full ;;
         esac
     fi
 
-    if declare -F apply_deploy_profile >/dev/null 2>&1; then
-        apply_deploy_profile
-        save_deploy_profile 2>/dev/null || true
-        sync_deploy_profile_to_modules 2>/dev/null || true
-    fi
+    # build-runtime 选「全部形态」时不要 apply/save：会把形态落成 full，并触发媒体根探测；
+    # 僵死 NFS（常见于 root 的 ~/easyaiot/data）会卡住约 1 分钟，期间多次回车会被后续 read 吃掉，表现为“自动选完”。
     if [ "${EASYAIOT_RUNTIME_BUILD_ALL_PROFILES:-0}" = "1" ]; then
-        runtime_img_msg info "已选择: 全部形态 (mini + standard + full)"
-    else
-        runtime_img_msg info "已选择: $(runtime_profile_label "${EASYAIOT_DEPLOY_PROFILE}") (${EASYAIOT_DEPLOY_PROFILE})"
+        runtime_img_msg info "已选择: 全部形态 (edge + mini + standard + full)"
+        echo ""
+        return 0
     fi
+
+    if declare -F apply_deploy_profile >/dev/null 2>&1; then
+        if [ "$purpose" = "build" ]; then
+            # 构建菜单只需记住形态；媒体根 sync 放到真正 install/start，避免交互阶段卡死
+            export EASYAIOT_DEPLOY_PROFILE="${EASYAIOT_DEPLOY_PROFILE:-full}"
+            save_deploy_profile 2>/dev/null || true
+        else
+            apply_deploy_profile
+            save_deploy_profile 2>/dev/null || true
+            sync_deploy_profile_to_modules 2>/dev/null || true
+        fi
+    fi
+    runtime_img_msg info "已选择: $(runtime_profile_label "${EASYAIOT_DEPLOY_PROFILE}") (${EASYAIOT_DEPLOY_PROFILE})"
     echo ""
 }
 
@@ -530,13 +579,61 @@ runtime_interactive_select_build_arch() {
     echo ""
 }
 
+# build-runtime 模块中文描述（交互菜单展示用）
+runtime_build_module_desc() {
+    case "$1" in
+        IDEA)      echo "在线 IDE（portal + workspace，全形态）" ;;
+        HARNESS)   echo "DeepSeek Harness AI 助手（全形态）" ;;
+        DEVICE)    echo "Device 微服务（含 aiot-visualize 后台）" ;;
+        AI)        echo "AI 服务" ;;
+        RTC)       echo "RTC / go2rtc 摄像头桥接（全形态）" ;;
+        POST)      echo "定制后处理（仅 standard/full 部署）" ;;
+        VIDEO)     echo "Video 服务" ;;
+        WEB)       echo "Web 前端（按部署形态）" ;;
+        APP)       echo "App 移动端 H5（仅 full 形态）" ;;
+        VISUALIZE) echo "可视化编辑器（仅 full 形态）" ;;
+        TRANSFORM) echo "系统对接 Runtime（仅 full 形态）" ;;
+        PANEL)     echo "独立运维控制台（全形态）" ;;
+        *)         echo "" ;;
+    esac
+}
+
+# 交互选择运行时模块（clean-build-runtime / cleanup 等入口复用）
+# 选择结果写入 RUNTIME_PICKED_MODULE（空=全部模块/取消）；始终返回 0
+runtime_interactive_pick_module() {
+    RUNTIME_PICKED_MODULE=""
+    local idx=1 mod choice
+    echo ""
+    echo "请选择模块："
+    echo "  0) 全部模块（默认）"
+    declare -A _RUNTIME_PICK_MODULE_CHOICES=()
+    for mod in "${ALL_RUNTIME_BUILD_MODULES[@]}"; do
+        printf "  %2d) %-10s %s\n" "$idx" "$mod" "$(runtime_build_module_desc "$mod")"
+        _RUNTIME_PICK_MODULE_CHOICES[$idx]="$mod"
+        idx=$((idx + 1))
+    done
+    echo ""
+    read -r -p "请输入选项 [0-${#ALL_RUNTIME_BUILD_MODULES[@]}，默认 0]: " choice
+    case "${choice:-0}" in
+        0|q|Q) return 0 ;;
+        *)
+            if [ -n "${_RUNTIME_PICK_MODULE_CHOICES[$choice]:-}" ]; then
+                RUNTIME_PICKED_MODULE="${_RUNTIME_PICK_MODULE_CHOICES[$choice]}"
+            else
+                echo "[WARN] 无效选项，默认全部模块" >&2
+            fi
+            ;;
+    esac
+    return 0
+}
+
 # build-runtime 交互选择目标模块（默认全部）
 runtime_interactive_select_build_module() {
     local normalized choice idx mod
     if [ -n "${EASYAIOT_RUNTIME_BUILD_MODULE:-}" ]; then
         normalized=$(runtime_normalize_build_module "$EASYAIOT_RUNTIME_BUILD_MODULE")
         if [ "$normalized" = "INVALID" ]; then
-            runtime_img_msg error "无效的运行时模块: ${EASYAIOT_RUNTIME_BUILD_MODULE}，可选: all | IDEA | HARNESS | DEVICE | AI | RTC | VIDEO | WEB | APP | VISUALIZE | TRANSFORM | PANEL"
+            runtime_img_msg error "无效的运行时模块: ${EASYAIOT_RUNTIME_BUILD_MODULE}，可选: $(runtime_build_module_help)"
             exit 1
         fi
         if [ -n "$normalized" ]; then
@@ -553,7 +650,7 @@ runtime_interactive_select_build_module() {
 
     echo ""
     echo "请选择要构建/推送的运行时模块："
-    echo "  1) 全部     — HARNESS + IDEA + DEVICE + AI + RTC + VIDEO + WEB + APP + VISUALIZE + TRANSFORM + PANEL（默认）"
+    echo "  1) 全部     — $(runtime_build_module_plus_list)（默认）"
     idx=2
     declare -A _MODULE_CHOICES=()
     for mod in "${ALL_RUNTIME_BUILD_MODULES[@]}"; do
@@ -563,6 +660,7 @@ runtime_interactive_select_build_module() {
             DEVICE) echo "  ${idx}) DEVICE    — Device 微服务（含 aiot-visualize 后台）" ;;
             AI)     echo "  ${idx}) AI        — AI 服务" ;;
             RTC)    echo "  ${idx}) RTC       — RTC / go2rtc 摄像头桥接（全形态）" ;;
+            POST)   echo "  ${idx}) POST      — 定制后处理（仅 standard/full 部署，镜像仍全量构建）" ;;
             VIDEO)  echo "  ${idx}) VIDEO     — Video 服务" ;;
             WEB)    echo "  ${idx}) WEB       — Web 前端（按上方所选部署形态）" ;;
             APP)    echo "  ${idx}) APP       — App 移动端 H5（仅 full 形态）" ;;
@@ -757,6 +855,8 @@ runtime_normalize_registry() {
 runtime_remote_ref() {
     local name="$1" profile="${2:-}" arch="${3:-$(runtime_detect_arch)}"
     local registry; registry=$(runtime_normalize_registry "${REGISTRY:-$RUNTIME_IMAGE_REGISTRY}")
+    # edge 前端与 mini 共用镜像名（无 aiot-web-edge）
+    [ "$profile" = "edge" ] && profile="mini"
     local image_name="${name}"
     [ -n "$profile" ] && [ "$profile" != "full" ] && image_name="${name}-${profile}"
     echo "${registry}${image_name}:${arch}"
@@ -766,6 +866,7 @@ runtime_manifest_ref() {
     local name="$1" profile="${2:-}"
     local registry; registry=$(runtime_normalize_registry "${REGISTRY:-$RUNTIME_IMAGE_REGISTRY}")
     local tag="${TAG:-latest}"
+    [ "$profile" = "edge" ] && profile="mini"
     local image_name="${name}"
     [ -n "$profile" ] && [ "$profile" != "full" ] && image_name="${name}-${profile}"
     echo "${registry}${image_name}:${tag}"
@@ -774,6 +875,7 @@ runtime_manifest_ref() {
 runtime_local_ref() {
     local name="$1" profile="${2:-}"
     local tag="${TAG:-latest}"
+    [ "$profile" = "edge" ] && profile="mini"
     local ref="${name}:${tag}"
     [ -n "$profile" ] && [ "$profile" != "full" ] && ref="${ref}-${profile}"
     echo "$ref"
@@ -797,6 +899,7 @@ runtime_is_full_only() {
 
 runtime_profile_label() {
     case "$1" in
+        edge) echo "edge" ;;
         mini) echo "边缘精简版" ;;
         standard) echo "标准版" ;;
         full) echo "完整版" ;;
@@ -866,6 +969,15 @@ runtime_images_collect_check_refs() {
     local -n _out="$1"
     local profile="${2:-${EASYAIOT_DEPLOY_PROFILE:-full}}"
     local tag="${3:-latest}"
+    _out=()
+    case "$profile" in
+        edge)
+            # 零 DEVICE：仅 VIDEO + WEB（前端镜像与 mini 共用）
+            _out+=("video-service:${tag}")
+            _out+=("web-service:${tag}-mini")
+            return 0
+            ;;
+    esac
     _out=(
         "easyaiot/idea-portal:${tag}"
         "easyaiot/idea-workspace:${tag}"
@@ -874,6 +986,9 @@ runtime_images_collect_check_refs() {
         "rtc-service:${tag}"
         "video-service:${tag}"
     )
+    case "$profile" in
+        standard|full) _out+=("post-service:${tag}") ;;
+    esac
     local _di _dlname
     for _di in "${!DEVICE_LOCAL_NAMES[@]}"; do
         if runtime_device_image_needed_for_pull "$_di" "$profile"; then
@@ -1392,7 +1507,7 @@ runtime_print_install_local_build_help() {
     runtime_img_msg info "  rm -f .scripts/docker/.runtime_images_pulled"
     runtime_img_msg info "  bash ${install_script} build && bash ${install_script} install"
     echo ""
-    runtime_img_msg info "当前部署形态: ${profile}（EASYAIOT_DEPLOY_PROFILE=mini|standard|full）"
+    runtime_img_msg info "当前部署形态: ${profile}（EASYAIOT_DEPLOY_PROFILE=edge|mini|standard|full）"
     runtime_img_msg info "预计耗时: 视机器配置约 30 分钟～数小时，请确保磁盘空间充足。"
     runtime_img_msg warn "========================================"
     echo ""
@@ -1658,13 +1773,13 @@ runtime_images_invoke() {
 # 显示运行时镜像管理用法摘要
 runtime_images_usage() {
     cat <<EOF
-运行时镜像管理（业务模块 IDEA/HARNESS/DEVICE/AI/RTC/VIDEO/WEB/APP/VISUALIZE/TRANSFORM/PANEL，不含中间件；IDEA/HARNESS/PANEL 全形态；APP/VISUALIZE/TRANSFORM 仅 full）
+运行时镜像管理（业务模块 $(runtime_build_module_pipe_list | tr '|' '/')，不含中间件；IDEA/HARNESS/PANEL 全形态；POST 仅 standard/full 部署；APP/VISUALIZE/TRANSFORM 仅 full）
 
 pull 按部署形态过滤 DEVICE 镜像（与 compose 启停一致）：
-  mini     — 仅拉 aiot-system（1/12）
-  standard — 跳过 aiot-device、aiot-tdengine、aiot-visualize（9/12）
-  full     — 拉全部 DEVICE（12/12，含 aiot-visualize）
-  build-runtime 默认构建/推送全部模块；可指定单模块 IDEA|HARNESS|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL
+  mini     — 精简 DEVICE（4/13：gateway/system/infra/sink）
+  standard — 跳过 aiot-device、aiot-tdengine、aiot-visualize（10/13）
+  full     — 拉全部 DEVICE（13/13，含 aiot-visualize）
+  build-runtime 默认构建/推送全部模块；可指定单模块 $(runtime_build_module_pipe_list)
   全量 build-runtime 仍构建/推送全量 DEVICE，供各形态共用远程仓库
 
 本地安装（含本地构建）:
@@ -1683,6 +1798,7 @@ pull 按部署形态过滤 DEVICE 镜像（与 compose 启停一致）：
   bash .scripts/docker/install_linux.sh build-runtime
   bash .scripts/docker/install_linux.sh build-runtime IDEA # 仅构建/推送 IDEA（portal+workspace）
   bash .scripts/docker/install_linux.sh build-runtime AI    # 仅构建/推送 AI 模块
+  bash .scripts/docker/install_linux.sh build-runtime POST  # 仅构建/推送 POST 定制后处理
   bash .scripts/docker/install_business_linux.sh pull
   bash .scripts/docker/install_business_linux.sh build-runtime
 
@@ -1692,12 +1808,12 @@ pull 按部署形态过滤 DEVICE 镜像（与 compose 启停一致）：
 
 非交互（CI）可用环境变量:
   EASYAIOT_RUNTIME_REGISTRY  远程仓库地址
-  EASYAIOT_DEPLOY_PROFILE    部署形态 mini|standard|full
+  EASYAIOT_DEPLOY_PROFILE    部署形态 edge|mini|standard|full
   EASYAIOT_RUNTIME_TAG         镜像标签（默认 latest）
   EASYAIOT_RUNTIME_PUSH=1      构建后推送（仅 build-runtime）
   EASYAIOT_RUNTIME_BUILD_ALL_PROFILES=1  构建全部形态（仅 build-runtime）
   EASYAIOT_RUNTIME_BUILD_ARCH=all|amd64|arm64  目标架构（默认 all=全部；单架构时跳过 manifest）
-  EASYAIOT_RUNTIME_BUILD_MODULE=all|IDEA|HARNESS|DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM|PANEL  目标模块（默认 all=全部）
+  EASYAIOT_RUNTIME_BUILD_MODULE=$(runtime_build_module_help)  目标模块（默认 all=全部）
   EASYAIOT_RUNTIME_FORCE_REBUILD=1       强制重建全部镜像（忽略本地缓存）
   EASYAIOT_RUNTIME_FORCE_REBUILD=0       复用本地镜像（已存在则跳过构建，直接推送）
   EASYAIOT_SKIP_REGISTRY_AUTH_CHECK=1     跳过 build-runtime 前的远程仓库登录/推送权限检查

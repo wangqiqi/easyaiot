@@ -26,6 +26,7 @@ from app.utils.gb28181_source import (
     resolve_gb28181_alternate_pull_url,
     resolve_gb28181_source,
 )
+from app.utils.algorithm_task_identity import rewrite_task_stream_url
 from app.utils.service_urls import resolve_video_service_base_url
 
 logger = logging.getLogger(__name__)
@@ -207,7 +208,7 @@ def ensure_runtime_on_video_startup() -> None:
     if existing:
         os.environ.setdefault('RUNTIME_BIN', existing)
         lib = runtime_library_path_env()
-        if lib and not (os.getenv('LD_LIBRARY_PATH') or '').strip():
+        if lib:
             os.environ['LD_LIBRARY_PATH'] = lib
         logger.info('RUNTIME 已就绪: %s', existing)
         return
@@ -634,24 +635,64 @@ def _resolve_dir_to_onnx(model_dir: Path, default_names: Path) -> Optional[Tuple
     return None
 
 
-def _resolve_model_paths(task: AlgorithmTask, prefer_cluster: bool = False) -> Tuple[str, str]:
-    """Resolve task.model_ids → (onnx_path, names_path) for RUNTIME.
+def _resolve_single_model_path(
+    mid_int: int, *, prefer_cluster: bool, default_names: Path
+) -> Optional[Tuple[str, str]]:
+    """Resolve one model id → (onnx_path, names_path); None if unresolvable."""
+    root = _repo_root()
+    builtin = _default_builtin_model_name(mid_int)
+    if builtin:
+        if prefer_cluster:
+            remote_models = Path('/opt/easyaiot/RUNTIME/models')
+            return str(remote_models / f'{builtin}.onnx'), str(remote_models / 'coco.names')
+        try:
+            return _resolve_builtin_onnx(builtin)
+        except Exception as e:
+            logger.warning('builtin model %s resolve failed: %s', builtin, e)
+            return None
+
+    if mid_int <= 0:
+        return None
+
+    # cluster resolver may return a file path directly
+    if prefer_cluster:
+        try:
+            lib = str((root / '.scripts' / 'lib').resolve())
+            if lib not in sys.path:
+                sys.path.insert(0, lib)
+            from model_resolver import try_resolve_cluster_model_path  # type: ignore
+            found = try_resolve_cluster_model_path(mid_int)
+            if found:
+                found_p = Path(found)
+                if found_p.suffix.lower() == '.onnx' and found_p.is_file():
+                    return str(found_p), _pick_names(found_p, default_names)
+                if found_p.suffix.lower() == '.pt' and found_p.is_file():
+                    onnx_out = found_p.with_suffix('.onnx')
+                    exported = _export_pt_to_onnx(found_p, onnx_out)
+                    if exported and exported.is_file():
+                        return str(exported), _pick_names(exported, default_names)
+        except Exception as e:
+            logger.debug('cluster file resolve skip: %s', e)
+
+    model_dir = _resolve_custom_model_dir(mid_int, prefer_cluster=prefer_cluster)
+    if model_dir is not None:
+        resolved = _resolve_dir_to_onnx(model_dir, default_names)
+        if resolved:
+            return resolved
+    return None
+
+
+def _resolve_model_paths(task: AlgorithmTask, prefer_cluster: bool = False) -> List[Tuple[str, str]]:
+    """Resolve task.model_ids → [(onnx_path, names_path), ...] in model order for RUNTIME.
 
     Supports:
       - builtin ids: -1 yolo11n, -2 yolov8n, -3 yolo26n (.pt auto-exported to onnx)
       - custom positive ids: cluster/local dir, prefer .onnx else export .pt
+    Returns at least one model; unresolvable ids are skipped (首个模型即 [ai] 主模型，
+    其余按 model_path_<i> / classes_path_<i> 写入，RUNTIME 内多模型聚合推理）。
     """
     root = _repo_root()
-    default_onnx = root / 'RUNTIME' / 'models' / 'yolo11n.onnx'
-    if not default_onnx.is_file():
-        # backward-compatible filename
-        legacy = root / 'RUNTIME' / 'models' / 'yolov11n.onnx'
-        if legacy.is_file():
-            default_onnx = legacy
     default_names = root / 'RUNTIME' / 'models' / 'coco.names'
-    remote_default_onnx = Path('/opt/easyaiot/RUNTIME/models/yolo11n.onnx')
-    if not remote_default_onnx.is_file():
-        remote_default_onnx = Path('/opt/easyaiot/RUNTIME/models/yolov11n.onnx')
     remote_default_names = Path('/opt/easyaiot/RUNTIME/models/coco.names')
     env_model = (os.getenv('RUNTIME_MODEL_PATH') or '').strip()
     env_names = (os.getenv('RUNTIME_CLASSES_PATH') or '').strip()
@@ -664,69 +705,46 @@ def _resolve_model_paths(task: AlgorithmTask, prefer_cluster: bool = False) -> T
         except Exception:
             model_ids = []
 
+    resolved: List[Tuple[str, str]] = []
     for mid in model_ids:
         try:
             mid_int = int(mid)
         except Exception:
             continue
+        pair = _resolve_single_model_path(mid_int, prefer_cluster=prefer_cluster, default_names=default_names)
+        if pair:
+            resolved.append(pair)
 
-        builtin = _default_builtin_model_name(mid_int)
-        if builtin:
-            try:
-                return _resolve_builtin_onnx(builtin)
-            except Exception as e:
-                logger.warning('builtin model %s resolve failed: %s', builtin, e)
-                continue
+    if resolved:
+        return resolved
 
-        if mid_int <= 0:
-            continue
-
-        # cluster resolver may return a file path directly
-        if prefer_cluster:
-            try:
-                lib = str((root / '.scripts' / 'lib').resolve())
-                if lib not in sys.path:
-                    sys.path.insert(0, lib)
-                from model_resolver import try_resolve_cluster_model_path  # type: ignore
-                found = try_resolve_cluster_model_path(mid_int)
-                if found:
-                    found_p = Path(found)
-                    if found_p.suffix.lower() == '.onnx' and found_p.is_file():
-                        return str(found_p), _pick_names(found_p, default_names)
-                    if found_p.suffix.lower() == '.pt' and found_p.is_file():
-                        onnx_out = found_p.with_suffix('.onnx')
-                        exported = _export_pt_to_onnx(found_p, onnx_out)
-                        if exported and exported.is_file():
-                            return str(exported), _pick_names(exported, default_names)
-            except Exception as e:
-                logger.debug('cluster file resolve skip: %s', e)
-
-        model_dir = _resolve_custom_model_dir(mid_int, prefer_cluster=prefer_cluster)
-        if model_dir is not None:
-            resolved = _resolve_dir_to_onnx(model_dir, default_names)
-            if resolved:
-                return resolved
-
-    if prefer_cluster and remote_default_onnx.is_file():
-        names = str(remote_default_names if remote_default_names.is_file() else (env_names or remote_default_names))
-        return str(remote_default_onnx), names
+    if prefer_cluster:
+        remote_default_onnx = Path('/opt/easyaiot/RUNTIME/models/yolo11n.onnx')
+        if not remote_default_onnx.is_file():
+            remote_default_onnx = Path('/opt/easyaiot/RUNTIME/models/yolov11n.onnx')
+        if remote_default_onnx.is_file():
+            names = str(remote_default_names if remote_default_names.is_file() else (env_names or remote_default_names))
+            return [(str(remote_default_onnx), names)]
 
     if env_model:
         p = Path(env_model)
         if p.suffix.lower() == '.pt':
             exported = _export_pt_to_onnx(p, p.with_suffix('.onnx'))
             if exported and exported.is_file():
-                return str(exported), (env_names or _pick_names(exported, default_names))
-        return env_model, (env_names or str(default_names))
+                return [(str(exported), (env_names or _pick_names(exported, default_names)))]
+        return [(env_model, (env_names or str(default_names)))]
 
     # Final fallback: ensure yolo11n onnx exists
     try:
-        return _resolve_builtin_onnx('yolo11n')
+        return [_resolve_builtin_onnx('yolo11n')]
     except Exception:
         pass
-    onnx = str(default_onnx)
-    names = env_names or str(default_names)
-    return onnx, names
+    default_onnx = root / 'RUNTIME' / 'models' / 'yolo11n.onnx'
+    if not default_onnx.is_file():
+        legacy = root / 'RUNTIME' / 'models' / 'yolov11n.onnx'
+        if legacy.is_file():
+            default_onnx = legacy
+    return [(str(default_onnx), env_names or str(default_names))]
 
 
 def _control_port(task: AlgorithmTask) -> int:
@@ -753,12 +771,12 @@ def runtime_config_dir() -> Path:
     return path
 
 
-def _regions_ini_block(devices: List[Device]) -> str:
+def _regions_ini_block(devices: List[Device], task_id: int) -> str:
     lines: List[str] = []
     for device in devices:
         try:
             regions = DeviceDetectionRegion.query.filter_by(
-                device_id=device.id, is_enabled=True
+                device_id=device.id, task_id=task_id, is_enabled=True
             ).order_by(DeviceDetectionRegion.sort_order.asc()).all()
         except Exception as e:
             logger.warning('load regions for %s failed: %s', device.id, e)
@@ -835,7 +853,7 @@ def _resolve_ai_rtmp_url(device: Device, task: AlgorithmTask) -> str:
                 raw,
             )
             continue
-        return raw
+        return rewrite_task_stream_url(raw, task.id, device.id) or ''
 
     try:
         from app.services.camera_service import _default_stream_urls
@@ -872,7 +890,7 @@ def _resolve_ai_rtmp_url(device: Device, task: AlgorithmTask) -> str:
                     db.session.rollback()
                 except Exception:
                     pass
-        return ai_rtmp
+        return rewrite_task_stream_url(ai_rtmp, task.id, device.id) or ''
     except Exception as e:
         logger.warning('生成 ai_rtmp 失败 device_id=%s: %s', getattr(device, 'id', None), e)
         return ''
@@ -887,8 +905,7 @@ def _build_runtime_ini_text(
     rtsp_url: str,
     rtmp_out: str,
     enable_rtmp: bool,
-    model_path: str,
-    classes_path: str,
+    models: List[Tuple[str, str]],
     log_path: str,
     alert_image_dir: str,
     control_port: int,
@@ -910,12 +927,39 @@ def _build_runtime_ini_text(
     mqtt_client_id: str,
     mqtt_tenant: str,
     algo_bus_transport: str,
+    alert_hook_url: str,
     compute_node_id: str,
     resolved_urls: Dict[str, str],
+    heartbeat_url: str,
 ) -> str:
     devices_json_one_line = _devices_json(devices_for_json, resolved_urls).replace('\n', '')
-    regions_block = _regions_ini_block(devices_for_json)
+    regions_block = _regions_ini_block(devices_for_json, task.id)
     device_name = (device.name or device.id or '').replace('\n', ' ')
+    from app.utils.alert_class_filter import parse_alert_class_names
+    alert_class_names = parse_alert_class_names(getattr(task, 'alert_class_names', None))
+    alert_class_names_ini = json.dumps(alert_class_names, ensure_ascii=False, separators=(',', ':'))
+    # RUNTIME 人脸链路桥：仅 realtime 且启用人脸匹配且配置了人脸库时开启，
+    # C++ 在 MQTT/InferEvent 告警路径下会额外向 alert_hook_url 投递 face_feed_only 告警
+    face_matching_ini = 'true' if (
+        task_type == 'realtime'
+        and bool(getattr(task, 'face_matching_enabled', False))
+        and AlgorithmTask._parse_library_ids(getattr(task, 'face_library_ids', None))
+    ) else 'false'
+    # RUNTIME 车牌链路桥：仅 realtime 且启用车牌匹配且配置了车牌库时开启，
+    # C++ 在 MQTT/InferEvent 告警路径下会额外向 alert_hook_url 投递 plate_feed_only 告警
+    plate_matching_ini = 'true' if (
+        task_type == 'realtime'
+        and bool(getattr(task, 'plate_matching_enabled', False))
+        and AlgorithmTask._parse_library_ids(getattr(task, 'plate_library_ids', None))
+    ) else 'false'
+    # 多模型：首模型写 model_path/classes_path，其余写 model_path_<i>/classes_path_<i>
+    ai_model_lines: List[str] = []
+    for i, (onnx_path, names_path) in enumerate(models):
+        prefix = 'model_path' if i == 0 else f'model_path_{i}'
+        class_prefix = 'classes_path' if i == 0 else f'classes_path_{i}'
+        ai_model_lines.append(f'{prefix}={onnx_path}')
+        ai_model_lines.append(f'{class_prefix}={names_path}')
+    ai_model_block = '\n'.join(ai_model_lines)
     return f"""# Auto-generated by VIDEO for executor=cpp — do not edit by hand while task is running
 [video]
 rtsp_url={rtsp_url}
@@ -926,8 +970,7 @@ fps=25
 
 [ai]
 enable=true
-model_path={model_path}
-classes_path={classes_path}
+{ai_model_block}
 threads=2
 frame_skip={frame_skip}
 prefer_gpu={'true' if prefer_gpu else 'false'}
@@ -943,6 +986,8 @@ enable={'true' if task.alert_event_enabled else 'false'}
 confidence_threshold={conf}
 cooldown_time={cooldown}
 image_dir={alert_image_dir}
+alert_hook_url={alert_hook_url}
+alert_class_names={alert_class_names_ini}
 
 [task]
 id={task.id}
@@ -953,11 +998,14 @@ device_id={device.id}
 device_name={device_name}
 task_type={hook_tt}
 algorithm_name={algo_name}
-heartbeat_url={_heartbeat_url(task_type, resolve_video_service_base_url().rstrip('/'))}
+heartbeat_url={heartbeat_url}
 heartbeat_interval_sec={'15' if task_type == 'patrol' else '10'}
 log_path={log_path}
 alert_image_dir={alert_image_dir}
+face_matching_enabled={face_matching_ini}
+plate_matching_enabled={plate_matching_ini}
 algo_bus_transport={algo_bus_transport}
+alert_hook_url={alert_hook_url}
 mqtt_broker_urls={mqtt_broker_urls}
 mqtt_username={mqtt_username}
 mqtt_password={mqtt_password}
@@ -999,6 +1047,9 @@ def generate_runtime_inis(
     only_device_ids: Optional[List[str]] = None,
     force_per_device: bool = False,
     remote_ini_dir: Optional[str] = None,
+    heartbeat_url: Optional[str] = None,
+    compute_node_id: Optional[str] = None,
+    mqtt_broker_urls: Optional[str] = None,
 ) -> List[str]:
     """生成 RUNTIME ini 路径列表。
 
@@ -1007,6 +1058,8 @@ def generate_runtime_inis(
     - only_device_ids：仅生成指定设备（集群分片）
     - force_per_device：分片场景下即使单路也使用 task_{id}_{deviceId}.ini
     - remote_ini_dir：远程节点上的 ini 目录（write_local=False 时用于路径）
+    - compute_node_id：远程部署时传入目标节点 id（默认取本机环境变量）
+    - mqtt_broker_urls：远程部署时传入控制面可达的告警总线地址（默认取本机环境变量）
     """
     task_type = (getattr(task, 'task_type', None) or 'realtime').strip().lower()
     if task_type == 'snapshot':
@@ -1034,16 +1087,17 @@ def generate_runtime_inis(
     if not devices:
         raise ValueError(f'任务 {task.id} 的设备均无可用 RTSP/source 地址')
 
-    model_path, classes_path = _resolve_model_paths(task, prefer_cluster=prefer_cluster_model)
-    if write_local and not os.path.isfile(model_path):
-        raise ValueError(f'模型文件不存在: {model_path}（cpp 需要 .onnx；.pt 应已自动导出）')
-    if write_local and not str(model_path).lower().endswith('.onnx'):
-        raise ValueError(f'RUNTIME 最终需要 .onnx，当前为: {model_path}')
-    if prefer_cluster_model and not str(model_path).lower().endswith('.onnx'):
-        raise ValueError(
-            f'远程 cpp 需要 ONNX 模型，当前解析到: {model_path}。'
-            f'请确保模型已同步至集群，或允许控制面执行 .pt→onnx 导出'
-        )
+    models = _resolve_model_paths(task, prefer_cluster=prefer_cluster_model)
+    for onnx_path, _names_path in models:
+        if write_local and not os.path.isfile(onnx_path):
+            raise ValueError(f'模型文件不存在: {onnx_path}（cpp 需要 .onnx；.pt 应已自动导出）')
+        if write_local and not str(onnx_path).lower().endswith('.onnx'):
+            raise ValueError(f'RUNTIME 最终需要 .onnx，当前为: {onnx_path}')
+        if prefer_cluster_model and not str(onnx_path).lower().endswith('.onnx'):
+            raise ValueError(
+                f'远程 cpp 需要 ONNX 模型，当前解析到: {onnx_path}。'
+                f'请确保模型已同步至集群，或允许控制面执行 .pt→onnx 导出'
+            )
 
     conf = float(task.detect_conf if task.detect_conf is not None else 0.5)
     cooldown = int(task.alert_event_suppress_time or 30)
@@ -1063,14 +1117,58 @@ def generate_runtime_inis(
     if write_local:
         os.makedirs(alert_image_dir, exist_ok=True)
 
-    mqtt_broker_urls = (os.getenv('MQTT_BROKER_URLS') or '').strip() or '127.0.0.1:1883'
+    # 远程部署时控制面显式传入可达地址（如 192.168.1.10:1883）；
+    # 未传时回退控制面环境变量，最后兜底回环（仅适用于本机 RUNTIME）
+    mqtt_broker_urls = (
+        (mqtt_broker_urls or '').strip()
+        or (os.getenv('MQTT_BROKER_URLS') or '').strip()
+        or '127.0.0.1:1883'
+    )
     mqtt_username = (os.getenv('MQTT_ALGO_USERNAME') or '').strip()
     mqtt_password = (os.getenv('MQTT_ALGO_PASSWORD') or '').strip()
     mqtt_tenant = (os.getenv('MQTT_ALGO_TENANT') or 'default').strip()
     algo_bus_transport = (os.getenv('ALGO_BUS_TRANSPORT') or 'mqtt').strip() or 'mqtt'
-    compute_node_id = (os.getenv('COMPUTE_NODE_ID') or os.getenv('NODE_ID') or '').strip()
+    alert_hook_url = ''
+    # RUNTIME 人脸/车牌链路桥：realtime + 启用人脸/车牌匹配 + 配置对应库 → C++ 需向 VIDEO hook
+    # 补投 face_feed_only / plate_feed_only 告警（MQTT/InferEvent 路径下 hook 不参与主告警流），
+    # 始终填 hook 地址
+    face_matching_enabled = bool(
+        task_type == 'realtime'
+        and getattr(task, 'face_matching_enabled', False)
+        and AlgorithmTask._parse_library_ids(getattr(task, 'face_library_ids', None))
+    )
+    plate_matching_enabled = bool(
+        task_type == 'realtime'
+        and getattr(task, 'plate_matching_enabled', False)
+        and AlgorithmTask._parse_library_ids(getattr(task, 'plate_library_ids', None))
+    )
+    matching_enabled = face_matching_enabled or plate_matching_enabled
+    # edge：无 EMQX/iot-sink，强制 HTTP → VIDEO /video/alert/hook 直连落库
+    try:
+        from app.utils.service_urls import is_edge_deploy_profile, resolve_alert_hook_url
+        if is_edge_deploy_profile() and algo_bus_transport.lower() in (
+            'off', '0', 'false', 'no', 'mqtt', '',
+        ):
+            algo_bus_transport = 'http'
+        if algo_bus_transport.lower() in ('http', 'off'):
+            alert_hook_url = resolve_alert_hook_url()
+        elif matching_enabled:
+            alert_hook_url = resolve_alert_hook_url()
+    except Exception:
+        if algo_bus_transport.lower() in ('http', 'off'):
+            alert_hook_url = f'{resolve_video_service_base_url().rstrip("/")}/video/alert/hook'
+        elif matching_enabled:
+            alert_hook_url = f'{resolve_video_service_base_url().rstrip("/")}/video/alert/hook'
+    compute_node_id = (
+        (compute_node_id or '').strip()
+        or (os.getenv('COMPUTE_NODE_ID') or os.getenv('NODE_ID') or '').strip()
+    )
 
     hook_tt = _hook_task_type(task_type)
+    resolved_heartbeat_url = (heartbeat_url or '').strip() or _heartbeat_url(
+        task_type,
+        resolve_video_service_base_url().rstrip('/'),
+    )
 
     use_gpu_env = (os.getenv('USE_GPU') or '').strip().lower()
     force_cpu_env = (os.getenv('RUNTIME_FORCE_CPU') or '').strip().lower()
@@ -1177,8 +1275,7 @@ def generate_runtime_inis(
             rtsp_url=rtsp_url,
             rtmp_out=rtmp_out or '',
             enable_rtmp=enable_rtmp,
-            model_path=model_path,
-            classes_path=classes_path,
+            models=models,
             log_path=device_log,
             alert_image_dir=alert_image_dir,
             control_port=control_port,
@@ -1200,8 +1297,10 @@ def generate_runtime_inis(
             mqtt_client_id=mqtt_client_id,
             mqtt_tenant=mqtt_tenant,
             algo_bus_transport=algo_bus_transport,
+            alert_hook_url=alert_hook_url,
             compute_node_id=compute_node_id,
             resolved_urls=resolved_urls,
+            heartbeat_url=resolved_heartbeat_url,
         )
         contents.append(content)
         if write_local:
@@ -1227,6 +1326,9 @@ def generate_runtime_ini(
     prefer_cluster_model: bool = False,
     write_local: bool = True,
     remote_ini_path: Optional[str] = None,
+    heartbeat_url: Optional[str] = None,
+    compute_node_id: Optional[str] = None,
+    mqtt_broker_urls: Optional[str] = None,
 ) -> str:
     """Generate RUNTIME ini；realtime 多路时写多份并返回第一路路径（完整列表见 generate_runtime_inis）。"""
     if remote_ini_path and write_local is False:
@@ -1236,6 +1338,9 @@ def generate_runtime_ini(
             log_path,
             prefer_cluster_model=prefer_cluster_model,
             write_local=False,
+            heartbeat_url=heartbeat_url,
+            compute_node_id=compute_node_id,
+            mqtt_broker_urls=mqtt_broker_urls,
         )
         # 覆盖远程路径名（调用方指定）
         generate_runtime_ini.last_content = (  # type: ignore[attr-defined]
@@ -1247,6 +1352,9 @@ def generate_runtime_ini(
         log_path,
         prefer_cluster_model=prefer_cluster_model,
         write_local=write_local,
+        heartbeat_url=heartbeat_url,
+        compute_node_id=compute_node_id,
+        mqtt_broker_urls=mqtt_broker_urls,
     )
     return paths[0]
 
@@ -1259,6 +1367,9 @@ def generate_runtime_ini_content(
     remote_ini_path: Optional[str] = None,
     only_device_ids: Optional[List[str]] = None,
     force_per_device: bool = False,
+    heartbeat_url: Optional[str] = None,
+    compute_node_id: Optional[str] = None,
+    mqtt_broker_urls: Optional[str] = None,
 ) -> Tuple[str, str]:
     """Return (remote_ini_path, ini_content) without requiring local model file.
 
@@ -1275,6 +1386,9 @@ def generate_runtime_ini_content(
         only_device_ids=only_device_ids,
         force_per_device=force_per_device,
         remote_ini_dir=remote_dir,
+        heartbeat_url=heartbeat_url,
+        compute_node_id=compute_node_id,
+        mqtt_broker_urls=mqtt_broker_urls,
     )
     contents = getattr(generate_runtime_inis, 'last_contents', None) or []
     if not contents:
@@ -1292,6 +1406,9 @@ def generate_runtime_inis_content(
     only_device_ids: Optional[List[str]] = None,
     force_per_device: bool = False,
     remote_ini_dir: Optional[str] = None,
+    heartbeat_url: Optional[str] = None,
+    compute_node_id: Optional[str] = None,
+    mqtt_broker_urls: Optional[str] = None,
 ) -> List[Tuple[str, str]]:
     """返回 [(ini_path, content), ...]，供远程分片多路部署。"""
     paths = generate_runtime_inis(
@@ -1302,6 +1419,9 @@ def generate_runtime_inis_content(
         only_device_ids=only_device_ids,
         force_per_device=force_per_device,
         remote_ini_dir=remote_ini_dir,
+        heartbeat_url=heartbeat_url,
+        compute_node_id=compute_node_id,
+        mqtt_broker_urls=mqtt_broker_urls,
     )
     contents = getattr(generate_runtime_inis, 'last_contents', None) or []
     if len(contents) != len(paths):
@@ -1428,16 +1548,60 @@ def normalize_executor(value) -> str:
     return 'cpp'
 
 
+def _deploy_env_library_paths() -> List[str]:
+    """从 RUNTIME/deploy.env 读取库目录（不依赖进程 env，避免被 nvidia 路径抢先占位）。"""
+    deploy_env = _repo_root() / 'RUNTIME' / 'deploy.env'
+    if not deploy_env.is_file():
+        return []
+    kv: Dict[str, str] = {}
+    try:
+        for line in deploy_env.read_text(encoding='utf-8', errors='ignore').splitlines():
+            line = line.strip()
+            if not line or line.startswith('#') or '=' not in line:
+                continue
+            key, _, value = line.partition('=')
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key:
+                kv[key] = value
+    except Exception as e:
+        logger.warning('解析 RUNTIME/deploy.env 库路径失败: %s', e)
+        return []
+
+    paths: List[str] = []
+    for key in (
+        'RUNTIME_CONDA_LIB_HOST',
+        'RUNTIME_ORT_LIB_HOST',
+        'RUNTIME_CUDA_LIB_HOST',
+    ):
+        raw = (kv.get(key) or '').strip()
+        if not raw:
+            continue
+        for segment in raw.split(':'):
+            segment = segment.strip()
+            if segment and os.path.isdir(segment):
+                paths.append(segment)
+
+    ld = (kv.get('LD_LIBRARY_PATH') or '').strip()
+    if ld:
+        for segment in ld.split(':'):
+            segment = segment.strip()
+            if segment and os.path.isdir(segment):
+                paths.append(segment)
+    return paths
+
+
 def runtime_library_path_env() -> str:
     """Build LD_LIBRARY_PATH hint for conda + ORT SDK + CUDA (host or Docker mounts)."""
-    parts = []
-    existing = (os.getenv('LD_LIBRARY_PATH') or '').strip()
-    if existing:
-        parts.append(existing)
+    apply_runtime_deploy_env()
+    parts: List[str] = []
+    # deploy.env 中的 OpenCV/ORT 路径优先（须在 nvidia pip 库之前）
+    parts.extend(_deploy_env_library_paths())
     for mounted in (
         '/opt/easyaiot/runtime-conda-lib',
         '/opt/easyaiot/ort-lib',
         '/opt/easyaiot/cuda-lib',
+        '/opt/easyaiot/RUNTIME/lib',
     ):
         if os.path.isdir(mounted):
             parts.append(mounted)
@@ -1446,6 +1610,9 @@ def runtime_library_path_env() -> str:
         parts.append(os.path.join(conda, 'lib'))
     # common local ORT layout (gpu preferred)
     root = _repo_root()
+    runtime_bundle_lib = root / 'RUNTIME' / 'lib'
+    if runtime_bundle_lib.is_dir():
+        parts.append(str(runtime_bundle_lib))
     for arch in ('x64', 'aarch64'):
         for name in (
             f'onnxruntime-linux-{arch}-gpu-1.23.2',
@@ -1458,6 +1625,12 @@ def runtime_library_path_env() -> str:
         else:
             continue
         break
+    existing = (os.getenv('LD_LIBRARY_PATH') or '').strip()
+    if existing:
+        for segment in existing.split(':'):
+            segment = segment.strip()
+            if segment:
+                parts.append(segment)
     for cuda_path in (
         '/usr/local/cuda/lib64',
         '/usr/local/cuda/lib',

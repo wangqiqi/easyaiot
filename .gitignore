@@ -74,15 +74,9 @@ hs_err_pid*
 # 本地烟雾测试 / 临时 ini 与日志（不随仓库分发）
 .tmp/
 *.nar
-# Node Agent 离线 pip wheel（体积大，勿提交）
-NODE/get-pip.py
-NODE/pip-wheels/
-
-# Node Agent 运行时环境变量（含 token，勿提交）
-NODE/agent.env
-
 # Sentinel Agent 离线 pip wheel（体积大，勿提交）
 SENTINEL/pip-wheels/
+SENTINEL/get-pip.py
 
 # Sentinel Agent 运行时环境变量（含 token，勿提交）
 SENTINEL/agent.env
@@ -91,6 +85,15 @@ SENTINEL/agent.env
 *.pyc
 **/.pytest_cache/
 *.rar
+# POST 本地开发产物（与 POST/.gitignore 对齐；.env 含密钥勿提交；.env.docker 为默认可跟踪模板）
+POST/.env
+POST/bin/
+POST/out/
+POST/logs/
+POST/vendor/
+POST/post
+POST/post-replay
+
 # RTC 本地运行数据与 vendor 源码（go2rtc 由 install_linux.sh vendor 拉取，不随仓库分发）
 RTC/data/
 RTC/.env
@@ -101,18 +104,25 @@ RUNTIME/.atomic-test/
 RUNTIME/.atomic-verify/
 RUNTIME/.bundle-runtime/
 RUNTIME/build/
+RUNTIME/build-edgehub/
+RUNTIME/build-host/
 RUNTIME/build-linux/
 RUNTIME/cmake-build-debug/
 RUNTIME/cmake-build-local/
 RUNTIME/cmake-build-orangepi/
 RUNTIME/deploy.env
+RUNTIME/.local-install/
 RUNTIME/VERSION
 RUNTIME/models/*
 !RUNTIME/models/coco.names
 RUNTIME/config/task_*.ini
+# VIDEO stream-forward 运行时自动生成（含设备凭据，勿提交；示例见 forward.example.ini）
+RUNTIME/config/forward_task_*.ini
 RUNTIME/.test-hwaccel/
 RUNTIME/.test-yolo-link/
 RUNTIME/.test-*/
+# 本机媒体根目录（EASYAIOT_MEDIA_ROOT / 录像告警落盘，体积大，勿提交）
+.runtime-media/
 # .scripts/docker 中间件数据目录和日志目录
 .scripts/docker/db_data/
 .scripts/docker/.deploy_profile
@@ -133,6 +143,9 @@ RUNTIME/.test-*/
 .scripts/docker/vscode_data/
 .scripts/docker/.web_deploy_profile_built
 .scripts/media-cluster/images/*.tar
+# modbus demo 运行结果（本地压测/联调产物，勿提交）
+.scripts/modbus-rtu-demo/results/
+.scripts/modbus-tcp-demo/results/
 # .scripts/nexus3 数据目录
 .scripts/nexus3/nexus_data/
 !.scripts/postgresql/00-init-databases.sh
@@ -165,6 +178,12 @@ venv
 VIDEO/logs/
 # VIDEO 运行时生成的 RUNTIME/推流转发 ini（含设备凭证，勿提交）
 VIDEO/data/runtime_config/
+# VIDEO 运行时抓拍数据：人脸/车牌抓取队列输出与人脸库匹配校验截图
+VIDEO/data/face_images/
+VIDEO/data/plate_images/
+VIDEO/data/plate_verify/
+# 本地工具会话数据（ZCode 计划等，勿提交）
+.zcode/
 # VIDEO 人脸模型（大文件由 install 脚本或 WEB 人脸库页下载，不随仓库分发）
 VIDEO/data/models
 VIDEO/face_capture_head_yolov8.onnx
@@ -196,7 +215,10 @@ AI/yolov*.names.json
 !IDEA/workspace-template/.vscode/**
 *.war
 # WEB 日志目录（与 WEB/.gitignore 中 logs/*、!logs/.gitkeep 一致）
-# WEB 预构建前端缓存（runtime_image.sh 提取，体积大，勿提交）
+# WEB 构建产物与预构建前端缓存（runtime_image.sh 提取，体积大，勿提交）
+/WEB/dist/
+/WEB/dist-prebuilt/
+/WEB/dist-prebuilt-edge/
 /WEB/dist-prebuilt-full/
 /WEB/dist-prebuilt-mini/
 /WEB/dist-prebuilt-standard/
@@ -233,3 +255,35 @@ HARNESS/harness.env
 /HARNESS-README.md
 
 # ZLMediaKit 挂载目录（与 docker-compose 中 ../zlmediakit 对应）；运行时数据
+
+# ── ANDROID 移动端工程（与 ANDROID/.gitignore 对齐）──
+*.apk
+ANDROID/.gradle/
+ANDROID/**/build/
+ANDROID/local.properties
+ANDROID/captures/
+ANDROID/.cxx/
+# 前端构建产物：由 make-apk 脚本从 APP/dist/build/app 同步而来，不入库
+ANDROID/app/src/main/assets/apps/
+
+# ── IOS 移动端工程（与 IOS/.gitignore 对齐）──
+*.ipa
+IOS/build/
+IOS/DerivedData/
+IOS/**/xcuserdata/
+IOS/**/*.xcuserstate
+# 前端构建产物：由 make-ipa 脚本从 APP/dist/build/h5 同步而来，不入库
+IOS/EasyAIoT/www/
+
+# ── HARMONYOS 移动端工程（与 HARMONYOS/.gitignore 对齐）──
+*.hap
+HARMONYOS/.hvigor/
+HARMONYOS/**/build/
+HARMONYOS/**/oh_modules/
+HARMONYOS/local.properties
+HARMONYOS/.cxx/
+# 前端构建产物：由 make-hap 脚本从 APP/dist/build/h5 同步而来，不入库
+HARMONYOS/entry/src/main/resources/rawfile/www/
+
+# macOS 系统文件
+**/.DS_Store

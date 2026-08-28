@@ -29,7 +29,7 @@
 
 EasyAIoT 공식 웹사이트: [http://36.111.47.113:8090/](http://36.111.47.113:8090/)
 
-제품 소개, 기능 설명, 3단계 하드웨어 선택, 설치 패키지 다운로드와 문서 진입점을 제공하여 플랫폼 가치를 빠르게 이해하고 배포를 시작할 수 있습니다.
+제품 소개, 기능 설명, 4단계 하드웨어 선택, 설치 패키지 다운로드와 문서 진입점을 제공하여 플랫폼 가치를 빠르게 이해하고 배포를 시작할 수 있습니다.
 
 ## 📖 프로젝트 소개
 
@@ -38,11 +38,11 @@ EasyAIoT 공식 웹사이트: [http://36.111.47.113:8090/](http://36.111.47.113:
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-많은 스마트 IoT 프로젝트가 배포 단계에서 같은 벽에 부딪힙니다. 영상 시스템, 디바이스 플랫폼, 알고리즘 서비스가 각각 분리되어 있어 통합 비용이 높고, 운영이 파편화되며, 확장이 어렵습니다. <strong>EasyAIoT는 하나의 플랫폼으로 이 모순을 해소합니다</strong>—동일한 소프트웨어를 4 GB 엣지 박스에 배포해 단일 지점 지능을 구현하거나, AI 일체형 카메라에 탑재해 층 단위 커버리지를 달성하거나, 기업용 풀스택 어플라이언스에 탑재해 IoT 관리, 대규모 영상 접속, AI 분석 판단을 한 상자에 담을 수 있습니다. 여러 버전을 유지하거나 이기종 시스템을 반복 연동할 필요가 없습니다.
+많은 스마트 IoT 프로젝트가 배포 단계에서 같은 벽에 부딪힙니다. 영상 시스템, 디바이스 플랫폼, 알고리즘 서비스가 각각 분리되어 있어 통합 비용이 높고, 운영이 파편화되며, 확장이 어렵습니다. <strong>EasyAIoT는 하나의 플랫폼으로 이 모순을 해소합니다</strong>—동일한 소프트웨어를 <strong>2 GB</strong> 엣지 단기기(edge)에서 먼저 지능 폐루프를 돌리거나, 4–8 GB 엣지 박스(mini)에 단일 지점 지능을 올리거나, AI 일체형 카메라로 층 단위 커버리지를 달성하거나, 기업용 풀스택 어플라이언스에 IoT 관리·대규모 영상 접속·AI 분석 판단을 한 상자에 담을 수 있습니다. 여러 버전을 유지하거나 이기종 시스템을 반복 연동할 필요가 없습니다.
 </p>
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-플랫폼은 <strong>WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL, IDEA, HARNESS, SITE</strong> 등 핵심 모듈로 구성되며, <strong>COMPILE</strong>이 다중 플랫폼 패키징·납품을 담당합니다(Ubuntu / CentOS·RHEL <strong>7–9</strong>(x86 + <strong>CentOS ARM</strong>, el7/el8/el9 패키지) / <strong>Kylin (麒麟) / openEuler (欧拉)</strong> / Windows / macOS / ARM 포함). 역량 측면에서 GB28181 / ONVIF 다중 프로토콜 카메라 접속, <strong>RTC 소비자급 카메라 P2P 브리지</strong>(go2rtc 기반, <strong>Tapo, Tuya, Ring, Nest, Xiaomi, Wyze, DoorBird, GoPro, Roborock</strong> 9대 브랜드 지원 — 매장 Tapo 보완, Tuya 화이트라벨, 해외 Ring/Nest 초인종, Xiaomi 재활용, Wyze 저비용 확장, DoorBird 대화, GoPro 기동 시점, Roborock 청소기 카메라 — Web 원클릭 접속으로 통합 영상·AI 판정), <strong>DJI 도크·드론 공중 시점 접속</strong>, 실시간 / 스냅샷 / 순찰 알고리즘 작업, <strong>RUNTIME 네이티브 고속 실행 계층</strong>(컴파일 바이너리가 풀링·디코딩·YOLO 추론·박스 푸시·다중 원본 전달을 담당 — 인터프리터 경로 대비 CPU/메모리 더 낮고 지연 더 안정; 단일 바이너리가 실시간 / 스냅샷 / 순찰 / 전달을 커버), YOLO 객체 검출과 SAM 제로샷 자동 라벨링, 얼굴/번호판 인식, 오케스트레이션 가능한 업무 후처리, 연합 연산 클러스터 스케줄링, 그리고 <strong>무한 연합 엣지 클러스터 모드</strong>(일반 개발보드도 즉시 사용, 현장 지능의 로컬 의사결정, 경보·증거 자동 클라우드 집약, 업무에 따른 연산 확장)와 MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA IoT 장치 수명주기 관리와 <strong>EDGE C# 엣지 수집 런타임</strong>이 현장에서 Modbus RTU/TCP, OPC UA 등 산업 프로토콜 수집, 로컬 스케줄링, MQTT 클라우드-엣지 연동을 플러그인형 수집기로 담당하며, <strong>시각화 대형 화면과 Web SCADA 구성</strong>으로 장치 데이터를 지휘 상황으로 펼치고 공정 화면에 되돌리며; 신규 <strong>TRANSFORM 다방향 데이터 흐름 엔진</strong>으로 플랫폼 측 업무 이벤트를 MES / ERP / CRM / WMS 등 외부 시스템에 계약대로 전달해 다자 연동을 구성·추적·재사용 가능하게 하고; 동반 <strong>PANEL 납품·당직 진입점</strong>으로 일체기가 도착한 당일 설치·인수가 가능하고, 당직·장애 대응이 매번 개발자 원격 명령을 기다리지 않게 하며; <strong>SITE 공식 웹사이트</strong>로 제품 가치·3단계 하드웨어 선택·설치 패키지 진입점을 제시해 방문자가 먼저 이해한 뒤 다운로드하고 배포하도록 하며; <strong>IDEA 커뮤니티 온라인 IDE</strong>로 기여자가 브라우저에서 전체 저장소를 열고 GitHub Copilot으로 공동 창작하며, 변경분을 로컬에 배포하고 PR을 제출할 수 있게 해 오픈소스 협업을 「먼저 환경 구성」에서 「열고 바로 수정」으로 바꿉니다. 경험 측면에서는 Web 콘솔과 모바일 App / 미니프로그램 능력이 정렬되어 지휘 센터와 현장 순찰이 동일한 업무 논리로 언제 어디서나 처리합니다.
+플랫폼은 <strong>WEB, APP, DEVICE, EDGE, SENTINEL, VIDEO, RTC, AI, RUNTIME, POST, VISUALIZE, TRANSFORM, PANEL, IDEA, HARNESS, SITE</strong> 등 핵심 모듈로 구성되며, <strong>COMPILE</strong>이 다중 플랫폼 패키징·납품을 담당합니다(Ubuntu / CentOS·RHEL <strong>7–9</strong>(x86 + <strong>CentOS ARM</strong>, el7/el8/el9 패키지) / <strong>Kylin (麒麟) / openEuler (欧拉)</strong> / Windows / macOS / ARM 포함). 역량 측면에서 GB28181 / ONVIF 다중 프로토콜 카메라 접속, <strong>RTC 소비자급 카메라 P2P 브리지</strong>(go2rtc 기반, <strong>Tapo, Tuya, Ring, Nest, Xiaomi, Wyze, DoorBird, GoPro, Roborock</strong> 9대 브랜드 지원 — 매장 Tapo 보완, Tuya 화이트라벨, 해외 Ring/Nest 초인종, Xiaomi 재활용, Wyze 저비용 확장, DoorBird 대화, GoPro 기동 시점, Roborock 청소기 카메라 — Web 원클릭 접속으로 통합 영상·AI 판정), <strong>DJI 도크·드론 공중 시점 접속</strong>, 실시간 / 스냅샷 / 순찰 알고리즘 작업, <strong>RUNTIME 네이티브 고속 실행 계층</strong>(컴파일 바이너리가 풀링·디코딩·YOLO 추론·박스 푸시·다중 원본 전달을 담당 — 인터프리터 경로 대비 CPU/메모리 더 낮고 지연 더 안정; 단일 바이너리가 실시간 / 스냅샷 / 순찰 / 전달을 커버), YOLO 객체 검출과 SAM 제로샷 자동 라벨링, 얼굴/번호판 인식, <strong>POST 맞춤 판정</strong>(검출 후 현장 규칙으로 필터·복합 판단 후 경보, 규칙 변경에 재학습 불필요), 연합 연산 클러스터 스케줄링, <strong>SENTINEL 클러스터 노드 센티널</strong>(업무별로 노드 준비도와 스케줄 가능 역량을 지속적으로 파악하고, 결손 시 환경 보완을 요청하며, 실제 역량에 따라 작업을 배정), 그리고 <strong>무한 연합 엣지 클러스터 모드</strong>(일반 개발보드도 즉시 사용, 현장 지능의 로컬 의사결정, 경보·증거 자동 클라우드 집약, 업무에 따른 연산 확장)와 MQTT / TCP / HTTP / Modbus-TCP / Modbus-RTU / OPC UA IoT 장치 수명주기 관리와 <strong>EDGE C# 엣지 수집 런타임</strong>이 현장에서 Modbus RTU/TCP, OPC UA 등 산업 프로토콜 수집, 로컬 스케줄링, MQTT 클라우드-엣지 연동을 플러그인형 수집기로 담당하며, <strong>시각화 대형 화면과 Web SCADA 구성</strong>으로 장치 데이터를 지휘 상황으로 펼치고 공정 화면에 되돌리며; 신규 <strong>POST 맞춤 판정 서비스</strong>로 검출 결과를 현장에 맞는 업무 이벤트로 단련하고—오경보 감소·규칙 구성·상선 전 시운전; 함께 <strong>TRANSFORM 다방향 데이터 흐름 엔진</strong>으로 플랫폼 측 업무 이벤트를 MES / ERP / CRM / WMS 등 외부 시스템에 계약대로 전달해 다자 연동을 구성·추적·재사용 가능하게 하고; 동반 <strong>PANEL 납품·당직 진입점</strong>으로 일체기가 도착한 당일 설치·인수가 가능하고, 당직·장애 대응이 매번 개발자 원격 명령을 기다리지 않게 하며; <strong>SITE 공식 웹사이트</strong>로 제품 가치·4단계 하드웨어 선택·설치 패키지 진입점을 제시해 방문자가 먼저 이해한 뒤 다운로드하고 배포하도록 하며; <strong>IDEA 커뮤니티 온라인 IDE</strong>로 기여자가 브라우저에서 전체 저장소를 열고 GitHub Copilot으로 공동 창작하며, 변경분을 로컬에 배포하고 PR을 제출할 수 있게 해 오픈소스 협업을 「먼저 환경 구성」에서 「열고 바로 수정」으로 바꿉니다. 경험 측면에서는 Web 콘솔과 모바일 App / 미니프로그램 능력이 정렬되어 지휘 센터와 현장 순찰이 동일한 업무 논리로 언제 어디서나 처리합니다. 여기에 더해 새로운 <strong>ANDROID / IOS / HARMONYOS 셸 패키징 엔지니어링</strong>이 이 모바일 경험을 APK / IPA / HAP 설치 패키지 형태로 주류 휴대폰 OS에 전달합니다. 하나의 프런트엔드, 원클릭 빌드, 통합 버전 관리.
 </p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
@@ -51,6 +51,51 @@ EasyAIoT 공식 웹사이트: [http://36.111.47.113:8090/](http://36.111.47.113:
 
 <p style="font-size: 14px; line-height: 1.8; color: #555; margin: 15px 0;">
 📄 보다 완전한 그림·문자 소개는 <a href=".doc/项目介绍/EasyAIoT项目介绍 V2.0.pptx" style="color: #3498db; text-decoration: none; font-weight: 600;">EasyAIoT 프로젝트 소개 V2.0 (PPT)</a>, 그리고 <a href=".doc/项目介绍/AI视频监控分析平台.pdf" style="color: #3498db; text-decoration: none; font-weight: 600;">AI 영상 감시 분석 플랫폼 (PDF)</a>를 참조하세요. 배포 완료 후 업무 운영은 <a href=".doc/操作手册/README.md" style="color: #3498db; text-decoration: none; font-weight: 600;">플랫폼 운영 매뉴얼</a>을 참고하세요.
+</p>
+
+### 🏆 자격증
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| <img src=".image/certificates/gitee-oss-award-2025-top1.jpg" width="200" alt="Gitee 2025 연례 오픈소스 프로젝트 · 산업 소프트웨어 부문 Top1"> | <img src=".image/certificates/gitee-2000-stars.jpg" width="200" alt="Gitee 2000+ Stars"> | <img src=".image/certificates/gitee-gvp-2025.jpg" width="200" alt="Gitee GVP 2025 · 가장 가치 있는 오픈소스 프로젝트"> | <img src=".image/certificates/csdn-blog-expert.jpg" width="200" alt="CSDN 블로그 전문가"> |
+
+## 🚀 빠른 시작
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+README를 열자마자 속으로: 「이거… 내 허접한 기계에서 돌아갈까?」 — <strong>됩니다. 겁먹지 마세요.</strong>
+</p>
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+가장 가벼운 등급, 컨테이너 총 사용 약 <strong>1 GB</strong>. 카메라 접속·실시간 분석·스마트 경보, 작은 기계로도 폐루프. 낡은 노트북부터 돌려 보세요 — 맛 들리면 그때 올려타도 됩니다.
+</p>
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
+<strong>세 단계로 탑승 (Linux 예):</strong>
+</p>
+
+```bash
+git clone https://gitee.com/volara/easyaiot.git
+cd easyaiot
+
+# 방식 A (권장)
+EASYAIOT_DEPLOY_PROFILE=edge sudo bash .scripts/docker/install_linux.sh install
+
+# 방식 B
+# sudo bash .scripts/docker/install_linux.sh edge install
+```
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0;">
+설치 후 브라우저에서 <code>https://&lt;서버IP&gt;:8888</code> — 기본 계정 <code>admin</code> / <code>admin123</code>. 검증:
+</p>
+
+```bash
+.scripts/docker/install_linux.sh verify
+# 선택: 메모리가 등급 한도 안인지 한 번 더 확인
+.scripts/docker/install_linux.sh resources
+```
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0;">
+초록불이 떴다면 퇴근입니다 — 생각보다 쉽죠. 오늘 커피는 일찍 마셔도 됩니다.
 </p>
 
 ## 🌟 프로젝트에 대한 몇 가지 생각
@@ -68,7 +113,7 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
 </p>
 
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
-  <li><strong>인수 주기 단축</strong>: 도착 후 mini / standard / full 중 하나를 골라 설치하고 진행·결과를 현장에서 확인 — 명령 누락·단계 누락으로 「중간에 멈춤」 감소; PoC와 정식 납품 모두 인수에 더 빨리 도달</li>
+  <li><strong>인수 주기 단축</strong>: 도착 후 edge / mini / standard / full 중 하나를 골라 설치하고 진행·결과를 현장에서 확인 — 명령 누락·단계 누락으로 「중간에 멈춤」 감소; PoC와 정식 납품 모두 인수에 더 빨리 도달</li>
   <li><strong>상주·원격 비용 절감</strong>: 컨테이너 가동·자원 압박·로그 정체 지점이 한눈에 — 문서부터 뒤지거나 개발 지원을 기다리지 않고 재시작·캐시 정리·이미지 pull; 당직자가 흔한 장애를 자체 처리</li>
   <li><strong>다수 프로젝트 동일 기준</strong>: 동일 설치·운영 진입점을 다수 일체형·다수 기기에 재사용 — 납품·당직·인수인계 기준을 맞추고 「현장마다 구두 전승」을 피함</li>
 </ul>
@@ -160,6 +205,39 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
   <li><strong>E2E 연동 즉시 사용</strong>: <code>bash EDGE/demo/run_e2e.sh</code>로 수집 → MQTT 업링크 → 클라우드 입고 전체 체인을 원클릭 검증</li>
 </ul>
 
+### 🛰️ SENTINEL: 클러스터 노드 센티널 — 「등록 즉시 준비, 실제 역량으로 스케줄」
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+연합 확장이 자주 막히는 지점은 「머신은 들어왔지만, 일을 받을 수 있는지 모른다」입니다 — 영상 분석, 스트림 전달, 모델 학습은 각각 다른 준비 조건이 필요하고, 작업이 내려간 뒤에야 환경 결손을 발견하며, 현장은 의존성 설치를 위해 서버에 반복 접속하다가 「설치는 됐는데 안 돌아간다」에서 인수 검사에 걸립니다. EasyAIoT는 독립 <strong>SENTINEL 모듈</strong>을 추가합니다. 스케줄 가능한 각 노드를 따라가는 <strong>업무 준비도 센티널</strong>로, 선택한 업무를 실제로 받을 수 있는지 지속적으로 확인하고 스케줄 가능 역량을 콘솔에 모으며, 결손 시 환경 보완을 요청할 수 있습니다 — 운영은 서버 접속을 줄이고, 작업은 헛발질을 줄이며, 확장 당일 인수할 수 있습니다.
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>업무 선택으로 역량 인정</strong>: 영상 분석, 스트림 전달, 라이브 접속, 모델 학습, 대규모 모델, 스마트 라벨링 — 선택한 업무의 준비도를 추적하며, 역할로 「대충 뭘 할 수 있을지」 추측하지 않습니다</li>
+  <li><strong>등록 즉시 모니터링</strong>: 노드가 플랫폼에 편입되면 센티널 점검이 자동 시작 — 확장 당일 「일을 받을 수 있는지」를 확인</li>
+  <li><strong>실제 역량 기반 스케줄</strong>: 환경이 진짜 준비된 노드만 스케줄 풀에 들어가 「배정됐는데 안 돌아감」 재작업을 줄입니다</li>
+  <li><strong>결손 자가 보완</strong>: 기대 환경이 비면 플랫폼에 보완을 요청 — 현장 수동 설치를 플랫폼 폐루프로 압축</li>
+  <li><strong>단절망에서도 확장</strong>: 공인망 없음·제한 네트워크 현장도 오프라인 등록과 환경 동기화 가능</li>
+  <li><strong>콘솔 한눈에 인수</strong>: 컴포넌트 상태와 스케줄 가능 기능이 같은 화면 — 추측·서버 순회를 줄이고 납품 언어를 통일</li>
+</ul>
+
+
+### 🧭 POST: 맞춤 판정 — 「검출」을 운영 가능한 업무 이벤트로
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+비전 프로젝트는 「모델이 이미 사람/차량/물체를 박스로 잡았는데 경보를 쓸 수 없다」에서 자주 막힙니다 — 구역 밖 통행도 울리고, 정상 작업도 울리며, 고객이 원하는 것은 선 넘기·체류·인원 초과인데 팀은 모델만 다시 학습하고 작업을 멈추고 개발을 기다립니다. EasyAIoT는 독립 <strong>POST 맞춤 판정 서비스</strong>를 추가해 <strong>화면 인식</strong>과 <strong>업무 판단</strong>을 분리합니다. 검출은 「보는」 데 집중하고, 판정은 작업별로 「경보할지·무엇을 보고할지」를 편성합니다 — 규칙을 바꿔도 재학습이 없고, 분석도 멈추지 않아 경보가 공사장·단지·교통·공장의 관리 기준에 맞춰집니다.
+</p>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>작업별 판정 편성</strong>: 알고리즘 작업마다 후처리 단계를 독립 구성 — 기본은 검출 구역 필터 후 표준 경보; 업무 스크립트·산업 플러그인으로 인원 집계·선 넘기·체류 초과·구역 체류·다중 조건 복합 경보를 현장형 규칙 체인으로 구성, 동일 시나리오는 한 번 구성·다작업 재사용</li>
+  <li><strong>업무가 관심 있는 범위만 경보</strong>: 장치 「구역 검출」과 연동해 구역 밖 목표는 자동 필터 — 화면 폭주 없음; 구역을 안 그리면 경보를 막지 않음. 금지 구역·통로·작업대에 집중해 오경보와 수동 검토 비용이 크게 감소</li>
+  <li><strong>업무 스크립트와 규칙 체인 병행</strong>: 기본 설정의 스크립트는 현장 언어로 판단을 쓰고, 규칙 페이지는 필터와 단계 순서를 담당. 두 능력은 독립·동시 사용 가능 — 「스크립트 vs 단계」 양자택일 불필요</li>
+  <li><strong>산업 로직 플러그형</strong>: 단지·공사장·교통의 차별 판정을 위해 플랫폼 코어를 고치지 않음. SI·솔루션사는 판정 능력을 등록·기동/정지하고 작업에 연결 — 동일 검출 모델로 다수 고객 프로젝트 서비스</li>
+  <li><strong>상선 전 시운전</strong>: 샘플·실제 검출 이벤트로 현재 규칙을 온라인 재생 — 통과/폐기와 경보 발생 여부를 단계별로 확인. 「이 규칙이 무엇을 막았는지」를 인수에서 답할 수 있음</li>
+  <li><strong>규칙 변경 즉시 반영</strong>: 실행 중 작업에 규칙을 저장하면 새 기준이 적용 — 분석 중단·영상 재푸시 불필요. 금지 구역 임시 변경·판단 단계 추가도 당일 운영 가능</li>
+  <li><strong>인식과 판정이 서로를 끌어내리지 않음</strong>: 감시 화면은 계속 분석하고 업무 판단은 필요에 따라 확장; 판정 실패 시 「이 단계 건너뛰고 경보 유지」 또는 「잘못된 경보보다 미경보」를 선택. standard/full은 기본 포함, 경량 단기는 먼저 검출-경보 루프를 닫고 심화 운영 시 승급</li>
+  <li><strong>내장 판정 플러그인 4종(등록 불필요)</strong>: <strong><code>line_cross</code></strong>(선 넘기, <code>line</code> 검출선+추적), <strong><code>region_enter_exit</code></strong>(구역 진입/이탈), <strong><code>dwell_timer</code></strong>(체류/잔류 초과), <strong><code>headcount_gate</code></strong>(인원 임계값) — 구역 게이트·통과·업무 스크립트·산업 플러그인과 조합해 현장형 규칙 체인 구성</li>
+</ul>
+
 ### 🤖 AI 어시스턴트: IDEA 분할 화면 공동 창작 — 코드를 고치며 아키텍처·상태를 질문
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
@@ -180,25 +258,61 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
 | ![IDEA 로그인](.image/banner/banner1203.png) | ![IDEA 워크스페이스](.image/banner/banner1204.png) | ![IDEA 개발](.image/banner/banner1205.png) |
 | ![AI 어시스턴트 대화](.image/banner/banner1210.png) | ![AI 어시스턴트 분석](.image/banner/banner1211.png) | ![AI 어시스턴트 협업](.image/banner/banner1212.png) |
 
-### 🎯 세 가지 하드웨어, 하나의 플랫폼
+### 📱 ANDROID / IOS / HARMONYOS: 하나의 프런트엔드, 세 개의 네이티브 셸 — 어떤 폰이든 하나의 App
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-많은 지능형 IoT 프로젝트가 배포 단계에서 막힙니다. <strong>기능을 모두 넣으면 작은 기기에 안 들어가고, 들어가게 하려면 기능을 줄이고 버전을 나누고 여러 배포 패키지를 유지해야 합니다.</strong> EasyAIoT는 하나의 플랫폼으로 이 딜레마를 해결합니다 — <strong>엣지 박스로 점 단위 지능, AI 일체형 카메라로 벽면 즉시 분석, AIoT 풀스택 일체기로 한 박스에 전체 스택</strong>. 현장 하드웨어에 맞는 등급을 선택하면, 단일 지점 시범부터 층면 커버리지, 풀스택 납품까지 동일 소프트웨어로 진행 — 버전 분리 없음.
+모바일 납품은 흔히 '플랫폼 커버리지'에서 막힙니다. 하나의 OS에서만 실행되는 App은 현장 인력을 회사가 지급한 단말에 묶어두고, 네이티브 코드를 하나 더 유지할 때마다 비용은 두 배로 늘면서 기능은 조금씩 어긋납니다. EasyAIoT의 모바일은 <strong>하나의 uni-app 프런트엔드 + 세 개의 네이티브 셸</strong>로 구성됩니다. 동일한 <strong>APP</strong> 페이지를 <strong>ANDROID</strong>(DCloud 오프라인 런타임 + Gradle → APK), <strong>IOS</strong>(WKWebView 셸 + xcodebuild → .app / .ipa), <strong>HARMONYOS</strong>(ArkWeb 셸 + hvigor → HAP) 세 플랫폼의 설치형 앱으로 각각 컴파일합니다. 하나의 업무 로직으로 주류 휴대폰 OS 전부에 네이티브 설치 패키지를 제공하며, 코드 세 벌을 유지할 필요가 없습니다.
+</p>
+
+<table style="width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px;">
+<tr>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; width: 14%;">플랫폼</td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; width: 34%;">셸 기술</td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600; width: 30%;">빌드 산출물</td>
+<td style="padding: 10px 12px; border: 1px solid #e0e0e0; background-color: #f8f9fa; font-weight: 600;">원클릭 스크립트</td>
+</tr>
+<tr><td style="padding: 10px 12px; border: 1px solid #e0e0e0;"><strong>ANDROID</strong></td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;">DCloud uni-app 오프라인 런타임 + Gradle</td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;"><code>easyaiot-&lt;버전&gt;-&lt;환경&gt;-android.apk</code></td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;"><code>ANDROID/make-apk.sh</code> / <code>make-apk.bat</code></td></tr>
+<tr><td style="padding: 10px 12px; border: 1px solid #e0e0e0;"><strong>IOS</strong></td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;">WKWebView 셸 + xcodebuild (Xcode 16+)</td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;"><code>.app</code> (시뮬레이터, 서명 없음) / <code>.ipa</code> (실기기)</td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;"><code>IOS/make-ipa.sh</code></td></tr>
+<tr><td style="padding: 10px 12px; border: 1px solid #e0e0e0;"><strong>HARMONYOS</strong></td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;">ArkWeb 셸 + hvigor (DevEco Studio)</td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;"><code>easyaiot-&lt;버전&gt;-&lt;환경&gt;-harmonyos.hap</code></td><td style="padding: 10px 12px; border: 1px solid #e0e0e0; color: #444;"><code>HARMONYOS/make-hap.sh</code></td></tr>
+</table>
+
+<ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
+  <li><strong>하나의 코드, 제로 분기</strong>: 세 셸이 동일한 APP 페이지와 admin-api를 공유합니다 — 디바이스 관리, 실시간 미리보기, 스트림 전달, 알고리즘 작업, 경보 센터, 모델 추론/훈련 — Android·iOS·HarmonyOS에서 PC 관리 콘솔과 동일한 기능을 제공하며, 프런트엔드의 네이티브 능력 차이는 조건부 컴파일로 완전히 격리되어 한 번의 수정이 세 플랫폼에 적용됩니다</li>
+  <li><strong>플랫폼마다 시스템 네이티브 렌더링</strong>: Android는 uni-app 오프라인 런타임으로 네이티브 App 경험을 제공합니다. iOS는 커스텀 스킴 <code>easyiot://</code>로 H5 빌드를 서비스하여 페이지가 '정상적인 웹사이트'처럼 동작합니다(ES Module, localStorage, admin-api에 대한 cross-origin 요청 모두 실제 배포와 동일). HarmonyOS는 rawfile 리소스를 ArkWeb의 가상 호스트 <code>http://appassets.local/</code>로 매핑합니다 — 서드파티 엔진 없음, file:// 제약 없음, 동작 분기 없음</li>
+  <li><strong>플랫폼마다 원클릭 패키징</strong>: <code>make-apk.sh</code> / <code>make-ipa.sh</code>(시뮬레이터 .app 또는 실기기 .ipa) / <code>make-hap.sh</code>가 버전 일치 검증 → 프런트엔드 빌드 → 리소스 동기화 → 네이티브 빌드 → 명명된 산출물 순으로 수행합니다. prod / test / dev 환경이 각각 독립 패키지를 만들어 서로 덮어쓰지 않습니다</li>
+  <li><strong>통합 관리 진입점</strong>: <code>.scripts/docker/mobile.sh</code>가 세 플랫폼을 한 번에 관리합니다 — <code>status</code>(세 플랫폼 버전 일치 / 도구 체인 준비도 / 기존 산출물), <code>build android|ios|harmonyos|all</code>, <code>bump</code>, <code>artifacts</code>, <code>clean</code> — 일상 작업에서 각 모듈에 따로 들어갈 필요가 없습니다</li>
+  <li><strong>한 번의 명령으로 다섯 곳의 버전 번호 정렬</strong>: APP manifest + Android build.gradle + <code>dcloud_control.xml</code> + iOS pbxproj(Debug/Release) + HarmonyOS <code>app.json5</code> — <code>.scripts/docker/mobile.sh bump 1.0.1 101</code>이 모든 복사본을 수정한 뒤 다시 읽어 검증합니다. 다섯 곳이 어긋나면 각 패키징 스크립트가 빌드를 거부하므로, 잘못된 버전이 나갈 일이 없습니다</li>
+  <li><strong>표준화된 산출물 명명</strong>: 소문자 kebab-case <code>easyaiot-&lt;버전&gt;-&lt;환경&gt;-&lt;플랫폼&gt;.&lt;형식&gt;</code> — 보관에 적합한 안정적인 정렬, 객체 스토리지 / CDN 및 CI 산출물 수집에 가장 친숙합니다. <code>mobile.sh artifacts/clean/status</code>는 신·구 명명 규칙을 모두 인식합니다</li>
+  <li><strong>CI 친화적 파이프라인 분리</strong>: 어떤 Linux runner든 <code>--skip-native</code>로 프런트엔드 빌드와 리소스 동기화를 먼저 수행한 뒤, 준비된 프로젝트를 macOS runner(iOS) 또는 자체 호스팅 DevEco runner(HarmonyOS)에 넘겨 최종 네이티브 컴파일을 진행할 수 있습니다 — 하나의 파이프라인으로 세 플랫폼을 빌드하며, 모든 머신에 플랫폼 도구 체인을 설치할 필요가 없습니다</li>
+  <li><strong>서명과 배포 준비 완료</strong>: Android는 내장 <code>iot.jks</code>로 서명합니다(DCloud AppKey 등록 완료). iOS 시뮬레이터 빌드는 계정이 필요 없고, 실기기 / App Store 빌드는 Team ID 기반 자동 서명을 사용합니다. HarmonyOS는 DevEco에서 디버그 서명을 자동 생성하며, 배포 서명은 AppGallery Connect를 통해 진행합니다</li>
+  <li><strong>모듈별 문서와 트러블슈팅</strong>: 각 모듈에 환경 준비(JDK / Xcode 16+ / DevEco), 버전 관리, 서명, FAQ 표를 다루는 자체 README가 포함됩니다. 세 플랫폼 통합 가이드는 <a href="MOBILE.md" style="color: #3498db; text-decoration: none; font-weight: 600;">MOBILE.md</a></li>
+</ul>
+
+### 🎯 네 가지 하드웨어, 하나의 플랫폼
+
+<p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
+많은 지능형 IoT 프로젝트가 배포 단계에서 막힙니다. <strong>기능을 모두 넣으면 작은 기기에 안 들어가고, 들어가게 하려면 기능을 줄이고 버전을 나누고 여러 배포 패키지를 유지해야 합니다.</strong> EasyAIoT는 하나의 플랫폼으로 이 딜레마를 해결합니다 — <strong>edge 초경량 단기기 합장</strong>부터 <strong>엣지 박스로 점 단위 지능, AI 일체형 카메라로 벽면 즉시 분석, AIoT 풀스택 일체기로 한 박스에 전체 스택</strong>까지. 네 가지 흔한 현장 하드웨어 중 하나를 고르면, 「일단 기동」부터 단일 지점 시범·층면 커버리지·풀스택 납품까지 동일 소프트웨어로 진행 — 버전 분리 없음.
 </p>
 
 | 등급 | 대표 하드웨어 (예) | 권장 메모리 | 할 수 있는 것 | 실측 검증 |
 | :-- | :-- | :--: | :-- | :--: |
+| **edge** 엣지 단기기 | <strong>경량 엣지 단기기</strong> (2 GB 산업용 PC, 낡은 노트북, 클라우드 최소 사양, 매장 시범기) | ≥ 2 GB | <strong>한 대로 먼저 폐루프</strong>: WEB + VIDEO + RUNTIME; 카메라 접속·실시간 분석·스마트 경보; DEVICE 없음, 로그인은 VIDEO 주도 | 약 **1.02 GB**, 여유 거의 1 GB |
 | **mini** 엣지 경량판 | <strong>엣지 박스</strong> (8 GB 산업용 PC, 매장 보안 일체기, 현장 게이트웨이) | ≥ 8 GB | <strong>한 지점에 지능 설치</strong>: 카메라 접속·실시간 분석·스마트 경보·모델 추론; 이벤트 평면은 standard/full과 동일(Gateway + iot-sink + EMQX) | 약 4–6 GB, 여유 충분 |
-| **standard** 표준판 | <strong>AI 일체형 카메라</strong> (스마트 카메라 단말, 연산 내장 AI 감시 카메라, 다목 AI 분석 일체기) | ≥ 16 GB | <strong>각 카메라가 스마트 노드</strong>: 다수 카메라 벽면 배치로 층/단지 커버, 장치·규칙·연산 통합 오케스트레이션 | 약 10 GB, 안정적 여유 |
-| **full** 완전판 (기본) | <strong>AIoT 풀스택 일체기</strong> (엔터프라이즈 풀스택 지능관제 일체기, 산업 IoT 풀스택 호스트, 클라우드-엣지-디바이스 통합 플랫폼) | ≥ 20 GB | <strong>한 박스에 IoT + 영상 + AI</strong>: 장치 통합관리·대량 접속·지능 분석·지휘 판단 일체화, 전량 역량 장기 안정 | 약 14 GB, 전 기능 여유 확보 |
+| **standard** 표준판 | <strong>AI 일체형 카메라</strong> (스마트 카메라 단말, 연산 내장 AI 감시 카메라, 다목 AI 분석 일체기) | ≥ 16 GB | <strong>각 카메라가 스마트 노드</strong>: 다수 카메라 벽면 배치로 층/단지 커버, 장치·규칙·연산 통합 오케스트레이션; <strong>POST 맞춤 판정</strong>으로 경보를 현장 기준에 맞춤 | 약 10 GB, 안정적 여유 |
+| **full** 완전판 (기본) | <strong>AIoT 풀스택 일체기</strong> (엔터프라이즈 풀스택 지능관제 일체기, 산업 IoT 풀스택 호스트, 클라우드-엣지-디바이스 통합 플랫폼) | ≥ 20 GB | <strong>한 박스에 IoT + 영상 + AI</strong>: 장치 통합관리·대량 접속·지능 분석·지휘 판단 일체화, 전량 역량 장기 안정; <strong>POST 맞춤 판정</strong>과 대외 업무 흐름 포함 | 약 14 GB, 전 기능 여유 확보 |
+
+<p style="font-size: 14px; line-height: 1.8; color: #444; margin: 12px 0 8px 0;">
+<strong>edge 설치:</strong> <code>EASYAIOT_DEPLOY_PROFILE=edge sudo bash .scripts/docker/install_linux.sh install</code> (또는 <code>... install_linux.sh edge install</code>). 최초 설치 대화형 메뉴에서도 선택 가능; 자세한 내용은 위 <a href="#-빠른-시작">빠른 시작</a> 참고.
+</p>
 
 <p style="font-size: 14px; line-height: 1.8; color: #444; margin: 16px 0 8px 0;">
 <strong>설치 등급 선택 및 리소스 적합성 (실측):</strong>
 </p>
 
-| | | |
-|:---:|:---:|:---:|
-| ![엣지 박스 mini](.image/deploy-profile-mini.png) | ![AI 일체형 카메라 standard](.image/deploy-profile-standard.png) | ![풀스택 일체형 full](.image/deploy-profile-full.png) |
+| | |
+|:---:|:---:|
+| ![엣지 단기기 edge](.image/deploy-profile-edge.png) | ![엣지 박스 mini](.image/deploy-profile-mini.png) |
+| ![AI 일체형 카메라 standard](.image/deploy-profile-standard.png) | ![풀스택 일체형 full](.image/deploy-profile-full.png) |
 
 #### 🧠 AI 기능
 
@@ -218,8 +332,10 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
   <li><strong>DJI 도크 / 드론 공중 시야 접속</strong>: 고정 카메라의 「지면만 보고 광역 커버가 어렵다」는 한계를 넘어, DJI FlightHub 체계의 도크·드론 고공 영상을 플랫폼 통합 영상·AI 판정 루프에 포함합니다. 스트리밍 모듈의 「DJI 라이브 접속」: <strong>FlightHub API로 라이브 시작</strong>과 <strong>수동 라이브 소스</strong> 두 가지 접속 방식을 지원 — API 모드에서 원클릭으로 제조사 라이브 스트림을 수신하고 장치를 자동 등록; 수동 모드는 RTSP / RTMP / HTTP-FLV / HLS 등 라이브 소스를 직접 입력. 접속 후 공중 화면은 GB28181/ONVIF 고정 포인트와 동일 화면으로 공관할 수 있으며, 관리자는 고정 카메라처럼 도크·기체 실황을 조회하고 실시간 AI 분석, 경보 연동, 증거 보관을 추가로 연결할 수 있습니다 — 광역 순찰, 비상 정찰, 주경계 보완 등 고정 포인트로는 닿기 어려운 시나리오를 빠르게 커버하고 「발견—위치 확정—대응」 응답 체인을 크게 단축하여, 스마트 보안을 평면 배치에서 천지일체 협동 감지로 고도화합니다.</li>
   <li><strong>RTC 소비자급 카메라 P2P 브리지</strong>: <strong>Tapo, Tuya, Ring/Nest, Xiaomi Mi Home, Wyze, DoorBird, GoPro, Roborock</strong> 9대 브랜드를 한 번에 — 표준 RTSP 미지원. go2rtc 기반 RTC 모듈이 P2P 브리지와 통합 관리 API 제공. Web 콘솔 「RTC 카메라 접속」브랜드별 폼/OAuth; 브리지 후 소비자급·GB28181/ONVIF 전문 카메라 <strong>동일 화면·AI 작업·경보 연동</strong></li>
   <li><strong>실시간 인터콤 및 PTZ 원격 제어</strong>: 전통적인 감시의 「볼 수만 있고, 관리할 수 없는」 한계를 돌파합니다. 감시 담당자는 실시간 미리보기 화면에서 음성 방송과 PTZ 제어를 동시에 수행할 수 있습니다 — 시스템 전환 없이, 현장 방문 없이 원격 소통, 대피 유도, 위반 행위 제지가 가능하며, 대응을 「현장 파견」에서 「말하면 즉시 도달」로 압축합니다. PTZ 제어로 카메라를 자유롭게 회전·줌·포커스할 수 있어, 돌발 상황 시 사고 지역을 신속히 조준하고 세부 사항을 확대하여 「잘 보고, 정확히 지시하고, 말하면 전달된다」는 일체화된 현장 대응 선순환을 형성합니다. GB28181 및 ONVIF 장치와 완벽 호환, 기존 감시 자산을 활용하고 별도의 인터콤 장비나 서드파티 소프트웨어 없이 배포된 카메라에 즉시 원격 소통 및 유연한 디스패치 기능을 부여하여, 시스템 사일로와 감시 비용을 크게 절감합니다</li>
-  <li><strong>오케스트레이션 가능한 알고리즘 후처리</strong>: 「검출은 되지만 판단이 어렵다」는 역량 병목을 돌파하여, 객체 감지 위에 독립적인 업무 판단 계층을 추가하고 화면 인식 결과를 운영·추적·통계 가능한 업무 이벤트로 전환합니다. 작업별로 인원 집계, 경계선 통과, 체류 시간 초과, 구역 장기 체류, 다중 조건 복합 경보 등 시나리오 규칙을 유연하게 정의할 수 있어, 모델을 반복 조정하지 않고도 건설 현장 안전 감독, 단지 보안, 교통 통제 등 차별화된 요구에 빠르게 적응하고, 범용 시각 역량을 현장에 밀착한 관리 도구로 단련합니다. 후처리와 실시간 분석은 서로 독립적으로 병렬 운영됩니다 — 감시 화면은 끊김 없이 판단을 지속하고, 업무 로직은 필요에 따라 탄력적으로 확장되며, 판단 결과는 자동으로 축적·보관되어 정밀 경보를 구동하여 오탐·미탐과 수동 검토 비용을 크게 절감합니다. 업무 담당자는 규칙 표현에 집중하고, 플랫폼이 배포·실행·규모 확장을 담당하여 「볼 수 있다」에서 「명확히 판단하고, 통제하며, 실제로 활용한다」로 나아갑니다</li>
+  <li><strong>POST 맞춤 판정(오케스트레이션 가능 후처리)</strong>: 「검출은 되지만 판단이 어렵다」는 병목을 독립 <strong>POST</strong> 서비스가 업무 판정 계층으로 돌파해, 화면 인식 결과를 운영·추적·통계 가능한 업무 이벤트로 전환합니다. 알고리즘 작업 안에서 규칙 체인을 편성: 기본은 검출 구역 필터 후 경보, 업무 스크립트와 산업 플러그인으로 인원 집계·선 넘기·체류 초과·구역 체류·다중 조건 복합 경보를 구성 — 모델 반복 조정 없이 공사장 안전·단지 보안·교통 통제에 맞춤. 상선 전 샘플 이벤트로 규칙을 시운전하고, 실행 중 규칙 저장은 즉시 반영되어 분석을 멈출 필요 없음. 인식과 판정은 독립 병렬 — 오경보·미경보와 수동 검토 비용을 줄이고 「보이는」 데서 「판단·통제·활용」으로</li>
   <li><strong>다중 센터 노드 × 다중 워커 노드 연합 클러스터</strong>: 지역 간·다중 데이터센터·클라우드-엣지 협업 배포를 위해 플랫폼은 「N개 센터 노드 + N개 워커 노드」 연합 아키텍처를 채택합니다 — 센터 노드가 통합 오케스트레이션을, 워커 노드가 연산·미디어 실행을 담당하며 수평 확장이 가능합니다. 각 센터 노드는 소속 워커 노드를 관리하고, 스트리밍, 오디오·비디오 트랜스코딩, 영상 분석, 모델 추론·학습 등 역량의 원격 배포와 원클릭 배치를 지원합니다. 다중 센터 노드 간 상호 연동·동기화가 가능하며, 클러스터 스윔레인 뷰에서 「센터—워커」 토폴로지와 자원 수위를 직관적으로 표시합니다. 알고리즘 태스크, 자동 라벨링 파이프라인, 스트림 릴레이 등 워크로드는 노드 역할과 GPU 역량에 따라 지능적으로 스케줄링되어, 대량 스트림 접속·고동시성 추론·분산 학습이 동일 클러스터에서 협력 실행됩니다 — 「등록 용이, 스케줄 명확, 확장 유연, 통합 관리」를 실현합니다</li>
+  <li><strong>SENTINEL 클러스터 노드 센티널</strong>: 연합 확장과 다중 전산실 연산 풀을 위해 「머신은 들어왔지만 일을 받을 수 있는지 모른다」는 납품 통증을 해결합니다 — 업무 기능별로 각 노드의 준비도와 스케줄 가능 역량을 지속적으로 파악해, 진짜 준비된 머신에만 작업을 배정합니다. 결손 시 환경 보완을 요청할 수 있고, 공인망 없는 현장도 오프라인 등록·확장이 가능하여 클러스터가 「등록 용이, 인식 명확, 배정 정확, 서버 접속 감소」를 실현합니다</li>
+
   <li><strong>SAM 제로 스타트 자동 라벨링 오케스트레이션 파이프라인</strong>: 라벨링 샘플과 사용 가능한 검출 모델이 없는 콜드 스타트 시나리오를 위해, 플랫폼은 SAM 개방 어휘 분할 기능을 통합하여 원클릭 무인 라벨링 파이프라인을 제공합니다. 전략에 따라 시스템은 카메라 프레임 추출, SAM 텍스트 프롬프트 초기 라벨링, 기준 달성 시 YOLO 미세 조정 학습 자동 트리거, 양산 단계에서 YOLO 고속 추론을 주력으로 하되 누락 검출에 SAM 지능 보완, 주기적 반복 학습 및 데이터셋 자동 패키징·보내기를 자동으로 연결하여 「수집—라벨링—학습—보내기」 전 과정을 완결합니다. 작업 일시정지·재개 및 로컬/클러스터 컴퓨팅 탄력 스케줄링을 지원하며, 시각적 전략 설정과 실행 로그와 함께, 사용자는 제로 샘플·제로 모델에서 출발하여 맞춤형 검출 역량을 빠르게 축적할 수 있습니다 — 「카테고리를 말로 정의하고 모델이 완성되기를 기다리기」가 데이터셋 구축의 기본 경로가 됩니다</li>
   <li><strong>만 노드급 탄력적 컴퓨팅 클러스터 및 수평 확장 풀</strong>: 초대규모 AI·영상 비즈니스를 위해 클라우드-엣지-디바이스 통합 분산 컴퓨팅 기반을 구축하고, 알고리즘 태스크·스트림 릴레이·알고리즘 서비스·모델 학습·추론을 수평 부하 분산과 탄력적 확장 체계로 통합합니다. 신규 서버는 원클릭으로 등록·연동되어 즉시 스케줄 가능한 컴퓨팅 단위가 되며, 스케줄러가 자원 수위와 업무 부하에 따라 작업을 자동 분배·균형 조정합니다. 수백~수만 대 카메라, 단일 머신~만 노드급까지 선형 확장이 가능하며, 재배포나 수동 튜닝 없이 대량 스트림 접속·고동시성 추론·분산 학습이 동일 컴퓨팅 풀에서 협력 실행되어 「확장 가능, 안정 운영, 통합 관리」를 실현합니다</li>
   <li><strong>분산 스토리지 드라이버(연산 + 스토리지 이중 클러스터 분리)</strong>: 노드별 로컬 디렉터리 마운트, 경로 고정, 확장 시마다 설정 변경이 필요했던 기존 방식을 넘어, 플랫폼은 원시 로컬 디렉터리 드라이버 대신 <strong>클러스터 이벤트 구동</strong> 방식을 채택합니다 — Export 준비, 클라이언트 마운트, 주·백 전환, 다중 클러스터 브리지 등 스토리지 상태 변경이 이벤트로 자동 감지·연동되며, 스냅샷·녹화·알람 증거·모델 자산이 분산 NFS 클러스터에 통합 저장되어 업무 계층은 마운트 세부사항을 신경 쓸 필요가 없습니다. 연산과 스토리지는 <strong>이중 클러스터로 분리</strong> — 연산 측은 <strong>C++ RUNTIME</strong> 고속 실행 체인을 전면 채택하고, 스토리지 측은 수평 무한 확장 가능한 NFS 클러스터 풀을 독립 구축하여 연산 확장과 스토리지 확장이 서로 묶이지 않고 각자 수위에 따라 탄력적으로 스케일합니다. 클러스터 스윔레인, 토폴로지 뷰, 다중 클러스터 브리지 동기화를 갖추고, 신규 노드는 원클릭 등록으로 스토리지 도메인에 즉시 합류 — 대량 스트림 접속 환경에서 「연산 가능」과 「저장 가능」이 동시에 성립, 「연산·스토리지 분리, 각자 확장, 이벤트 연동, 통합 관리, 무한 확장」을 실현합니다</li>
@@ -233,6 +349,7 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
   <li><strong>번호판 인식 및 번호판 라이브러리 관리 기능</strong>: 모니터링 작업에서 원클릭으로 번호판 인식을 활성화할 수 있습니다. 지나가는 차량 화면에서 번호판 정보를 자동으로 인식하고, 자체 구축 번호판 라이브러리와 실시간으로 대조합니다. 화이트리스트·블랙리스트·업무 태그를 유연하게 관리하고, 규칙에 해당하는 차량이 감지되면 즉시 경보를 연동합니다. 출입구 통행 통제, 중점 차량 감시, 방문 차량과 등록 차량 분류 관리 등의 요구를 지원합니다. 새로 나타난 번호판을 자동 등록하고, 캡처 및 매칭 기록을 완전히 보존하여 사후 차량 조회, 경로 확인, 증거 보관에 활용할 수 있습니다. 인식 과정은 기존 영상 분석과 병렬로 실행되어 모니터링 및 경보 주 흐름의 안정성과 실시간성에 영향을 주지 않습니다</li>
   <li><strong>디바이스 감지 영역 그리기</strong>: 시각적 디바이스 감지 영역 그리기 도구를 제공하며, 디바이스 스냅샷 이미지에서 사각형 및 다각형 감지 영역 그리기를 지원합니다. 영역과 알고리즘 모델 간의 유연한 연관 구성 설정을 지원하며, 영역의 시각적 관리, 편집, 삭제 등의 작업을 지원합니다. 그리기 효율성을 높이기 위한 키보드 단축키를 지원하며, 정밀한 영역 감지 구성을 실현하고 알고리즘 태스크에 대한 정확한 감지 범위 정의를 제공합니다.</li>
   <li><strong>지능형 연동 경보 메커니즘</strong>: 감지 영역, 방어 시간대 및 이벤트 경보 간의 삼중 연동 메커니즘을 지원합니다. 시스템은 감지된 이벤트가 지정된 감지 영역 범위를 동시에 충족하고, 방어 시간대 내에 있으며 경보 이벤트 유형과 일치하는지 지능적으로 판단합니다. 세 가지 조건이 모두 충족될 때만 경보가 트리거되어 정밀한 시공간 조건 필터링을 실현하고, 오탐률을 크게 낮추며 경보 시스템의 정확성과 실용성을 향상시킵니다.</li>
+  <li><strong>알람 워크오더 (AI 알람 책임 폐쇄 루프)</strong>: 「AI가 경보를 올렸다」가 실제로 「책임자 배정, 절차 진행, 결과 추적 가능」으로 이어지게 합니다. 경보가 저장되면 <strong>라우팅 규칙</strong>(경보 객체/이벤트/태스크/장치/엣지 노드 조건 조합)에 따라 자동 매칭되어, 조건이 맞으면 즉시 <strong>알람 워크오더</strong>가 생성되고 처리 프로세스가 시작됩니다 — 수동 배정 없이 책임이 바로 사람에게 연결됩니다. 워크오더는 플랫폼 내장 <strong>프로세스 오케스트레이션</strong>(시각적 플로우 디자이너: 승인, 합의 서명, 참조, 조건 분기, 병렬 분기, 타임아웃 알림 등)을 기반으로 실행되며, 승인/거부/반려/위임/이관/추가 서명 등의 조치와 앱 내·모바일 알림(딥링크로 승인 상세 페이지 바로 이동)을 지원합니다. 각 경보의 처리 상태, 현재 담당자, 소요 시간이 전 과정 기록되어 「경보→워크오더→처리→검토」 완전한 폐쇄 루프를 형성합니다. 기존 경보도 수동으로 워크오더를 발급할 수 있어 누락을 방지합니다.</li>
   <li><strong>대규모 카메라 관리</strong>: 수백 대 규모의 카메라 접속을 지원하며, 수집, 라벨링, 학습, 추론, 내보내기, 분석, 경보, 녹화, 저장, 배포 등의 전 과정 서비스를 제공합니다.</li>
   <li><strong>알고리즘 태스크 관리</strong>: 실시간·스냅샷·순찰 유형의 알고리즘 태스크 생성 및 관리를 지원하며, 각 태스크는 프레임 추출기와 정렬기를 유연하게 바인딩하여 정밀한 비디오 프레임 추출 및 결과 정렬을 실현합니다.
     <ul style="margin: 5px 0; padding-left: 20px;">
@@ -350,7 +467,7 @@ EasyAIoT는 AI와 IoT의 심층적 융합에 초점을 맞춘 클라우드-엣�
 <ul style="font-size: 14px; line-height: 1.8; color: #444; margin: 10px 0;">
   <li><strong>브라우저에서 바로 개발</strong>: code-server 기반 VS Code 스타일 온라인 IDE, 기본적으로 EasyAIoT 전체 저장소를 clone — 기여자가 로컬 환경을 먼저 구성하지 않아도 코드 수정, 모듈 검증, PR 제출 가능</li>
   <li><strong>독립 포털과 다중 사용자</strong>: 운영 콘솔은 <code>:9300</code>에서 WEB 관리 콘솔과 분리; 1인 1 Docker 워크스페이스; 포트 풀 13338–13437로 동시 접속; 콘솔 플로팅 볼로 포털 원클릭 이동</li>
-  <li><strong>6개 언어 도구 체인을 호스트와 정렬</strong>: <strong>JDK 21</strong>, Node 22, Python, Go, CMake/C++, .NET 8 사전 설치 — WEB / DEVICE / AI / NODE / RUNTIME / EDGE의 열람·경량 수정·모듈 검증 지원</li>
+  <li><strong>6개 언어 도구 체인을 호스트와 정렬</strong>: <strong>JDK 21</strong>, Node 22, Python, Go, CMake/C++, .NET 8 사전 설치 — WEB / DEVICE / AI / RUNTIME / EDGE의 열람·경량 수정·모듈 검증 지원</li>
   <li><strong>AI 공동 창작</strong>: GitHub Copilot 사전 설치(본인 GitHub 계정 로그인, 플랫폼이 키를 보관하지 않음); Copilot 구독이 없으면 OpenAI 호환 API Key를 Continue로 사용; 툴바로 HARNESS AI 어시스턴트를 분할 화면으로 열고, 파일을 끌어 자동 <code>@</code> 하며 수정과 질의를 병행</li>
   <li><strong>로컬 배포</strong>: 워크스페이스 변경 경로로 대상 모듈을 제안하고, 원클릭으로 빌드 후 호스트에서 실행 중인 동일 컨테이너를 교체 — 새로고침으로 검증해 「수정 → 확인」 루프를 단축</li>
   <li><strong>OAuth와 유휴 회수</strong>: Gitee / GitHub 로그인(필수화 가능), 1인 1존 계정 바인딩; 기본 8시간 유휴 시 자동 중지, 하트비트와 IDE 열기가 활성 시간을 갱신해 연산 낭비 방지</li>
@@ -486,7 +603,7 @@ EasyAIoT는 현지화 전략에 적극적으로 대응하며, 현지화 하드�
 ## 🧩 프로젝트 구조
 
 <p style="font-size: 15px; line-height: 1.8; color: #333; margin: 15px 0;">
-EasyAIoT는 WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TRANSFORM, PANEL, IDEA, HARNESS, SITE 등 핵심 모듈로 구성되며, COMPILE 다중 플랫폼 패키징·납품 능력을 함께 제공합니다:
+EasyAIoT는 WEB, APP, DEVICE, EDGE, SENTINEL, VIDEO, RTC, AI, RUNTIME, POST, VISUALIZE, TRANSFORM, PANEL, IDEA, HARNESS, SITE 등 핵심 모듈로 구성되며, COMPILE 다중 플랫폼 패키징·납품 능력을 함께 제공합니다:
 </p>
 
 <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
@@ -499,8 +616,8 @@ EasyAIoT는 WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TR
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
     <li><strong>공식 가치 진입점</strong>: 방문자·통합사·최종 고객을 위한 독립 공식 웹사이트 — 클라우드-엣지-디바이스 통합 가치를 명확히 설명한 뒤 다운로드와 배포로 안내</li>
-    <li><strong>인지 경로 단축</strong>: 제품 특성, 3단계 하드웨어 선택, 설치 패키지, 문서를 한 사이트에서 제공 — 저장소 검색·문의·패키지 찾기 비용 감소</li>
-    <li><strong>선택 의사결정 지원</strong>: mini / standard / full로 엣지 박스, AI 일체형 카메라, 풀스택 일체기 시나리오를 제시해 현장에서 한 번에 맞는 등급을 선택</li>
+    <li><strong>인지 경로 단축</strong>: 제품 특성, 4단계 하드웨어 선택, 설치 패키지, 문서를 한 사이트에서 제공 — 저장소 검색·문의·패키지 찾기 비용 감소</li>
+    <li><strong>선택 의사결정 지원</strong>: edge / mini / standard / full로 경량 단기기, 엣지 박스, AI 일체형 카메라, 풀스택 일체기 시나리오를 제시해 현장에서 한 번에 맞는 등급을 선택</li>
     <li><strong>관심에서 설치까지</strong>: 공식 사이트, 데모, 오픈소스 저장소, Releases가 하나의 흐름을 형성 — 이해 → 체험 → 다운로드 → 설치</li>
   </ul>
 </td>
@@ -527,6 +644,16 @@ EasyAIoT는 WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TR
     <li><strong>경보 센터</strong>: 경보 이벤트 검색, 스냅샷 미리보기, 경보 녹화 VOD 재생</li>
     <li><strong>모델 & AI</strong>: 모델 목록 및 배포 상태, 모바일 이미지 추론 워크벤치, 훈련 작업 진행률 모니터링 및 중지</li>
     <li><strong>개인 센터</strong>: 개인 프로필, 계정 보안, FAQ, 피드백 및 앱 설정</li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>ANDROID / IOS / HARMONYOS 모듈</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>하나의 프런트엔드, 세 개의 네이티브 셸</strong>: APP의 uni-app 페이지를 Android(DCloud 오프라인 런타임 + Gradle → APK), iOS(WKWebView 셸 + xcodebuild → .app / .ipa), HarmonyOS(ArkWeb 셸 + hvigor → HAP) 설치형 앱으로 패키징 — 주류 휴대폰 OS에서 동일한 업무 로직</li>
+    <li><strong>원클릭 패키징</strong>: <code>make-apk.sh</code> / <code>make-ipa.sh</code> / <code>make-hap.sh</code>가 버전 일치 검증 포함; prod / test / dev 환경이 각각 독립 산출물 생성</li>
+    <li><strong>통합 관리</strong>: <code>.scripts/docker/mobile.sh</code>가 status / build / bump / artifacts / clean 담당; <code>bump</code>가 다섯 곳의 버전 번호를 한 번에 정렬하며, 버전이 일치하지 않으면 패키징을 거부합니다</li>
   </ul>
 </td>
 </tr>
@@ -560,15 +687,15 @@ EasyAIoT는 WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TR
 </td>
 </tr>
 <tr>
-<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>NODE 모듈</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>SENTINEL 모듈</strong></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
   <ul style="margin: 5px 0; padding-left: 20px;">
-    <li><strong>노드 에이전트</strong>: 엣지/원격 노드 Agent로, 원클릭 설치·배포 후 플랫폼에 자동 접속</li>
-    <li><strong>상태 보고</strong>: 주기적 하트비트로 CPU·메모리·디스크·GPU 사용률 및 실행 중인 워크로드 상태를 실시간 보고</li>
-    <li><strong>원격 워크로드</strong>: 플랫폼에서 내려보낸 배포/중지 명령을 수신하여, 노드 로컬에서 AI 모델 서비스, 알고리즘 태스크, FFmpeg 트랜스코딩 등 워크로드 실행</li>
-    <li><strong>미디어 노드 풀</strong>: 노드에서 스트리밍 역량을 원격 배포할 수 있으며, 장치와 미디어 노드 바인딩 및 스트림 URL 생성 지원</li>
-    <li><strong>노드 역할</strong>: compute / media / hybrid 역할로 크로스 노드 스케줄링·탄력 확장; 연산 노드는 센터가 하달한 실시간 / 캡처 / 순찰·고성능 전달을 수용</li>
-    <li><strong>오프라인 친화</strong>: 오프라인 의존성 패키징 및 Agent 핫 업데이트 지원, 외부망 없음 또는 제한된 네트워크 환경에서의 대량 노드 통합에 적합</li>
+    <li><strong>업무 준비도 센티널</strong>: 스케줄 가능한 각 노드를 따라가며, 선택한 업무를 실제로 받을 수 있는지 지속적으로 확인</li>
+    <li><strong>등록 즉시 모니터링</strong>: 편입 후 자동 점검 시작 — 확장 당일 준비도 인수 가능</li>
+    <li><strong>스케줄 가능 역량 집약</strong>: 「이 노드가 해당 업무를 돌릴 수 있는가」를 콘솔에 모아 실제 역량으로 배정</li>
+    <li><strong>결손 자가 보완</strong>: 기대 환경 결손 시 플랫폼에 보완 요청 — 현장 설치 감소</li>
+    <li><strong>단절망 친화 확장</strong>: 공인망 없는 현장도 오프라인 등록·환경 동기화</li>
+    <li><strong>납품 언어 통일</strong>: 컴포넌트 상태와 스케줄 가능 기능을 한 화면에서 — 인수·장애 대응 시 추측 감소</li>
   </ul>
 </td>
 </tr>
@@ -584,6 +711,7 @@ EasyAIoT는 WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TR
     <li><strong>프레임 추출기 및 정렬기</strong>: 유연한 프레임 추출 전략과 결과 정렬 메커니즘을 지원하며, 각 알고리즘 태스크는 독립적인 프레임 추출기와 정렬기에 바인딩할 수 있습니다</li>
     <li><strong>방범 시간대</strong>: 전체 방범 모드 및 반방범 모드의 시간대별 구성 지원</li>
     <li><strong>오케스트레이션과 실행 분담</strong>: VIDEO는 장치 오케스트레이션·원본 미리보기·경보 아카이브·시작/중지; 무거운 일은 <strong>RUNTIME</strong>(추론·고성능 전달) — 「관리」와 「속도」를 분리해 채널·지연이 Python 오케스트레이션에 끌려가지 않음</li>
+    <li><strong>POST 판정 연계</strong>: 알고리즘 작업에 후처리 규칙을 구성해 검출 결과가 맞춤 판정 후 표준 경보로 진입 — 규칙 변경에 분석 중단 불필요</li>
     <li><strong>인수 미리보기</strong>: 원본과 판정 화면을 나란히 대조해 현장 지연·표기 품질을 빠르게 확인</li>
   </ul>
 </td>
@@ -626,6 +754,19 @@ EasyAIoT는 WEB, APP, DEVICE, EDGE, NODE, VIDEO, RTC, AI, RUNTIME, VISUALIZE, TR
     <li><strong>이벤트면 MQTT</strong>: 경보/스냅샷/후처리는 EMQX 알고리즘 버스로 전송, <strong>iot-sink</strong>가 저장·아카이브·알림 enrichment</li>
     <li><strong>관리면 HTTP 하트비트</strong>: 태스크 생존은 VIDEO로 보고, 기동/중지와 태스크 테이블은 VIDEO가 관리</li>
     <li><strong>NFS 미디어 루트</strong>: 경보 이미지·SRS 녹화는 <strong>NFS 공유 미디어 루트</strong>에 기록(<code>EASYAIOT_MEDIA_ROOT</code>, 기본 <code>/mnt/easyaiot-media</code>; sudo 없으면 <code>$HOME/easyaiot/media</code>로 fallback); MQTT는 경로만 전달, <strong>iot-sink</strong>가 디스크를 읽어 MinIO에 아카이브</li>
+  </ul>
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; vertical-align: top;"><strong>POST 모듈</strong></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; line-height: 1.8; color: #444;">
+  <ul style="margin: 5px 0; padding-left: 20px;">
+    <li><strong>맞춤 판정</strong>: 객체 검출 위에서 독립 업무 판단 — 「목표를 박스」에서 「경보할지·어떤 기준으로」로</li>
+    <li><strong>작업별 규칙</strong>: 구역 필터·통과·업무 스크립트·산업 플러그인을 규칙 체인으로 편성</li>
+    <li><strong>오경보 감소·인수 가능</strong>: 구역 밖 폭주 없음; 상선 전 규칙 시운전</li>
+    <li><strong>기준 변경해도 분석 유지</strong>: 실행 중 규칙 저장이 즉시 반영</li>
+    <li><strong>인식·판정 분리</strong>: 화면 분석은 계속, 업무 로직은 확장; 산업 능력 플러그형</li>
+    <li><strong>내장 플러그인</strong>: <code>line_cross</code> 선 넘기, <code>region_enter_exit</code> 구역 진입/이탈, <code>dwell_timer</code> 체류 초과, <code>headcount_gate</code> 인원 임계값 — 알고리즘 작업 「후처리 규칙」에서 바로 선택, 등록 불필요; 선 넘기/진입·이탈/체류는 목표 추적(<code>track_id</code>) 필요</li>
   </ul>
 </td>
 </tr>
@@ -792,6 +933,10 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
 - 계정: admin
 - 비밀번호: admin123
 
+## 🎬 데모 영상
+
+- Bilibili: https://www.bilibili.com/video/BV1d3846yEQz/?vd_source=5d3350c0182a2cf35c2739f3d16c1161
+
 ## ⚙️ 프로젝트 주소
 
 - Gitee: https://gitee.com/soaring-xiongkulu/easyaiot
@@ -825,6 +970,12 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
 
 | | | |
 |:---:|:---:|:---:|
+| ![영상 모니터링](.image/banner/banner1225.png) | ![영상 모니터링](.image/banner/banner1226.png) | ![영상 모니터링](.image/banner/banner1227.png) |
+| ![영상 모니터링](.image/banner/banner1228.png) | ![영상 모니터링](.image/banner/banner1229.png) | ![영상 모니터링](.image/banner/banner1230.png) |
+| ![영상 모니터링](.image/banner/banner1219.png) | ![영상 모니터링](.image/banner/banner1220.png) | ![영상 모니터링](.image/banner/banner1221.png) |
+| ![영상 모니터링](.image/banner/banner1222.png) | ![영상 모니터링](.image/banner/banner1223.png) | ![영상 모니터링](.image/banner/banner1224.png) |
+| ![영역 검출](.image/banner/banner1213.png) | ![영역 검출](.image/banner/banner1214.png) | ![영역 검출](.image/banner/banner1218.png) |
+| ![후처리 규칙 체인](.image/banner/banner1216.png) | ![후처리 규칙 체인](.image/banner/banner1217.png) | ![후처리 규칙 체인](.image/banner/banner1215.png) |
 | ![라이브](.image/banner/banner1145.jpg) | ![미리보기](.image/banner/banner1146.jpg) | ![카메라](.image/banner/banner1051.jpg) |
 | ![목록](.image/banner/banner1053.jpg) | ![푸시](.image/banner/banner1083.jpg) | ![전달](.image/banner/banner1084.jpg) |
 | ![저장](.image/banner/banner1121.png) | ![스냅샷](.image/banner/banner1122.png) | ![녹화](.image/banner/banner1123.png) |
@@ -866,6 +1017,13 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
 | ![미리보기](.image/banner/banner1082.jpg) | ![알고리즘](.image/banner/banner1062.jpg) | ![생성](.image/banner/banner1063.png) |
 | ![화면](.image/banner/banner1064.jpg) | ![분석](.image/banner/banner1065.jpg) | ![결과](.image/banner/banner1066.jpg) |
 | ![다시보기](.image/banner/banner1067.jpg) | ![실황](.image/banner/banner1052.jpg) | ![스마트](.image/banner/banner1054.jpg) |
+
+#### 📋 알람 워크오더
+
+| | | |
+|:---:|:---:|:---:|
+| ![플로우 디자인](.image/banner/banner1231.png) | ![노드 구성](.image/banner/banner1232.png) | ![승인자 선택](.image/banner/banner1233.png) |
+| ![조건 분기](.image/banner/banner1234.png) | ![조건 규칙](.image/banner/banner1235.png) | ![병렬 분기](.image/banner/banner1236.png) |
 
 #### 📦 데이터셋
 
@@ -923,9 +1081,14 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
 
 | | | |
 |:---:|:---:|:---:|
-| ![홈](.image/banner/app/app_1000.jpg) | ![모니터링](.image/banner/app/app_1001.jpg) | ![미리보기](.image/banner/app/app_1002.jpg) |
-| ![경보](.image/banner/app/app_1003.jpg) | ![재생](.image/banner/app/app_1004.jpg) | ![디바이스](.image/banner/app/app_1005.jpg) |
-| ![메시지](.image/banner/app/app_1006.jpg) | ![마이](.image/banner/app/app_1007.jpg) |  |
+| ![APP 스크린샷](.image/banner/app/app_1008.jpg) | ![APP 스크린샷](.image/banner/app/app_1009.jpg) | ![APP 스크린샷](.image/banner/app/app_1010.jpg) |
+| ![APP 스크린샷](.image/banner/app/app_1011.jpg) | ![APP 스크린샷](.image/banner/app/app_1012.jpg) | ![APP 스크린샷](.image/banner/app/app_1013.jpg) |
+| ![APP 스크린샷](.image/banner/app/app_2023.png) | ![APP 스크린샷](.image/banner/app/app_2024.png) | ![APP 스크린샷](.image/banner/app/app_2025.png) |
+| ![APP 스크린샷](.image/banner/app/app_2026.png) | ![APP 스크린샷](.image/banner/app/app_2027.png) | ![APP 스크린샷](.image/banner/app/app_2028.png) |
+| ![APP 스크린샷](.image/banner/app/app_1014.jpg) | ![APP 스크린샷](.image/banner/app/app_1015.jpg) | ![APP 스크린샷](.image/banner/app/app_1016.jpg) |
+| ![APP 스크린샷](.image/banner/app/app_1017.jpg) | ![APP 스크린샷](.image/banner/app/app_1018.jpg) | ![APP 스크린샷](.image/banner/app/app_1019.jpg) |
+| ![APP 스크린샷](.image/banner/app/app_1020.jpg) | ![APP 스크린샷](.image/banner/app/app_1021.jpg) | ![APP 스크린샷](.image/banner/app/app_1022.jpg) |
+| ![APP 스크린샷](.image/banner/app/app_2029.jpg) | ![APP 스크린샷](.image/banner/app/app_2030.jpg) | ![APP 스크린샷](.image/banner/app/app_2031.jpg) |
 
 ## 📞 연락처
 
@@ -1095,11 +1258,15 @@ EasyAIoT는 오픈소스 학습 프로젝트이며 상업적 행위와 무관합
 <td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>刘兆中ᯤ⁵ᴳ</nobr></td>
 <td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT의 macOS 원클릭 배포 방향 발전을 위해 Mac 원클릭 배포 스크립트의 일부를 선도적으로 기여하여, 이미지 풀·컨테이너 오케스트레이션·환경 사전 검사 등 주요 경로를 대부분 열어 「마지막 1마일」만 보완하면 되도록 만들었습니다. 그의 탐색과 실천은 팀이 Mac 측 배포 체인의 핵심 노드와 리스크를 명확히 하는 데 도움을 주었고, 이후 엔지니어링 마무리 경로를 크게 단축시켰으며, macOS 배포 역량이 제로에서 가용까지 이르는 과정에서 없어서는 안 될 기반 기여입니다.</td>
 </tr>
+<tr>
+<td style="padding: 15px; border: 1px solid #e0e0e0; font-weight: 600; color: #2c3e50; width: 32%; min-width: 9rem;"><nobr>添旺</nobr></td>
+<td style="padding: 15px; border: 1px solid #e0e0e0; color: #444; line-height: 1.8;">EasyAIoT의 클라우드-엣지 협업 영상 수집과 AI 분석 방향의 발전을 위해 여러 핵심 역량을 독자적으로 기여하여, 실제 엣지 현장의 핵심 난제 — 「카메라를 못 넣는다, 스케줄링이 빗나간다, 실제로는 한 경로만 동작한다, 과거를 다시 볼 수 없다」 — 에 정면으로 응했습니다. 첫째, 엣지 카메라 접속과 알고리즘 노드 어피니티를 개척하여, IPC/NVR 장치가 온라인 엣지 노드를 「접속 노드」로 지정하면 장치 발견·대역 스캔·ONVIF 탐색·NVR 채널 열거가 모두 해당 노드에서 로컬로 수행되고 원본 스트림은 컨트롤 플레인 미디어 서비스로 회수되어 통일된 배포·재생이 이루어지므로, 지점이나 크로스 세그먼트/사설망의 카메라도 중앙 플랫폼과 직접 연결될 필요 없이 온보딩·출류할 수 있으며, 알고리즘 작업은 카메라가 등록된 접속 노드에 자동 고정되어 소스 스트림에 도달할 수 없는 노드에 배정되어 헛돌 일을 원천 차단하고 연산 자력이 카메라 가까이에서 오케스트레이션되도록 했습니다. 둘째, 같은 카메라에 여러 작업 및 멀티 모델 파이프라인이 있을 때 단일 경로만 유효한 치명적 결함을 진단하고 수정하여 — 작업별 스트림 식별자로 추론 체인을 격리하고, 전용 카메라 소스 서비스로 공유 디코딩을 재사용해 동시 작업을 지원하며, 작업 식별자를 알림과 실행 상태까지 종단 간 전파함으로써 — 하나의 카메라가 여러 알고리즘 작업과 멀티 모델 검출(예: 얼굴+차량 동시 인식)을 안정적으로 병렬 수행할 수 있게 하고 독립 스트림 서비스와 회귀 테스트로 이를 장기 보호했습니다. 셋째, 엣지 녹화의 계층화 저장과 통합 이벤트 리플레이를 지원하여, 녹화본은 엣지에 계층별로 현지 보존하고 알림 이벤트와 영상 증거는 클라우드-엣지 통합 입구에서 검색·재생할 수 있게 함으로써 「이벤트는 근거 있게 조회되고 증거는 신뢰할 수 있게 재생되는」 증거 폐루프를 완성했습니다. 이러한 성과는 복잡한 실제 네트워크 환경에서 플랫폼의 전달 확실성과 AI 분석 결과의 신뢰도를 크게 높였습니다.</td>
+</tr>
 </tbody>
 </table>
 
 <p style="font-size: 14px; line-height: 1.8; color: #2c3e50; font-weight: 500; margin: 20px 0; padding: 15px; background-color: #e8f4f8; border-left: 4px solid #3498db; border-radius: 4px;">
-<strong>특별 감사</strong>: 위 기여자들의 노력은 크로스 플랫폼 배포 문서·스크립트, macOS 원클릭 배포 스크립트 기반 구축과 경로 탐색, 국가 표준 영상(GB28181) 역량 구현, AI 연동 검증, 멀티 GPU 학습 가용성 및 체크포인트 이어학습 역량 구현, 다중 브랜드 카메라 직접 연결 발견 및 일괄 온보딩, 천지도 공간 시각화 완전 구현, 이기종 스트리밍 미디어 클러스터 배포 및 스케줄링 아키텍처, 번호판 인식 알고리즘 및 완전한 코드 구현, EasyAIoT-Edge 종단 간 연동(카메라·AI), 교내 개발자 커뮤니티 조직 및 청년 협업 생태계 구축, IoT 장치 상·하행 폐루프와 DJI FlightHub 공중 시야 접속, Modbus-TCP / Modbus-RTU / OPC UA 산업 프로토콜 접속, 카메라 직접 연결의 발견부터 로그인/동기화/설정/다중 브랜드 출류까지의 현장 폐루프, 드래그 대시보드(Board) 구상 및 IoT 측정점 실시간/이력 값 직접 연동, 센서 부동 데이터 예측과 임계값 알람·규칙 및 중심 장치 연관 하위 장치 운행 상태 한 화면 표시, AI 영상 감시 분석 플랫폼 도문 소개 자료 등 여러 측면에서 EasyAIoT의 발전에 기여했습니다. 그들의 전문성과 헌신은 우리가 배우고 존경할 만합니다. 다시 한 번 이 탁월한 기여자들에게 진심으로 감사드립니다! 🙏
+<strong>특별 감사</strong>: 위 기여자들의 노력은 크로스 플랫폼 배포 문서·스크립트, macOS 원클릭 배포 스크립트 기반 구축과 경로 탐색, 국가 표준 영상(GB28181) 역량 구현, AI 연동 검증, 멀티 GPU 학습 가용성 및 체크포인트 이어학습 역량 구현, 다중 브랜드 카메라 직접 연결 발견 및 일괄 온보딩, 천지도 공간 시각화 완전 구현, 이기종 스트리밍 미디어 클러스터 배포 및 스케줄링 아키텍처, 번호판 인식 알고리즘 및 완전한 코드 구현, EasyAIoT-Edge 종단 간 연동(카메라·AI), 교내 개발자 커뮤니티 조직 및 청년 협업 생태계 구축, IoT 장치 상·하행 폐루프와 DJI FlightHub 공중 시야 접속, Modbus-TCP / Modbus-RTU / OPC UA 산업 프로토콜 접속, 카메라 직접 연결의 발견부터 로그인/동기화/설정/다중 브랜드 출류까지의 현장 폐루프, 드래그 대시보드(Board) 구상 및 IoT 측정점 실시간/이력 값 직접 연동, 센서 부동 데이터 예측과 임계값 알람·규칙 및 중심 장치 연관 하위 장치 운행 상태 한 화면 표시, AI 영상 감시 분석 플랫폼 도문 소개 자료, 엣지 카메라 접속 및 알고리즘 노드 어피니티 스케줄링, 동일 카메라 멀티 작업·멀티 모델 단일 경로 문제의 격리 수정, 엣지 녹화 계층화 저장 및 통합 이벤트 리플레이 등 여러 측면에서 EasyAIoT의 발전에 기여했습니다. 그들의 전문성과 헌신은 우리가 배우고 존경할 만합니다. 다시 한 번 이 탁월한 기여자들에게 진심으로 감사드립니다! 🙏
 </p>
 
 ## 💝 오픈소스 수호자

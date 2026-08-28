@@ -63,6 +63,7 @@ MODULES=(
   "DEVICE"
   "AI"
   "RTC"
+  "POST"
   "VIDEO"
   "WEB"
   "APP"
@@ -113,6 +114,7 @@ module_name() {
     "DEVICE") echo "Device服务" ;;
     "AI") echo "AI服务" ;;
     "RTC") echo "RTC服务" ;;
+    "POST") echo "POST服务" ;;
     "VIDEO") echo "Video服务" ;;
     "WEB") echo "Web前端服务" ;;
     "APP") echo "App移动端H5" ;;
@@ -131,6 +133,7 @@ module_port() {
     "DEVICE") echo "48080" ;;
     "AI") echo "5000" ;;
     "RTC") echo "6100" ;;
+    "POST") echo "8089" ;;
     "VIDEO") echo "6000" ;;
     "WEB") echo "8888" ;;
     "APP") echo "9010" ;;
@@ -149,6 +152,7 @@ module_health() {
     "DEVICE") echo "/actuator/health" ;;
     "AI") echo "/actuator/health" ;;
     "RTC") echo "/actuator/health" ;;
+    "POST") echo "/readyz" ;;
     "VIDEO") echo "/actuator/health" ;;
     "WEB") echo "/health" ;;
     "APP") echo "/health" ;;
@@ -202,6 +206,30 @@ print_section() {
   log_to_file "  $section"
   log_to_file "========================================="
   log_to_file ""
+}
+
+
+# 部署完成后初始化 FLOW 工作流并重放 demo 数据（幂等可重跑），与 install_linux.sh 的 after_stack 钩子一致。
+# 关闭：EASYAIOT_ENABLE_FLOW_DEMO=0
+ensure_flow_demo_after_stack() {
+    local flow_script="${PROJECT_ROOT}/.scripts/flow/flow_demo_replay.sh"
+    if [ "${EASYAIOT_ENABLE_FLOW_DEMO:-1}" = "0" ]; then
+        print_info "跳过 FLOW 工作流初始化与 demo 重放（EASYAIOT_ENABLE_FLOW_DEMO=0）"
+        return 0
+    fi
+    if [ ! -f "$flow_script" ]; then
+        print_warning "未找到 ${flow_script}，跳过 FLOW 初始化"
+        return 0
+    fi
+    if [ ! -x "$flow_script" ]; then
+        chmod +x "$flow_script" 2>/dev/null || true
+    fi
+    print_section "初始化 FLOW 工作流（菜单/通知模板/会签模型/路由规则 + demo 告警实例）"
+    if bash "$flow_script"; then
+        print_success "FLOW 初始化完成（APP 流程审批页 / PC 工作流菜单可查看 demo 数据）"
+    else
+        print_warning "FLOW 初始化未完全成功，可稍后手动: bash ${flow_script}"
+    fi
 }
 
 check_command() {
@@ -283,6 +311,7 @@ _desktop_resource_targets() {
   local want_mem want_cpu want_disk
   case "$profile" in
     # Docker 引擎目标内存（不够时由 resources / bootstrap / install 自动调高）
+    edge)     want_mem=2;  want_cpu=2; want_disk=40 ;;
     mini)     want_mem=4;  want_cpu=4; want_disk=60 ;;
     standard) want_mem=16; want_cpu=6; want_disk=80 ;;
     *)        want_mem=24; want_cpu=8; want_disk=100 ;;  # full
@@ -933,7 +962,10 @@ check_desktop_prerequisites() {
   fi
   local profile_hint="${EASYAIOT_DEPLOY_PROFILE:-full}"
   if [ -n "$mem_gb" ] && [ "$mem_gb" -gt 0 ] 2>/dev/null; then
-    if [ "$mem_gb" -lt 8 ]; then
+    if [ "$profile_hint" = "edge" ] && [ "$mem_gb" -lt 4 ]; then
+      warnings+=("物理内存约 ${mem_gb}GB；edge 单机合装建议主机 ≥4GB（引擎目标 2GB）")
+      print_info "主机内存: 约 ${mem_gb}GB"
+    elif [ "$mem_gb" -lt 8 ] && [ "$profile_hint" != "edge" ]; then
       warnings+=("物理内存约 ${mem_gb}GB，建议 ≥16GB（mini 规格至少 ≥8GB）")
     elif [ "$profile_hint" = "full" ] && [ "$mem_gb" -lt 32 ]; then
       warnings+=("物理内存约 ${mem_gb}GB；full 全量建议主机 ≥32GB（引擎目标 24GB）")
@@ -1207,7 +1239,7 @@ execute_module_command() {
   # Docker Desktop：host 网络无法把端口暴露到宿主机，启用 bridge override
   unset COMPOSE_FILE 2>/dev/null || true
   case "$module" in
-    VIDEO|AI|RTC|DEVICE)
+    VIDEO|AI|RTC|POST|DEVICE)
       export EASYAIOT_COMPOSE_DESKTOP=1
       if [ -f docker-compose.desktop.yaml ]; then
         local base_compose="docker-compose.yaml"
@@ -1231,7 +1263,7 @@ execute_module_command() {
 
   local defer_agent_sync=0
   case "$module" in
-    DEVICE|AI|RTC|VIDEO|WEB|APP|VISUALIZE|TRANSFORM) defer_agent_sync=1 ;;
+    DEVICE|AI|RTC|POST|VIDEO|WEB|APP|VISUALIZE|TRANSFORM) defer_agent_sync=1 ;;
   esac
   if [ "$defer_agent_sync" -eq 1 ]; then
     export EASYAIOT_DEFER_PLATFORM_AGENT_SYNC=1
@@ -1525,6 +1557,7 @@ desktop_start() {
   fi
 
   print_success "启动流程完成"
+  ensure_flow_demo_after_stack
   print_access_urls
 }
 
@@ -1611,6 +1644,7 @@ desktop_update() {
     execute_module_command "$module" "update" || print_warning "$(module_name "$module") 更新失败"
   done
   print_success "更新完成"
+  ensure_flow_demo_after_stack
   print_access_urls
 }
 
@@ -1672,7 +1706,7 @@ print_access_urls() {
   if module_enabled_for_deploy_profile HARNESS; then
     echo -e "  AI 助手 (HARNESS):       http://localhost:3080"
   fi
-  echo -e "  Web 控制台:              http://localhost:8888"
+  echo -e "  Web 控制台:              https://localhost:8888"
   echo -e "  API 网关:                http://localhost:48080"
   echo -e "  Nacos:                   http://localhost:8848/nacos"
   echo -e "  MinIO:                   http://localhost:9001"
@@ -1932,8 +1966,9 @@ ${EASYAIOT_INSTALL_LABEL}
     DOCKER_MIRROR_FALLBACKS（默认 docker.m.daocloud.io,docker.1ms.run,docker.1panel.live）
     EASYAIOT_DOCKER_SKIP_MIRROR=1 可跳过；FUXA 始终优先 pull_fuxa.sh（1ms）
 
-部署形态（EASYAIOT_DEPLOY_PROFILE）:
-  mini(1) / standard(2) / full(3，默认)
+部署形态（install 交互选型）：
+  0) edge / 1) mini / 2) standard / 3) full（默认）
+  选定 edge 后再选: 1) standalone | 2) integrated
 
 不支持的命令（请改用 Linux 服务器脚本）:
   build / build-runtime / clean-build-runtime
@@ -1943,6 +1978,7 @@ ${EASYAIOT_INSTALL_LABEL}
   bash .scripts/docker/install_${EASYAIOT_DESKTOP_OS}.sh check
   bash .scripts/docker/install_${EASYAIOT_DESKTOP_OS}.sh install
   bash .scripts/docker/install_${EASYAIOT_DESKTOP_OS}.sh pull
+  EASYAIOT_DEPLOY_PROFILE=edge bash .scripts/docker/install_${EASYAIOT_DESKTOP_OS}.sh install
   EASYAIOT_DEPLOY_PROFILE=mini bash .scripts/docker/install_${EASYAIOT_DESKTOP_OS}.sh install
 EOF
 }

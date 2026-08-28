@@ -458,11 +458,20 @@ create_env_file() {
 
     ensure_deploy_profile
     apply_python_service_deploy_env "${EASYAIOT_ROOT}"
-    if is_mini_deploy_profile; then
+    if is_edge_deploy_profile; then
+        print_info "edge 形态：零 DEVICE + 本地存储；告警/DVR 由 VIDEO 本地消化"
+    elif is_mini_deploy_profile; then
         print_info "mini 形态：已配置 Gateway 部署（48080）+ MQTT→iot-sink 统一事件面"
     else
         print_info "${EASYAIOT_DEPLOY_PROFILE:-full} 形态：已配置网关部署（JAVA_BACKEND_URL=48080, MinIO 启用）"
     fi
+
+    # RTC / go2rtc（存量 .env.docker 可能缺项）
+    _set_env_docker_kv .env.docker RTC_SERVICE_URL "http://127.0.0.1:6100"
+    _set_env_docker_kv .env.docker RTC_GO2RTC_WEB_URL "/dev-api/go2rtc/"
+    _set_env_docker_kv .env.docker RTC_RTSP_HOST "127.0.0.1"
+    _set_env_docker_kv .env.docker RTC_RTSP_PORT "8554"
+
 }
 
 # 安装服务

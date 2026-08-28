@@ -224,6 +224,20 @@ def _use_remote_deploy(task: StreamForwardTask) -> bool:
     return policy in ('auto', 'node')
 
 
+def _requires_local_runtime(
+    task: StreamForwardTask,
+    *,
+    remote_deploy: Optional[bool] = None,
+) -> bool:
+    """Only locally executed C++ tasks depend on the control-plane RUNTIME."""
+    from app.services.runtime_config_service import normalize_executor
+
+    if remote_deploy is None:
+        remote_deploy = _use_remote_deploy(task)
+    executor = normalize_executor(getattr(task, 'executor', None) or 'cpp')
+    return executor == 'cpp' and not remote_deploy
+
+
 def _devices_per_shard() -> int:
     try:
         return max(1, int(os.getenv('STREAM_FORWARD_DEVICES_PER_SHARD', '4')))
@@ -522,6 +536,7 @@ def _build_stream_forward_deploy_env(
     device_ids: Optional[List[str]] = None,
     workload_id: Optional[str] = None,
     node_tags: Optional[dict] = None,
+    node_info: Optional[dict] = None,
     task: Optional[StreamForwardTask] = None,
     gpu_ids: Optional[str] = None,
 ) -> dict:
@@ -622,6 +637,22 @@ def _build_stream_forward_deploy_env(
 
     executor = normalize_executor(getattr(task, 'executor', None) if task else os.getenv('STREAM_FORWARD_EXECUTOR', 'cpp'))
     env['STREAM_FORWARD_EXECUTOR'] = executor
+    publish_scope = getattr(task, 'publish_scope', None) if task else None
+    recording_mode = str((node_info or {}).get('recordingStorageMode')
+                         or (node_info or {}).get('recording_storage_mode') or '').strip().lower()
+    edge_local_publish = remote and recording_mode == 'edge_local'
+    if remote and publish_scope == 'control_plane' and not edge_local_publish:
+        if not control_plane_host or control_plane_host in ('127.0.0.1', 'localhost'):
+            raise RuntimeError('无法解析主节点地址，边缘流不能推送到控制面媒体服务')
+        env['STREAM_FORWARD_PUSH_HOST'] = control_plane_host
+        env['STREAM_FORWARD_PUSH_PORT'] = os.getenv('CONTROL_PLANE_SRS_RTMP_PORT', '1935')
+        env['STREAM_FORWARD_PUSH_SCOPE'] = 'control_plane'
+    elif edge_local_publish:
+        # 边缘本地存储必须先进入节点 SRS 触发 DVR；SRS 再原生 forward 到控制面，
+        # 避免 FFmpeg 重复拉取摄像头或双路编码。
+        env.pop('STREAM_FORWARD_PUSH_HOST', None)
+        env.pop('STREAM_FORWARD_PUSH_PORT', None)
+        env['STREAM_FORWARD_PUSH_SCOPE'] = 'edge_local'
     if executor == 'cpp':
         is_remote_node = node_tags is not None or os.getenv('NODE_REMOTE_VIDEO_ROOT')
         if is_remote_node:
@@ -800,12 +831,16 @@ def _deploy_shard_with_workload_id(
         logger.debug('部署前停止 stale workload 失败（可忽略） workload_id=%s: %s', workload_id, e)
 
     node_tags = None
+    node_info = None
     try:
         node_info = node_client.get_node(node_id)
         node_tags = node_info.get('tags')
     except Exception as e:
         logger.debug('查询分配节点详情失败 node_id=%s: %s', node_id, e)
-    _ensure_node_srs_ready(node_id, host, node_tags)
+    edge_local_publish = str((node_info or {}).get('recordingStorageMode')
+                             or (node_info or {}).get('recording_storage_mode') or '').strip().lower() == 'edge_local'
+    if edge_local_publish or (getattr(task, 'publish_scope', None) or 'node') != 'control_plane':
+        _ensure_node_srs_ready(node_id, host, node_tags)
 
     video_root_remote = os.getenv('NODE_REMOTE_VIDEO_ROOT', '/opt/easyaiot/VIDEO')
     work_dir = os.path.join(video_root_remote, 'services', 'stream_forward_service')
@@ -820,7 +855,7 @@ def _deploy_shard_with_workload_id(
     command = [python_exec, deploy_script]
 
     env = _build_stream_forward_deploy_env(
-        task_id, log_dir, host, device_ids, workload_id, node_tags, task=task, gpu_ids=gpu_ids,
+        task_id, log_dir, host, device_ids, workload_id, node_tags, node_info, task=task, gpu_ids=gpu_ids,
     )
     env['VIDEO_ROOT'] = video_root_remote
 
@@ -843,6 +878,11 @@ def _deploy_shard_with_workload_id(
         'device_ids': device_ids,
         'node_id': node_id,
         'host': host,
+        'publish_host': (
+            _resolve_control_plane_host()
+            if (getattr(task, 'publish_scope', None) or 'node') == 'control_plane'
+            else None
+        ),
         'workload_id': workload_id,
         'pid': result.get('pid'),
         'log_dir': log_dir,
@@ -928,6 +968,27 @@ def redeploy_existing_shard(
     )
 
 
+def _restart_existing_shard_on_pinned_node(
+    task_id: int,
+    task: StreamForwardTask,
+    deployment: Dict[str, Any],
+) -> Dict[str, Any]:
+    """心跳超时时在指定节点原地重建分片，不把目标节点加入排除列表。"""
+    device_ids = list(deployment.get('device_ids') or [])
+    workload_id = str(deployment.get('workload_id') or '')
+    if not device_ids or not workload_id:
+        raise ValueError('分片部署信息不完整')
+
+    return _deploy_shard_with_workload_id(
+        task_id,
+        task,
+        device_ids,
+        workload_id,
+        shard_index=_shard_index_from_workload_id(workload_id),
+        fresh_allocate=True,
+    )
+
+
 def _is_compute_node_online(node_id: int) -> bool:
     from app.utils import node_client
     try:
@@ -994,10 +1055,15 @@ def migrate_unhealthy_stream_forward_task(task_id: int) -> int:
                     '推流转发分片迁移失败 task_id=%s workload=%s: %s',
                     task_id, dep.get('workload_id'), e, exc_info=True,
                 )
-    elif heartbeat_stale and policy != 'node':
+    elif heartbeat_stale:
         for index, dep in enumerate(deployments):
             try:
-                updated[index] = redeploy_existing_shard(task_id, task, dep)
+                if policy == 'node':
+                    updated[index] = _restart_existing_shard_on_pinned_node(
+                        task_id, task, dep,
+                    )
+                else:
+                    updated[index] = redeploy_existing_shard(task_id, task, dep)
                 migrated += 1
             except Exception as e:
                 logger.error(
@@ -1085,12 +1151,16 @@ def _deploy_task_on_remote_node(
         logger.debug('部署前停止 stale workload 失败（可忽略） task_id=%s: %s', task_id, e)
 
     node_tags = None
+    node_info = None
     try:
         node_info = node_client.get_node(node_id)
         node_tags = node_info.get('tags')
     except Exception as e:
         logger.debug('查询分配节点详情失败 node_id=%s: %s', node_id, e)
-    _ensure_node_srs_ready(node_id, host, node_tags)
+    edge_local_publish = str((node_info or {}).get('recordingStorageMode')
+                             or (node_info or {}).get('recording_storage_mode') or '').strip().lower() == 'edge_local'
+    if edge_local_publish or (getattr(task, 'publish_scope', None) or 'node') != 'control_plane':
+        _ensure_node_srs_ready(node_id, host, node_tags)
 
     video_root_remote = os.getenv('NODE_REMOTE_VIDEO_ROOT', '/opt/easyaiot/VIDEO')
     work_dir = os.path.join(video_root_remote, 'services', 'stream_forward_service')
@@ -1100,7 +1170,7 @@ def _deploy_task_on_remote_node(
     command = [python_exec, deploy_script]
 
     env = _build_stream_forward_deploy_env(
-        task_id, log_dir, host, node_tags=node_tags, task=task, gpu_ids=gpu_ids,
+        task_id, log_dir, host, node_tags=node_tags, node_info=node_info, task=task, gpu_ids=gpu_ids,
     )
     env['VIDEO_ROOT'] = video_root_remote
 
@@ -1119,6 +1189,11 @@ def _deploy_task_on_remote_node(
         'device_ids': device_ids,
         'node_id': node_id,
         'host': host,
+        'publish_host': (
+            _resolve_control_plane_host()
+            if (getattr(task, 'publish_scope', None) or 'node') == 'control_plane'
+            else None
+        ),
         'workload_id': str(task_id),
         'pid': result.get('pid'),
         'log_dir': log_dir,
@@ -1595,13 +1670,14 @@ def restart_stream_forward_task_services(task_id: int) -> bool:
 
 def start_stream_forward_task(task_id: int):
     """启动推流转发任务（本机守护进程或远程节点/设备级分片）"""
-    from app.services.runtime_config_service import normalize_executor, ensure_runtime_bin_ready
+    from app.services.runtime_config_service import ensure_runtime_bin_ready
 
     task = StreamForwardTask.query.get(task_id)
     if not task:
         raise ValueError(f"推流转发任务不存在: task_id={task_id}")
 
-    if normalize_executor(getattr(task, 'executor', None) or 'cpp') == 'cpp':
+    remote_deploy = _use_remote_deploy(task)
+    if _requires_local_runtime(task, remote_deploy=remote_deploy):
         try:
             ensure_runtime_bin_ready(task)
         except Exception as e:
@@ -1613,7 +1689,7 @@ def start_stream_forward_task(task_id: int):
         task_start_lock = _starting_tasks[task_id]
 
     with task_start_lock:
-        if _use_remote_deploy(task):
+        if remote_deploy:
             if _task_has_active_remote_deployments(task):
                 if _stream_forward_deployments_healthy(task):
                     logger.info('推流转发任务 %s 分片仍在运行，跳过重复部署', task_id)

@@ -2735,10 +2735,17 @@ _apply_srs_http_hooks() {
     local srs_config_file="$1"
     local gateway_ip="$2"
     local on_publish_url on_dvr_url
+    local video_port="${FLASK_RUN_PORT:-6000}"
+    local host_ip
+    host_ip=$(get_host_ip)
+    [ -z "$host_ip" ] && host_ip="127.0.0.1"
 
-    if is_mini_deploy_profile; then
-        local video_port="${FLASK_RUN_PORT:-6000}"
-        local host_ip=$(get_host_ip)
+    if is_edge_deploy_profile; then
+        # 零 DEVICE：on_publish / on_dvr 均直连 VIDEO 本地消化
+        on_publish_url="http://${host_ip}:${video_port}/video/camera/callback/on_publish"
+        on_dvr_url="http://${host_ip}:${video_port}/video/media/hook/srs/on_dvr"
+        print_info "edge 形态：推流/录像回调走本地闭环（本地存储）"
+    elif is_mini_deploy_profile; then
         on_publish_url="http://${host_ip}:${video_port}/video/camera/callback/on_publish"
         on_dvr_url="http://${gateway_ip}:48080/admin-api/sink/media/hook/srs/on_dvr"
         print_info "mini 形态：on_publish 直连 VIDEO；on_dvr 经 Gateway→iot-sink"
@@ -2807,8 +2814,11 @@ prepare_srs_config() {
     # 如果复制失败或源文件不存在，创建默认配置文件
     print_info "创建默认 SRS 配置文件..."
     local on_publish_url on_dvr_url
-    if is_mini_deploy_profile; then
-        local video_port="${FLASK_RUN_PORT:-6000}"
+    local video_port="${FLASK_RUN_PORT:-6000}"
+    if is_edge_deploy_profile; then
+        on_publish_url="http://${host_ip}:${video_port}/video/camera/callback/on_publish"
+        on_dvr_url="http://${host_ip}:${video_port}/video/media/hook/srs/on_dvr"
+    elif is_mini_deploy_profile; then
         on_publish_url="http://${host_ip}:${video_port}/video/camera/callback/on_publish"
         on_dvr_url="http://${gateway_ip}:48080/admin-api/sink/media/hook/srs/on_dvr"
     else
@@ -3376,6 +3386,8 @@ _curl_nacos() {
 wait_for_nacos() {
     local max_attempts="${NACOS_READY_MAX_ATTEMPTS:-90}"
     local attempt=0
+    local repair_attempted=0
+    local container_id_before="" container_id_after=""
 
     print_info "等待 Nacos 服务就绪..."
     while [ $attempt -lt $max_attempts ]; do
@@ -3389,6 +3401,20 @@ wait_for_nacos() {
             st=$(container_status nacos-server 2>/dev/null || echo "missing")
             health=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' nacos-server 2>/dev/null || echo "unknown")
             print_info "等待 Nacos 就绪... (${attempt}/${max_attempts})，容器: ${st}，健康: ${health}"
+        fi
+
+        # 首次启动时 Derby 错误可能在 compose up 后几十秒才出现，初始自愈检查会错过。
+        # 等待期间持续检测一次；若容器被重建，则为新容器重新计算就绪等待时间。
+        if [ "$repair_attempted" -eq 0 ] && [ $((attempt % 5)) -eq 0 ]; then
+            container_id_before=$(docker inspect -f '{{.Id}}' nacos-server 2>/dev/null || true)
+            fix_nacos_startup_failure
+            container_id_after=$(docker inspect -f '{{.Id}}' nacos-server 2>/dev/null || true)
+            if [ -n "$container_id_after" ] && [ "$container_id_before" != "$container_id_after" ]; then
+                repair_attempted=1
+                attempt=0
+                print_info "Nacos 容器已自动重建，重新等待服务就绪..."
+                continue
+            fi
         fi
         sleep 2
     done
@@ -5764,6 +5790,7 @@ install_middleware() {
     
     # 清理残留容器
     cleanup_stale_containers
+    cleanup_profile_excluded_containers
     
     # 检查端口占用
     check_and_clean_ports
@@ -5959,6 +5986,7 @@ start_middleware() {
     
     # 清理残留容器
     cleanup_stale_containers
+    cleanup_profile_excluded_containers
     
     # 检查端口占用
     check_and_clean_ports
@@ -6070,8 +6098,50 @@ restart_middleware() {
     # 准备 ZLMediaKit 配置文件
     prepare_zlmediakit_config
 
-    print_info "重启所有中间件服务..."
-    $COMPOSE_CMD -f "$COMPOSE_FILE" restart 2>&1 | tee -a "$LOG_FILE"
+    cleanup_profile_excluded_containers
+
+    local -a _skip_optional=()
+    read -r -a _skip_optional <<< "$(collect_skippable_optional_services)"
+
+    local -a up_services=()
+    local svc should_skip
+    while IFS= read -r svc; do
+        [ -z "$svc" ] && continue
+        should_skip=0
+        for skip in "${_skip_optional[@]}"; do
+            if [ "$svc" = "$skip" ]; then
+                should_skip=1
+                break
+            fi
+        done
+        if [ "$should_skip" -eq 0 ]; then
+            up_services+=("$svc")
+        fi
+    done < <(mw_compose config --services 2>/dev/null)
+
+    if [ ${#_skip_optional[@]} -gt 0 ]; then
+        local -a lingering_skips=()
+        local skip_svc
+        for skip_svc in "${_skip_optional[@]}"; do
+            [ -z "$skip_svc" ] && continue
+            if mw_compose ps -q "$skip_svc" 2>/dev/null | grep -q .; then
+                lingering_skips+=("$skip_svc")
+            fi
+        done
+        if [ ${#lingering_skips[@]} -gt 0 ]; then
+            print_info "停止并移除当前形态不部署的中间件: $(_format_service_list "${lingering_skips[@]}")"
+            mw_compose stop "${lingering_skips[@]}" >/dev/null 2>&1 || true
+            mw_compose rm -f "${lingering_skips[@]}" >/dev/null 2>&1 || true
+        fi
+    fi
+
+    if [ ${#up_services[@]} -eq 0 ]; then
+        print_error "没有可重启的中间件服务"
+        return 1
+    fi
+
+    print_info "重启中间件服务: $(_format_service_list "${up_services[@]}")"
+    mw_compose restart "${up_services[@]}" 2>&1 | tee -a "$LOG_FILE"
     
     print_success "所有中间件重启完成"
     echo ""
@@ -6501,7 +6571,7 @@ show_help() {
     echo "  help            - 显示此帮助信息"
     echo ""
     echo "环境变量:"
-    echo "  EASYAIOT_DEPLOY_PROFILE   - 部署规格: mini(1,≥4GB) | standard(2,≥16GB) | full(3,≥20GB，默认)"
+    echo "  EASYAIOT_DEPLOY_PROFILE   - 部署规格: edge(0,≥2GB) | mini(1,≥4GB) | standard(2,≥16GB) | full(3,≥20GB，默认)"
     echo "  EASYAIOT_ENABLE_TDENGINE  - 完整版自动为 1；mini/standard 为 0"
     echo "  EASYAIOT_ENABLE_EMQX      - mini/standard/完整版均为 1；显式 0 可关闭"
     echo "  FORCE_CHMOD=true    - 对已存在的数据目录强制完整递归 chmod 修复（默认只设顶层，数据量大时慢）"

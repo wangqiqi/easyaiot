@@ -9,7 +9,7 @@
       >
         <template #icon>
           <view
-            class="h-80rpx w-80rpx flex items-center justify-center rounded-16rpx"
+            class="h-80rpx w-80rpx flex items-center justify-center rounded-20rpx"
             :style="getIconStyle(menu)"
           >
             <wd-icon :name="menu.icon" size="50rpx" :color="menu.iconColor" />
@@ -38,7 +38,6 @@ const toast = useToast()
 
 /** 处理菜单点击 */
 function handleClick(menu: MenuItem) {
-  console.log('点击菜单：', menu)
   if (!menu.url) {
     toast.show('功能开发中')
     return
@@ -80,12 +79,17 @@ function getIconStyle(menu: MenuItem) {
 </script>
 
 <style lang="scss" scoped>
+// 收窄宫格内容左右内边距：默认 padding-loose 下 4 列文字区放不下「设备控制台」这类 5 字菜单，末字会折行
+:deep(.wd-grid-item__content) {
+  padding: 24rpx 8rpx;
+}
+
 :deep(.wd-grid-item__text) {
   width: 100%;
   min-height: 64rpx;
   font-size: 24rpx;
   line-height: 32rpx;
-  color: #333;
+  color: var(--app-text-1, #10131a);
   overflow: hidden;
   display: -webkit-box;
   white-space: normal;
